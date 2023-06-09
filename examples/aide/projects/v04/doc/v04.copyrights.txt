@@ -1,0 +1,23 @@
+
+To make V04 a real thing, I've picked a lot of code around the web.
+Credit are listed below, ordered by names, dates and packages.
+Error or ommission reports are welcome.
+
+All my thanks to the Ada Community.
+
+Stephane Riviere
+
+---
+
+Copyright (C)  
+
+# CRT SubPackage
+
+Michael B. Feldman 07/1995 screen
+Jerry van Dijk     06/1998 nt_console
+Hans Marqvardsen   03/1999 nt_mouse
+Stephane Riviere   02/2004
+Xavier Riviere     07/2004
+Martin Cattoen     07/2004
+
+--- eof

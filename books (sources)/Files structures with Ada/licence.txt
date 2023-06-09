@@ -1,0 +1,46 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--               AIDE - ADA INSTANT DEVELOPMENT ENVIRONMENT                 --
+--                                                                          --
+--                                   *                                      --
+--                                                                          --
+--                             $Revision: 0.0$
+--                                                                          --
+--                 Copyright (C) 2001-2004 Stephane Riviere                 --
+--                                                                          --
+--                         stephane@rochebrune.org                          --
+--                     http://stephane.rochebrune.org                       --
+--                                                                          --
+--                                   *                                      --
+--                                                                          --
+-- AIDE is free software; you can  redistribute it  and/or modify  it under --
+-- terms of the  GNU General Public License as published  by the Free Soft- --
+-- ware  Foundation;  either version 2,  or (at your option) any later ver- --
+-- sion. AIDE is distributed in the hope  that it will be useful, but WITH- --
+-- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
+-- or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License --
+-- for  more details.  You should have  received  a copy of the GNU General --
+-- Public License  distributed with AIDE;  see file COPYING.  If not, write --
+-- to  the Free Software Foundation,  59 Temple Place - Suite 330,  Boston, --
+-- MA 02111-1307, USA.                                                      --
+--                                                                          --
+------------------------------------------------------------------------------
+
+Message-ID: <000801c4b776$28be98a0$c600fea9@Nancy>
+From: "Nancy E Miller" <nemiller@netdoor.com>
+To: "stephane" <stephane@rochebrune.org>
+Cc: <petersen@netdoor.com>
+References: <200408101726.i7AHQdV26938@club.netdoor.com>    <1811.216.106.67.201.1092186081.squirrel@webmail.netdoor.com>    <411A4989.7000002@rochebrune.org> <412A25DC.5010300@rochebrune.org> <007901c489e9$32d1ebe0$2cd394d0@Nancy> <416055BB.50403@rochebrune.org>
+Subject: Re: File structure with Ada source code
+Date: Thu, 21 Oct 2004 08:59:12 -0500
+MIME-Version: 1.0
+
+(excerpt from)
+
+We would be willing to give you permission to use the source code from our
+book with the license of  LGPL.
+
+Nancy E Miller
+
+------------------------------------------------------------------------------
+eof

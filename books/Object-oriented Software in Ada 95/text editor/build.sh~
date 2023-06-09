@@ -1,0 +1,11 @@
+#--   The file io.c is the commented out C code before Raw_io.adb
+#--   The current I/O system with Windows 95 can not cope with 
+#--     the fast reception of characters
+#--   ^C Will Kill the program use ^E to exit
+#--   ^D Will cause the program to terminate do not use 
+
+gcc -c io.c                     // Compile C interface
+gnatmake ed.adb -largs io.o     // Compile program
+
+
+

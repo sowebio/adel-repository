@@ -1,0 +1,9 @@
+name = "kalle"
+description = "Shiny new project"
+version = "0.1.0-dev"
+
+authors = ["Stéphane Rivière"]
+maintainers = ["Stéphane Rivière <sriviere@soweb.io>"]
+maintainers-logins = ["github-username"]
+
+executables = ["kalle"]

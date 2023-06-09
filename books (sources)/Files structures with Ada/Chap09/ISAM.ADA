@@ -1,0 +1,544 @@
+Generic
+    INDEX_BLOCK_SIZE : Positive;
+    DATA_BLOCK_SIZE : Positive;
+    Type key_Type Is Private;
+    Type Record_Info Is Private;
+    With Function Key_Of ( a_record : Record_Info ) Return Key_Type;
+    With Function ">" ( left_operand, right_operand : Key_Type )
+                        Return Boolean;
+    With Function "<" ( left_operand, right_operand : Key_Type )
+                        Return Boolean;
+Package ISAM Is
+    key_not_found : Exception;
+    key_not_deleted : Exception;
+    key_not_inserted : Exception;
+    Procedure Create_ISAM ( external_sequential_filename,
+                            external_index_block_filename,
+                            external_data_block_filename,
+                            external_overflow_filename : String );
+    Procedure Open_ISAM ( external_index_block_filename,
+                          external_data_block_filename,
+                          external_overflow_filename : String );
+    Procedure  Insert ( data_record : Record_Info );
+    Procedure Delete ( key : Key_Type );
+    Procedure Retrieve ( key : Key_Type; data_record : Out Record_Info);
+    Procedure Replace ( data_record : Record_Info );
+    Procedure Close_ISAM;
+End ISAM;
+
+With Text_IO;
+With Direct_IO;
+With Sequential_IO;
+Package Body ISAM Is
+    Type An_entry Is Record
+                         key     : Key_Type;
+                         address : Natural;
+                     End Record;
+    Type Index_entries Is Record
+                              normal : An_entry;
+                              overflow   : An_entry;
+                          End Record;
+    Type Tuple_Type Is Array ( 1 .. INDEX_BLOCK_SIZE ) Of Index_entries;
+    Type Index_Type Is Record
+                           entries : Natural := 0;
+                           tuple : Tuple_Type;
+                       End Record;
+    Type Data_Status Is ( ACTIVE, DELETED );
+    Type Data_Type Is Record
+                          data : Record_Info;
+                          status : Data_Status;
+                      End Record;
+    Type Data_Tuple Is Array ( 1 .. DATA_BLOCK_SIZE ) Of Data_Type;
+    Type Prime_data_block Is Record
+                                 data_entries : Integer;
+                                 prime_record : Data_Tuple;
+                             End Record;
+    Type Overflow_block Is Record
+                               over_record : Record_Info;
+                               next_overflow : Natural;
+                           End Record;
+    Type Status_Type Is ( IN_NORMAL, IN_OVERFLOW );
+    Package Index_IO    Is New Direct_IO     ( Index_type );
+    Package Data_IO     Is New Direct_IO     ( Prime_Data_Block );
+    Package Overflow_IO Is New Direct_IO     ( Overflow_Block );
+    index_file    : Index_IO.File_Type;
+    data_file     : Data_IO.File_Type;
+    overflow_file : Overflow_IO.File_Type;
+    indexes     : Index_Type;
+
+Procedure Create_ISAM ( external_sequential_filename,
+                        external_index_block_filename,
+                        external_data_block_filename,
+                        external_overflow_filename : String ) Is
+
+    data_block  : Prime_Data_Block;
+    db          : Natural := 0;
+    location    : Natural := 0;
+    over_block  : Overflow_Block;
+    Package Seq_IO      Is New Sequential_IO ( Record_Info );
+    seq_file    : Seq_IO.File_Type;
+
+    Procedure Full_Data_Block ( data_block : In Prime_Data_Block;
+                                db : In Natural;
+                                location : In Natural;
+                                indexes : In Out Index_Type ) Is
+    Begin  -- Full_Data_Block
+        Data_IO.Write ( data_file, data_block,
+                        Data_IO.Positive_Count ( location ) );
+        indexes.entries := indexes.entries + 1;
+        indexes.tuple ( indexes.entries).normal :=
+                ( Key_Of (data_block.prime_record ( db ).data ), location );
+        indexes.tuple( indexes.entries).overflow :=
+            indexes.tuple( indexes.entries).normal;
+    End Full_Data_Block;
+
+Begin  -- Create_ISAM
+    Seq_IO.Open ( seq_file, Seq_IO.IN_FILE, external_sequential_filename );
+    Index_IO.Create ( index_file,
+                      Index_IO.INOUT_FILE,
+                      external_index_block_filename );
+    Data_IO.Create ( data_file,
+                     Data_IO.INOUT_FILE,
+                     external_data_block_filename );
+    Overflow_IO.Create ( overflow_file,
+                         Overflow_IO.INOUT_FILE,
+                         external_overflow_filename );
+
+    Loop
+        Exit When Seq_IO.End_Of_File ( seq_file );
+        db := db + 1;
+        Seq_IO.Read ( seq_file, data_block.prime_record ( db ).data );
+        data_block.prime_record ( db ).status := ACTIVE;
+        If db = DATA_BLOCK_SIZE Then
+            data_block.data_entries := db;
+            location := location + 1;
+            Full_Data_Block ( data_block, db, location, indexes );
+            db := 0;
+        End If;
+    End Loop;
+    If db /= 0 Then
+        data_block.data_entries := db;
+        location := location + 1;
+        Full_Data_Block ( data_block, db, location, indexes );
+    End If;
+    Seq_IO.Close ( seq_file );
+End Create_ISAM;
+
+    Procedure Open_ISAM ( external_index_block_filename,
+                          external_data_block_filename,
+                          external_overflow_filename : String ) Is
+    Begin
+        Index_IO.Open ( index_file,
+                        Index_IO.INOUT_FILE,
+                        external_index_block_filename );
+        Index_IO.Read ( index_file , indexes );
+        Data_IO.Open ( data_file,
+                       Data_IO.INOUT_FILE,
+                       external_data_block_filename );
+        Overflow_IO.Open ( overflow_file,
+                           Overflow_IO.INOUT_FILE,
+                           external_overflow_filename );
+    End Open_ISAM;
+
+    Procedure Find ( key : Key_Type;
+                     status : In Out Status_Type;
+                     index_location, data_block_number,
+                     location, previous : In Out Natural;
+                     successful : In Out Boolean ) Is
+
+
+        Procedure Search_Indexes ( key : Key_Type;
+                                   status : In Out Status_Type;
+                                   index_location, data_block_number,
+                                   location : Out Natural;
+                                   successful : Out Boolean ) Is
+        Begin
+            successful := FALSE;
+            index_location := indexes.entries + 1;
+            For count In 1 .. indexes.entries Loop
+                If Not ( key > indexes.tuple (count).normal.key ) Then
+                    successful := TRUE;
+                    status := IN_NORMAL;
+                    index_location := count;
+                    data_block_number := indexes.tuple (count).normal.address;
+                    Exit;
+                Elsif Not ( key > indexes.tuple (count).overflow.key ) Then
+                    successful := TRUE;
+                    status := IN_OVERFLOW;
+                    index_location := count;
+                    data_block_number := indexes.tuple (count).overflow.address;
+                    Exit;
+                End If;
+            End Loop;
+        End Search_Indexes;
+
+        Procedure Search_Prime_Data ( trans_key : Key_Type;
+                                      data_block_number : Natural;
+                                      location : Out Natural;
+                                      successful : Out Boolean) Is
+            count : Positive := 1;
+            data_block : Prime_Data_Block;
+            prime_key : Key_Type;
+        Begin
+            Data_IO.Read ( data_file, data_block,
+                Data_IO.Positive_Count ( data_block_number ) );
+            Loop
+                Exit When count > data_block.data_entries;
+                If data_block.prime_record( count ).status = ACTIVE Then
+                    prime_key := Key_OF (data_block.prime_record( count ).data);
+                    If trans_key < prime_key Then
+                      --
+                      -- trans_key not found in prime_data_block so return count
+                      -- as location of first entry greater than transkey.
+                      -- trans_key belongs immediately prior to location count.
+                      --
+                        successful := FALSE;
+                        Exit;
+                    End If;
+                    If trans_key > prime_key Then
+                        Null;
+                    Else  --  key = prime_key
+                        successful := TRUE;
+                        Exit;
+                    End If;
+                End If;
+                count := count + 1;
+            End Loop;
+            location := count;Š
+        End Search_Prime_Data;
+
+
+        Procedure Search_Overflow_Data ( key : Key_Type;
+                                         over_block_number : In Out Natural;
+                                         previous : Out Natural;
+                                         successful : Out Boolean ) Is
+
+            over_block : Overflow_Block;
+            overflow_key : Key_Type;
+        Begin  -- Search_Overflow_Data
+            previous := 0;
+            Overflow_IO.Read ( overflow_file, over_block,
+                Overflow_IO.Positive_Count ( over_block_number ) );
+            overflow_key := Key_Of ( over_block.over_record );
+            If key < overflow_key Then
+                successful := FALSE;
+            ElsIf key > overflow_key Then
+                previous := over_block_number;
+                over_block_number := over_block.next_overflow;
+                Search_Overflow_Data ( key, over_block_number, previous,
+                                       successful );
+            Else  -- key = overflow_key
+                  -- point for insertion
+                successful := TRUE;
+            End If;
+        End Search_Overflow_Data;
+
+    Begin  -- Find
+        Search_Indexes ( key, status, index_location, data_block_number,
+                         location, successful );
+        If successful Then
+            previous := 0;
+            If status = IN_OVERFLOW Then
+                Search_Overflow_Data ( key, data_block_number, previous,
+                                       successful );
+            Else -- status = IN_NORMAL
+                Search_Prime_Data ( key, data_block_number, location,
+                                   successful );
+            End If;
+        Else
+            data_block_number := 0;
+        End If;
+    End Find;
+
+    Procedure Insert ( data_record : Record_Info ) Is
+        data_block : Prime_Data_Block;
+        data_block_number : Natural;
+        hold_address : Natural;
+        index_location : Natural;
+        key : Key_Type;
+        location : Natural;
+        new_over_block : Overflow_Block;
+        next_overflow_location : Natural;
+        over_block : Overflow_BLock;
+        previous : Natural;
+        status : Status_Type;
+        successful : Boolean;
+
+        Procedure Insert_Overflow ( index_location,
+                                    previous : Natural;
+                                    new_record : Record_Info ) Is
+            new_over_block, previous_block : Overflow_Block;
+        Begin  -- Insert_Overflow
+            new_over_block.over_record := new_record;
+            next_overflow_location :=
+                Natural ( Overflow_IO.Size ( overflow_file ) ) + 1;
+            If indexes.tuple(index_location).normal.address =
+               indexes.tuple(index_location).overflow.address Then
+              --
+              -- start overflow linked list
+              --
+               new_over_block.next_overflow := 0;
+               indexes.tuple(index_location).overflow.address :=
+                   next_overflow_location;
+
+           Elsif previous = 0 Then
+             --
+             -- add to front of linked list
+             --
+               new_over_block.next_overflow :=
+                   indexes.tuple(index_location).overflow.address;
+               indexes.tuple(index_location).overflow.address :=
+                   next_overflow_location;
+           Else
+             --
+             -- add to middle of linked list
+             --
+               Overflow_IO.Read ( overflow_file, previous_block,
+                   Overflow_IO.Positive_Count ( previous ) );
+               new_over_block.next_overflow := previous_block.next_overflow;
+               previous_block.next_overflow := next_overflow_location;
+               Overflow_IO.Write (overflow_file, previous_block,
+                   Overflow_IO.Positive_Count ( previous ) );
+           End If;
+           Overflow_IO.Write ( overflow_file, new_over_block,
+               Overflow_IO.Positive_Count ( next_overflow_location ) );
+        End Insert_Overflow;
+
+        Procedure Insert_Normal ( index_location,
+                                  data_block_number,
+                                  location : In Out Natural;
+                                  new_record : Record_Info ) Is
+            data_block : Prime_Data_Block;
+            hold_record : Record_Info;
+
+            Procedure Insert_Into_Block ( index_location,
+                                          data_block_number,
+                                          location : Natural;
+                                          new_record : In Record_Info;
+                                          data_block : In Out Prime_Data_Block ) Is
+            Begin  -- Insert_Into_Block
+                For lcv In Reverse location .. data_block.data_entries Loop
+                    data_block.prime_record ( lcv + 1 ) :=
+                        data_block.prime_record ( lcv );
+                End Loop;
+                data_block.data_entries := data_block.data_entries + 1;
+                data_block.prime_record ( location ).data := new_record;
+                data_block.prime_record ( location ).status := ACTIVE;
+                indexes.tuple(index_location).normal.key :=
+                   Key_Of(data_block.prime_record(data_block.data_entries).data);
+                Data_IO.Write (data_file, data_block,
+                    Data_IO.Positive_Count ( data_block_number ) );
+            End Insert_Into_Block;
+
+        Begin  -- Insert_Normal
+            Data_IO.Read ( data_file, data_block,
+                Data_IO.Positive_Count ( data_block_number ) );
+            If data_block.data_entries = DATA_BLOCK_SIZE Then
+              --
+              -- data_block full
+              --
+                hold_record := data_block.prime_record ( DATA_BLOCK_SIZE ).data;
+                data_block.data_entries := data_block.data_entries - 1;
+                Insert_Into_Block ( index_location, data_block_number,
+                                    location, new_record, data_block );
+                If indexes.tuple(index_location).overflow.key >
+                   indexes.tuple(index_location).normal.key Then
+                  --
+                  -- Find insertion point in overflow
+                  --
+                    Find ( key, status, index_location, data_block_number,
+                           location, previous, successful );
+                End If;
+                Insert_Overflow ( index_location, previous, hold_record );
+            Else  -- block not full
+                Insert_Into_Block ( index_location, data_block_number,
+                                    location, new_record, data_block );
+            End If;
+        End Insert_Normal;
+
+    Begin  --Insert
+        key := Key_Of ( data_record );
+        Find ( key, status, index_location, data_block_number, location,
+           previous, successful );
+        If successful Then
+            Raise key_not_inserted;
+        End If;
+        If data_block_number = 0 Then
+          --
+          -- key larger than any currently in the file so add to the
+          -- next available data block and add new entry to indexes
+          --
+            new_over_block.over_record := data_record;
+            next_overflow_location :=
+                Natural ( Overflow_IO.Size ( overflow_file ) ) + 1;
+            hold_address := indexes.tuple( indexes.entries ).overflow.address;
+            If hold_address = indexes.tuple(indexes.entries).normal.address Then
+              -- no overflow for last data block
+                new_over_block.next_overflow := hold_address;
+                indexes.tuple(indexes.entries).overflow.address :=
+                    next_overflow_location;
+                indexes.tuple(indexes.entries).overflow.key :=
+                    Key_Of ( data_record );
+                Overflow_IO.Write ( overflow_file, new_over_block,
+                    Overflow_IO.Positive_Count ( next_overflow_location ) );
+            Else
+                Loop
+                    Overflow_IO.Read ( overflow_file, over_block,
+                        Overflow_IO.Positive_Count ( hold_address ) );
+                    Exit When over_block.next_overflow = 0;
+                    hold_address :=
+                        indexes.tuple( indexes.entries ).overflow.address;
+                End Loop;
+                new_over_block.next_overflow := over_block.next_overflow;
+                over_block.next_overflow :=new_over_block.next_overflow;
+                indexes.tuple(indexes.entries).overflow.key :=
+                    Key_Of ( data_record );
+                Overflow_IO.Write ( overflow_file, over_block,
+                    Overflow_IO.Positive_Count ( hold_address ) );
+                Overflow_IO.Write ( overflow_file, new_over_block,
+                     Overflow_IO.Positive_COunt ( next_overflow_location ) );
+            End If;
+        ElsIf status = IN_NORMAL Then
+            Insert_Normal ( index_location, data_block_number, location,
+                        data_record );
+        Else  -- status = IN_OVERFLOW
+            Insert_Overflow ( index_location, previous, data_record );
+        End If;
+    End Insert;
+
+    Procedure Delete ( key : Key_Type ) Is
+        data_block : Prime_Data_Block;
+        data_block_number,
+        index_location,
+        location,
+        previous : Natural;
+        previous_block,
+        over_block : Overflow_Block;
+        status : Status_Type;
+        successful : Boolean;
+    Begin  -- Delete
+        Find ( key, status, index_location, data_block_number,
+               location, previous, successful );
+        If successful Then
+            If status = IN_NORMAL Then
+                Data_IO.Read ( data_file, data_block,
+                    Data_IO.Positive_Count ( data_block_number ) );
+                data_block.prime_record(location).status := DELETED;
+                Data_IO.Write ( data_file, data_block,
+                    Data_IO.Positive_Count ( data_block_number ) );
+                If key = indexes.tuple(index_location).normal.key Then
+                    If location > 1 Then
+                        -- will not delete the last one in the block
+                        If indexes.tuple(index_location).normal.key =
+                              indexes.tuple(index_location).overflow.key Then
+                           indexes.tuple(index_location).overflow.key :=
+                              Key_Of (data_block.prime_record(location-1).data);
+                        End If;
+                        indexes.tuple(index_location).normal.key :=
+                            Key_Of ( data_block.prime_record(location-1).data );
+                    End If;
+                End If;
+              -- status = IN_OVERFLOW
+            ElsIf indexes.tuple(index_location).overflow.address
+                  = data_block_number Then
+              --
+              -- first one in linked list
+              --
+                Overflow_IO.Read (overflow_file, over_block,
+                    Overflow_IO.Positive_Count ( data_block_number ) );
+                indexes.tuple(index_location).overflow.address :=
+                    over_block.next_overflow;
+            Else
+              --
+              -- middle or last of linked list
+              --
+                Overflow_IO.Read ( overflow_file, previous_block,
+                    Overflow_IO.Positive_Count ( previous ) );
+                previous_block.next_overflow := over_block.next_overflow;
+                If over_block.next_overflow = 0 Then
+                  --
+                  -- last of list so change overflow.key
+                  --
+                    indexes.tuple(index_location).overflow.key :=
+                        Key_Of ( previous_block.over_record );
+                End If;
+                Overflow_IO.Write (overflow_file, previous_block,
+                    Overflow_IO.Positive_Count ( previous ) );
+            End If;
+        Else
+            Raise key_not_deleted;
+        End If;
+    End Delete;
+
+    Procedure Retrieve ( key : Key_Type; data_record : Out Record_Info) Is
+    data_block : Prime_Data_Block;
+    data_block_number,
+    index_location,
+    location,
+    previous : Natural;
+    over_block : Overflow_Block;
+    status : Status_Type;
+    successful : Boolean := FALSE;
+
+    Begin -- Retrieve
+        Find ( key, status, index_location, data_block_number, location,
+               previous, successful );
+        If successful Then
+            If status = IN_NORMAL Then
+                Data_IO.Read ( data_file, data_block,
+                    Data_IO.Positive_Count ( data_block_number ) );
+                data_record := data_block.prime_record(location).data;
+            Else
+                Overflow_IO.Read ( overflow_file, over_block,
+                    Overflow_IO.Positive_Count ( data_block_number ) );
+                data_record := over_block.over_record;
+            End If;
+        Else
+            Raise key_not_found;
+        End If;
+    End Retrieve;
+
+    Procedure Replace ( data_record : Record_Info ) Is
+        data_block : Prime_Data_Block;
+        key : Key_Type;
+        index_location,
+        data_block_number,
+        location,
+        previous : Natural;
+        status : Status_Type;
+        successful : Boolean;
+        over_block : Overflow_Block;
+    Begin
+        key := Key_Of ( data_record );
+        Find ( key, status, index_location, data_block_number, location,
+               previous, successful );
+        If successful Then
+            Case status Is
+                When IN_NORMAL   =>
+                    Data_IO.Read ( data_file, data_block,
+                            Data_IO.Positive_Count ( data_block_number ) );
+                    data_block.prime_record ( location ).data :=data_record;
+                    Data_IO.Write ( data_file, data_block,
+                            Data_IO.Positive_Count ( data_block_number ) );
+                When IN_OVERFLOW =>
+                    Overflow_IO.Read ( overflow_file, over_block,
+                            Overflow_IO.Positive_Count ( data_block_number ) );
+                    over_block.over_record := data_record;
+                    Overflow_IO.Write ( overflow_file, over_block,
+                             Overflow_IO.Positive_Count ( data_block_number ) );
+            End Case;
+        Else
+            Raise key_not_found;
+        End If;
+    End Replace;
+
+    Procedure Close_ISAM Is
+    Begin
+        Index_IO.Write ( index_file, indexes, 1 );
+        Index_IO.Close ( index_file );
+        Data_IO.Close ( data_file );
+        Overflow_IO.Close ( overflow_file );
+    End Close_ISAM;
+
+End ISAM;
+

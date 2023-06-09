@@ -1,0 +1,13 @@
+AC1 DODGE     2 DR      OMNI      25,000    GREY_______
+AC2 DODGE     2 DR      ASPEN      7,000    TAN________
+AF1 FORD      2 DR HB   ESCORT    54,000    WHITE______
+AF2 LINCOLN   4 DR      CONTINENTL38,000    BLACK______
+AF3 FORD      2 DR      THUNDERBRD35,000    BLUE_______
+AGM1CADILLAC  4 DR      FLEETWOOD  9,000    RED________
+AGM2OLDS      4 DR      DELTA 88  28,050    BLUE_______
+AGM3CHEVROLET 2 DR      CAMARO    33,000    SILVER_____
+AGM4CADILLAC  2 DR      CIMARRON  63,000    MAROON_____
+AGM5OLDS      4 DR      98        11,000    GREEN______
+AH1 HONDA     4 DR      ACCORD    32,000    YELLOW_____
+AH2 HONDA     2 DR HB   ACCORD    11,250    BROWN______
+AT1 TOYOTA    2 DR HB   CELICA     3,400    WHITE______

@@ -1,0 +1,682 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.76 (Macintosh; U; PPC) [Netscape]">
+   <meta name="Author" content="Michael Feldman">
+   <title>CSci 53 - Systematic Software Development</title>
+<!                                       authored by Michael Feldman >
+<!                                       authored by Michael Feldman >
+<!                                       authored by Michael Feldman >
+<!                                       authored by Michael Feldman >
+<!                                       modified by Chester B. Lund >
+<!                                       modified by Chester B. Lund >
+<!                                       modified by Chester B. Lund >
+<!                                       modified by Chester B. Lund >
+<!                                                   file=index.html >
+<!                                                   file=index.html >
+<!                                                   file=index.html >
+<!                                                   file=index.html >
+<!                                                   date=08/14/1999 >
+<!                                                   date=08/14/1999 >
+<!                                                   date=08/14/1999 >
+<!                                                   date=08/14/1999 >
+</head>
+<body text="#000000" bgcolor="#FFFFCF" link="#0000FF" vlink="#551A8B" alink="#0000FF">
+&nbsp;
+<table BORDER=0 WIDTH="100%" >
+<tr>
+<td>
+<div align=right><img SRC="gw-logo.jpg" X-SAS-USEIMAGEHEIGHT X-SAS-USEIMAGEWIDTH height=95 width=214 align=BOTTOM></div>
+</td>
+
+<td></td>
+
+<td><a href="http://www.seas.gwu.edu">School of Engineering and Applied
+Science</a>
+<br><a href="http://cs.seas.gwu.edu">Department of Computer Science</a>
+<br>CSci 53 -- Introduction to Software Development
+<br>http://www.seas.gwu.edu/~csci53/fall02
+<br>Prof. Michael B. Feldman
+<br><a href="mailto:mfeldman@seas.gwu.edu">mfeldman@seas.gwu.edu</a></td>
+</tr>
+</table>
+
+<center>
+<h3>
+SYSTEMATIC SOFTWARE DEVELOPMENT</h3></center>
+
+<h3>
+Problem Solving and Programming</h3>
+Computer problem-solving ability is a combination of art and science, the
+transformation of a description—in English or another human language—of
+a problem into a form that permits a mechanical solution and the implementation
+of that solution on a computer. A relatively straightforward example of
+this process is transforming a word problem into a set of algebraic equations
+that can then be solved for one or more unknowns.
+<p>Most problems are not so easily solved. The problem-solving process
+is more difficult because problem descriptions are often incomplete, imprecise,
+or ambiguous. The successful problem solver needs to learn the following
+skills:
+<ol>
+<li>
+Ask the right questions to clarify the problem and obtain any information
+that is missing from the problem statement (this process is called <i>problem
+specification</i>).</li>
+
+<li>
+Analyze the problem, attempting to extract its essential features and identify
+what is provided (the <i>problem inputs</i>) and what is required (the
+<i>problem
+outputs</i>).</li>
+
+<li>
+Determine whether there are any <i>constraints</i> or <i>simplifying assumptions</i>
+that can be applied to facilitate the problem solution. We often cannot
+solve the most general case of a problem but must make some realistic assumptions
+that limit or constrain the problem so that it can be solved.</li>
+
+<li>
+Apply knowledge of the problem environment and the formulas or equations
+that characterize it, to develop a series of steps whose successful completion
+will lead to a problem solution, eventually implementing or coding these
+steps in a form that can be submitted to a computer.</li>
+
+<li>
+Once a solution is obtained, verify its accuracy by testing it systematically,
+according to a test plan.</li>
+</ol>
+
+<h3>
+The Software Development Method</h3>
+Students in many subject areas receive instruction in specific problem-solving
+methods. For example, business students are encouraged to follow a systems
+approach to problem solving; engineering and science students are encouraged
+to follow the engineering and scientific method. Although these problem-solving
+methods are associated with very different fields of study, their essential
+ingredients are quite similar. We will describe one such method below.
+<p>This course is concerned with a particular kind of problem solving,
+namely, developing solutions that use computers to get results. A computer
+cannot think; therefore, to get it to do any useful work, we must provide
+a computer with a program that is a list of instructions. Programming a
+computer is a lot more involved than simply writing a list of instructions.
+Software development is really an exercise in systematic problem solving.
+Before we can write a program to solve a particular problem, we must consider
+carefully all aspects of the problem and then organize its solution.
+<p>A <i>software developer</i> is someone who is involved with the design
+and implementation of reliable software systems. This title emphasizes
+the fact that programmers, like engineers, are concerned with developing
+practical, reliable solutions to problems. However, the product that a
+software developer produces is a software system rather than a physical
+system.
+<p>To highlight the analogy with engineering, some people refer to <i>software
+engineering</i> and <i>software engineers.</i> To emphasize the fact that
+one need not be an actual engineer or even an engineering student to develop
+good software, we instead use the terms <i>software development</i> and
+<i>software
+developer.</i>
+<h3>
+Steps in the Software Development Method</h3>
+Software can be complicated, so software development requires the developer
+to use a methodical working style. Details of different methods vary somewhat,
+but these methods have in common that they are systematic, step-by-step
+approaches. The software development method that is used in this course
+is typical of the methods used in industry. <i>You are required to use
+this method in your projects, and your project grade will depend heavily
+on your following it carefully. </i>Here are the major steps:
+<ol>
+<li>
+<i>Problem specification:</i> State the problem and gain a clear understanding
+of what is required for its solution. This sounds easy, but it can be the
+most critical part of problem solving. A good problem solver must be able
+to recognize and define the problem precisely. If the problem is not totally
+defined, you must study the problem carefully, eliminating the aspects
+that are unimportant and zeroing in on the root problem.</li>
+
+<li>
+<i>Analysis:</i> Identify problem inputs, desired outputs, and any additional
+requirements of or constraints on the solution. Identify what information
+is supplied as problem data and what results should be computed and displayed.
+Also, determine the required form and units in which the results should
+be displayed (for example, as a table with specific column headings).</li>
+
+<li>
+<i>Design:</i> Develop a list of steps (called an <i>algorithm</i>) to
+solve the problem and verify that the algorithm solves the problem as intended.
+Writing the algorithm is often the most difficult part of the problem-solving
+process. Once you have the algorithm, you should verify that it is correct
+before proceeding further.</li>
+
+<li>
+<i>Test plan:</i> Develop a strategy for proving to yourself and to others
+that your algorithm will get the proper results. It is highly advisable
+to write a plan for testing the program you will write, even before you
+have written it. Which test cases will you choose? What are the special
+cases that must be tested? Pretend you are a potential purchaser of the
+program and ask, “Which tests would I require to be convinced that this
+program behaves as advertised?”</li>
+
+<li>
+<i>Implementation or coding:</i> Implement the algorithm as a program.
+This requires knowledge of a particular programming language. Each algorithm
+step must be converted into a statement in that programming language.</li>
+
+<li>
+<i>Testing:</i> Run the completed program, testing it with the test cases
+specified in the test plan.</li>
+</ol>
+If the first three steps in the list above are not done properly, you will
+either solve the wrong problem or produce an awkward, inefficient solution.
+To perform these steps successfully, it is most important that you read
+the problem statement carefully before attempting to solve it. You may
+need to read each problem statement two or three times. The first time,
+you should get a general idea of what is being asked. The second time,
+you should try to answer the questions:
+<ul>
+<li>
+What information should the solution provide?</li>
+
+<li>
+What data do I have to work with?</li>
+</ul>
+The answer to the first question will tell you the desired results, or
+the problem outputs. The answer to the second question will tell you the
+data provided, or the problem inputs. It may be helpful to underline the
+phrases in the problem statement that identify the inputs and outputs.
+<p>As was indicated above, the design phase is often the most difficult
+part of the problem-solving process. When you write an algorithm, you should
+first list the major steps of the problem that need to be solved (called
+<i>subproblems</i>).
+Don’t try to list each and every step imaginable; instead, concentrate
+on the overall strategy. Once you have the list of subproblems, you can
+attack each one individually, adding detail or <i>refining the algorithm.</i>
+The process of solving a problem by breaking it up into its smaller subproblems,
+called <i>divide and conquer,</i> is a basic strategy for all kinds of
+problem solving activities.
+<p>If you do not develop a proper test plan, you risk just running the
+program with casually chosen inputs, thereby missing important test cases
+which, should they arise after the program is completed and delivered,
+may cause the program to fail unexpectedly. A program’s behavior must be,
+to the greatest extent possible, <i>predictable,</i> even if the user makes
+errors in operating it.
+<p>The <i>principle of predictable performance</i> requires that a test
+plan should include cases of “bad” as well as “good” input. An especially
+tragic, and true, story of unpredictable software is a certain radiation
+machine that, in treating several cancer patients, responded to some unexpected
+operator keystrokes by giving the patients lethally high radiation dosages,
+killing them instead of treating their cancer.
+<p>The software development method can be used with any actual programming
+language; indeed, only the implementation phase really requires detailed
+knowledge of a language or a particular computer. Even the testing phase
+is, in industry, often carried out by individuals who do not know programming
+but specialize in developing good tests of programs.
+<p>Now let us look at two examples. The first is a real-life example, changing
+a flat tire on a car; we will develop a tire-changing algorithm. The second
+is a small software development problem.
+<h3>
+An Example from "Real Life": Changing a Flat Tire</h3>
+
+<h4>
+Problem Specification</h4>
+You are driving a car with two friends and suddenly get a flat tire. Fortunately,
+there is a spare tire and jack in the trunk.
+<h4>
+Analysis</h4>
+After pulling over to the side of the road, you might decide to subdivide
+the problem of changing a tire into the subproblems below.
+<h4>
+Design</h4>
+Here are the main steps in the algorithm to change a tire.
+<h4>
+Algorithm</h4>
+
+<blockquote>1. Loosen the lug nuts on the flat tire; don’t remove them
+yet.
+<br>2. Get the jack and jack up the car.
+<br>3. Remove the lug nuts from the flat tire and remove the tire.
+<br>4. Get the spare tire, place it on the wheel, and tighten the lug nuts.
+<br>5. Lower the car.
+<br>6. Secure the jack and flat tire in the trunk.</blockquote>
+Because these steps are relatively independent, you might decide to assign
+subproblem 1 to friend A, subproblem 2 to friend B, subproblem 3 to yourself,
+and so on. If friend B has used a jack before, the whole process should
+proceed smoothly; however, if friend B does not know how to use a jack,
+you need to refine step 2 further.
+<h4>
+Step 2 Refinement</h4>
+
+<blockquote>2.1. Get the jack from the trunk.
+<br>2.2. Place the jack under the car near the flat tire.
+<br>2.3. Insert the jack handle in the jack.
+<br>2.4. Place a block of wood under the car to keep it from rolling.
+<br>2.5. Jack up the car until there is enough room for the spare tire.</blockquote>
+Step 2.4 requires a bit of decision making on your friend’s part. Because
+the actual placement of the block of wood depends on whether the car is
+facing uphill or downhill, friend B needs to refine step 2.4.
+<h4>
+Step 2.4 Refinement</h4>
+
+<blockquote>2.4.1&nbsp; If the car is facing uphill, then place the block
+of wood in back of a tire that is not flat; if the car is facing downhill,
+then place the block of wood in front of a tire that is not flat. This
+is actually a conditional action: One of two alternative actions is executed,
+depending on a certain condition.</blockquote>
+Finally, step 2.5 involves a <i>repetitive</i> action: moving the jack
+handle until there is sufficient room to put on the spare tire. Often,
+people stop when the car is high enough to remove the flat tire, forgetting
+that an inflated tire requires more room. It may take a few attempts to
+complete step 2.5.
+<h4>
+Step 2.5 Refinement</h4>
+
+<blockquote>2.5.1. Move the jack handle repeatedly until the car is high
+enough off the ground that the spare tire can be put on the wheel.</blockquote>
+
+<h4>
+Refined Algorithm</h4>
+Here is the refined algorithm thus far. You can continue refining it until
+you are satisfied that every detail has been properly specified.
+<blockquote>1. Loosen the lug nuts on the flat tire; don’t remove them
+yet.
+<br>2. Get the jack and jack up the car.
+<blockquote>2.1. Get the jack from the trunk.
+<br>2.2. Place the jack under the car near the flat tire.
+<br>2.3. Insert the jack handle in the jack.
+<br>2.4. Place a block of wood under the car to keep it from rolling.
+<blockquote>2.4.1. If the car is facing uphill, then place the block of
+wood in back of a tire that is not flat; if the car is facing downhill,
+then place the block of wood in front of a tire that is not flat.</blockquote>
+2.5. Jack up the car until there is enough room for the spare tire.
+<blockquote>2.5.1. Move the jack handle repeatedly until the car is high
+enough off the ground that the spare tire can be put on the wheel.</blockquote>
+</blockquote>
+3. Loosen the lug nuts from the flat tire and remove the tire.
+<br>4. Get the spare tire, place it on the wheel, and tighten the lug nuts.
+<br>5. Lower the car.
+<br>6. Secure the jack and flat tire in the trunk.</blockquote>
+The algorithm for changing a flat tire has three categories of action:
+<i>sequential
+actions,</i> <i>conditional actions,</i> and <i>repeated actions.</i> Steps
+2.1 through 2.5 are carried out in the <i>sequence</i> listed. Step 2.4.1
+illustrates a <i>conditional action</i> in that placement of the block
+of wood depends on the angle of inclination of the car. Step 1.5.1 illustrates
+<i>repetition.</i>
+<p>In general, <i>the order of steps in an algorithm is very important.</i>
+For example, the car cannot be lowered before it has been raised. Sometimes,
+there are several sequences for the steps in an algorithm, any one of which
+will produce a proper result, but in any case the steps cannot be written
+in a careless, arbitrary order. To succeed in software development, you
+must be willing to focus on solving problems in a careful, step-by-step
+fashion.
+<h3>
+A Computer Example: Your Sister's Piggy Bank</h3>
+
+<h4>
+Problem Specification</h4>
+Your little sister has been saving nickels (U.S. five-cent coins) and pennies
+(U.S. one-cent coins) for quite a while. Because she is getting tired of
+lugging her piggy bank with her whenever she goes to the store, she would
+like to trade in her collection for one-dollar banknotes (a dollar is 100
+cents) and some change. To do this, she would like to know the value of
+her coin collection in dollars and cents.
+<h4>
+Analysis</h4>
+To solve this problem, we must be given the count of nickels and the count
+of pennies in the collection. The first step is to determine the total
+value of the collection in cents. Once we have this figure, we can do an
+integer division using 100 as the divisor to get the dollar value; the
+remainder of this division will be the loose change that she should receive.
+In the data requirements below, we list the total value in cents (<tt>totalCents</tt>)
+as a program variable because it is needed as part of the computation process;
+it is not a required problem output.
+<h4>
+Data Requirements and Formulas</h4>
+
+<h5>
+Problem Inputs:</h5>
+nickels&nbsp; - the number of nickels, an integer
+<br>pennies - the number of pennies, an integer
+<h5>
+Problem Outputs:</h5>
+dollars - the number of dollars she should receive, an integer
+<br>change - the loose change she should receive, an integer
+<h5>
+Additional Program Variables:</h5>
+total cents - the total number of cents, an integer
+<h5>
+Relevant Formulas</h5>
+One nickel equals five pennies.
+<h4>
+Design</h4>
+The algorithm is straightforward and is displayed next.
+<h5>
+Initial Algorithm</h5>
+
+<blockquote>1. Prompt the user and read in the number of nickels and pennies.
+<br>2. Compute the total value in cents.
+<br>3. Find the value in dollars and loose change.
+<br>4. Display the value in dollars and loose change.</blockquote>
+Steps 2 and 3 need refinement.
+<h5>
+Step 2 Refinement</h5>
+
+<blockquote>
+<blockquote>2.1. total cents is 5 times nickels plus pennies.</blockquote>
+</blockquote>
+
+<h5>
+Step 3 Refinement:</h5>
+
+<blockquote>
+<blockquote>3.1. dollars is the integer quotient of total cents and 100.
+<br>3.2. change is the integer remainder of total cents and 100.</blockquote>
+</blockquote>
+
+<h5>
+Algorithm with Refinements</h5>
+
+<blockquote>1. Prompt the user and read in the number of nickels and pennies.
+<br>2. Compute the total value in cents.
+<blockquote>2.1. total cents is 5 times nickels plus pennies.</blockquote>
+3. Find the value in dollars and loose change.
+<blockquote>3.1. dollars is the integer quotient of total cents and 100.
+<br>3.2. change is the integer remainder of total cents and 100.</blockquote>
+4. Display the value in dollars and loose change.</blockquote>
+
+<h4>
+Test Plan</h4>
+In addition to testing some typical values, there are several special cases
+in our test plan: zero nickels and/or zero pennies, and negative input
+values. Let’s put the test plan in the form of a table.
+<br>&nbsp;
+<table BORDER=3 CELLSPACING=3 CELLPADDING=3 >
+<caption><b>Test Plan for Coin Collection</b></caption>
+
+<tr>
+<td><i>Test Case</i></td>
+
+<td><i>Nickels</i></td>
+
+<td><i>Pennies</i></td>
+
+<td><i>Reason</i></td>
+
+<td><i>Expected Result</i></td>
+</tr>
+
+<tr>
+<td>1&nbsp;</td>
+
+<td>30&nbsp;</td>
+
+<td>77</td>
+
+<td>typical</td>
+
+<td>$2.27</td>
+</tr>
+
+<tr>
+<td>2&nbsp;</td>
+
+<td>0&nbsp;</td>
+
+<td>59</td>
+
+<td>no nickels</td>
+
+<td>$0.59</td>
+</tr>
+
+<tr>
+<td>3&nbsp;</td>
+
+<td>13&nbsp;</td>
+
+<td>0</td>
+
+<td>no pennies</td>
+
+<td>$0.65</td>
+</tr>
+
+<tr>
+<td>4&nbsp;</td>
+
+<td>0&nbsp;</td>
+
+<td>0</td>
+
+<td>no coins</td>
+
+<td>$0.00</td>
+</tr>
+
+<tr>
+<td>5&nbsp;</td>
+
+<td>13&nbsp;</td>
+
+<td>-5</td>
+
+<td>negative</td>
+
+<td>?</td>
+</tr>
+
+<tr>
+<td>6&nbsp;</td>
+
+<td>xyz&nbsp;</td>
+
+<td>4</td>
+
+<td>bad input</td>
+
+<td>?</td>
+</tr>
+</table>
+
+<p>The last two cases test for out of range input (a negative number when
+a natural number is required) and “bad” input (letters instead of digits).
+The question marks indicate that we won’t know the result until we run
+the test. It is important always to test programs with “bad” as well as
+“good” input: The programmer cannot control which keys will be pressed
+by the human user, and a program’s behavior must always be predictable.
+<h4>
+Implementation</h4>
+Developers seldom start off with a blank slate (or empty screen) when they
+develop a program; to save time and effort, they try to make use of their
+documentation, and of their existing programs.
+<h5>
+Start with an Existing Source File</h5>
+Using an existing program as a starting point for a new one will save you
+from typing in the entire new file from scratch. For example, in this course
+you can always start with a file called <tt>ProjectTemplate.java</tt>.
+You simply copy this file from the course distribution into your own file
+system, changing the file name to the one that will name your project.
+Here is the source listing for this template:
+<p><tt>&nbsp;&nbsp; 1. //--------------------------------------------------------------</tt>
+<br><tt>&nbsp;&nbsp; 2. //| ProjectTemplate.java &lt;-- change to your
+project filename</tt>
+<br><tt>&nbsp;&nbsp; 3. //| Use this as a basis for your own programs</tt>
+<br><tt>&nbsp;&nbsp; 4. //| Author: &lt;your name>, The George Washington
+University</tt>
+<br><tt>&nbsp;&nbsp; 5. //| Last Modified: &lt;date></tt>
+<br><tt>&nbsp;&nbsp; 6. //--------------------------------------------------------------</tt>
+<br><tt>&nbsp;&nbsp; 7. import cs1.Keyboard;</tt>
+<br><tt>&nbsp;&nbsp; 8. public class ProjectTemplate &lt;-- change to your
+project name</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;--------------------------></tt>
+<br><tt>>>> Error: Unexpected symbols ignored</tt>
+<br><tt>&nbsp;&nbsp; 9. {</tt>
+<br><tt>&nbsp; 10.&nbsp;&nbsp; public static void main (String[] args)</tt>
+<br><tt>&nbsp; 11.&nbsp;&nbsp; {</tt>
+<br><tt>&nbsp; 12.&nbsp;&nbsp;&nbsp;&nbsp; // put your code here</tt>
+<br><tt>&nbsp; 13.&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp; 14. }</tt>
+<p>This file has the proper basic "framework" for a Java application. It
+has no compilation errors in it, except for the one that is deliberately
+placed in line 8, so as to remind you to change the project title.
+<h5>
+Make a "framework" file for your program</h5>
+Starting with the template, make the necessary name changes, then copy
+the problem data requirements into the program declaration section, editing
+those lines to conform to the Java syntax for constant and variable declarations.
+This approach is especially helpful if the documentation file was created
+with a word processor and is in a file from which you can copy lines and
+paste them into the code file.
+<h5>
+Fill in the program statements</h5>
+To develop the program body,
+<ol>
+<li>
+Write the initial algorithm steps as program comments. The comments describe
+each algorithm step and provide program documentation that guides your
+Java code.</li>
+
+<li>
+Save the file and compile it. If there are any errors, correct these immediately.
+You will then have a <i>correct</i> framework into which you can add the
+program statements.</li>
+
+<li>
+Begin to add the Java statements, after the appropriate comments. Place
+the code for an unrefined step directly under that step. For a refined
+step, either edit the refinement to convert it from English to Java or
+just replace it with Java code.</li>
+</ol>
+Here is the listing for <tt>CoinCollection</tt> after Step 2:
+<p><tt>&nbsp;&nbsp; 1. //--------------------------------------------------------------</tt>
+<br><tt>&nbsp;&nbsp; 2. //| CoinCollection.java</tt>
+<br><tt>&nbsp;&nbsp; 3. //| Finds the value of a coin collection,</tt>
+<br><tt>&nbsp;&nbsp; 4. //| given pennies and nickels</tt>
+<br><tt>&nbsp;&nbsp; 5. //| Author: M.B. Feldman, The George Washington
+University</tt>
+<br><tt>&nbsp;&nbsp; 6. //| Last Modified: August 24, 2002</tt>
+<br><tt>&nbsp;&nbsp; 7. //--------------------------------------------------------------</tt>
+<br><tt>&nbsp;&nbsp; 8. import cs1.Keyboard;</tt>
+<br><tt>&nbsp;&nbsp; 9. public class CoinCollection</tt>
+<br><tt>&nbsp; 10. {</tt>
+<br><tt>&nbsp; 11.&nbsp;&nbsp; public static void main (String[] args)</tt>
+<br><tt>&nbsp; 12.&nbsp;&nbsp; {</tt>
+<br><tt>&nbsp; 13.</tt>
+<br><tt>&nbsp; 14.&nbsp;&nbsp;&nbsp;&nbsp; int pennies;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// input&nbsp; - number of pennies</tt>
+<br><tt>&nbsp; 15.&nbsp;&nbsp;&nbsp;&nbsp; int nickels;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// input&nbsp; - number of nickels</tt>
+<br><tt>&nbsp; 16.&nbsp;&nbsp;&nbsp;&nbsp; int dollars;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// output - dollars part of value</tt>
+<br><tt>&nbsp; 17.&nbsp;&nbsp;&nbsp;&nbsp; int change;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// output - cents part of value</tt>
+<br><tt>&nbsp; 18.</tt>
+<br><tt>&nbsp; 19.&nbsp;&nbsp;&nbsp;&nbsp; int totalCents;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// internal variable</tt>
+<br><tt>&nbsp; 20.</tt>
+<br><tt>&nbsp; 21.&nbsp;&nbsp;&nbsp;&nbsp; // Prompt user and read in the
+number of nickels and pennies.</tt>
+<br><tt>&nbsp; 22.&nbsp;&nbsp;&nbsp;&nbsp; // Compute the total value in
+cents.</tt>
+<br><tt>&nbsp; 23.&nbsp;&nbsp;&nbsp;&nbsp; // Find the value in dollars
+and loose change.</tt>
+<br><tt>&nbsp; 24.&nbsp;&nbsp;&nbsp;&nbsp; // Display the value in dollars
+and loose change.</tt>
+<br><tt>&nbsp; 25.</tt>
+<br><tt>&nbsp; 26.&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp; 27. }</tt>
+<p>Here's the listing for the final result:
+<p><tt>&nbsp;&nbsp; 1. //--------------------------------------------------------------</tt>
+<br><tt>&nbsp;&nbsp; 2. //| CoinCollection.java</tt>
+<br><tt>&nbsp;&nbsp; 3. //| Finds the value of a coin collection,</tt>
+<br><tt>&nbsp;&nbsp; 4. //| given pennies and nickels</tt>
+<br><tt>&nbsp;&nbsp; 5. //| Author: M.B. Feldman, The George Washington
+University</tt>
+<br><tt>&nbsp;&nbsp; 6. //| Last Modified: August 24, 2002</tt>
+<br><tt>&nbsp;&nbsp; 7. //--------------------------------------------------------------</tt>
+<br><tt>&nbsp;&nbsp; 8. import cs1.Keyboard;</tt>
+<br><tt>&nbsp;&nbsp; 9. public class CoinCollection</tt>
+<br><tt>&nbsp; 10. {</tt>
+<br><tt>&nbsp; 11.&nbsp;&nbsp; public static void main (String[] args)</tt>
+<br><tt>&nbsp; 12.&nbsp;&nbsp; {</tt>
+<br><tt>&nbsp; 13.</tt>
+<br><tt>&nbsp; 14.&nbsp;&nbsp;&nbsp;&nbsp; int pennies;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// input&nbsp; - number of pennies</tt>
+<br><tt>&nbsp; 15.&nbsp;&nbsp;&nbsp;&nbsp; int nickels;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// input&nbsp; - number of nickels</tt>
+<br><tt>&nbsp; 16.&nbsp;&nbsp;&nbsp;&nbsp; int dollars;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// output - dollars part of value</tt>
+<br><tt>&nbsp; 17.&nbsp;&nbsp;&nbsp;&nbsp; int change;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// output - cents part of value</tt>
+<br><tt>&nbsp; 18.</tt>
+<br><tt>&nbsp; 19.&nbsp;&nbsp;&nbsp;&nbsp; int totalCents;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// internal variable</tt>
+<br><tt>&nbsp; 20.</tt>
+<br><tt>&nbsp; 21.&nbsp;&nbsp;&nbsp;&nbsp; // Prompt the user and read
+in the number of nickels and pennies.</tt>
+<br><tt>&nbsp; 22.&nbsp;&nbsp;&nbsp;&nbsp; System.out.print ("How many
+nickels do you have? ");</tt>
+<br><tt>&nbsp; 23.&nbsp;&nbsp;&nbsp;&nbsp; nickels = Keyboard.readInt();</tt>
+<br><tt>&nbsp; 24.&nbsp;&nbsp;&nbsp;&nbsp; System.out.print ("How many
+pennies do you have? ");</tt>
+<br><tt>&nbsp; 25.&nbsp;&nbsp;&nbsp;&nbsp; pennies = Keyboard.readInt();</tt>
+<br><tt>&nbsp; 26.</tt>
+<br><tt>&nbsp; 27.&nbsp;&nbsp;&nbsp;&nbsp; // Compute the total value in
+cents.</tt>
+<br><tt>&nbsp; 28.&nbsp;&nbsp;&nbsp;&nbsp; totalCents = 5 * nickels + pennies;</tt>
+<br><tt>&nbsp; 29.</tt>
+<br><tt>&nbsp; 30.&nbsp;&nbsp;&nbsp;&nbsp; // Find the value in dollars
+and loose change.</tt>
+<br><tt>&nbsp; 31.&nbsp;&nbsp;&nbsp;&nbsp; dollars = totalCents / 100;</tt>
+<br><tt>&nbsp; 32.&nbsp;&nbsp;&nbsp;&nbsp; change&nbsp; = totalCents %
+100;</tt>
+<br><tt>&nbsp; 33.</tt>
+<br><tt>&nbsp; 34.&nbsp;&nbsp;&nbsp;&nbsp; // Display the value in dollars
+and loose change.</tt>
+<br><tt>&nbsp; 35.&nbsp;&nbsp;&nbsp;&nbsp; System.out.print&nbsp;&nbsp;
+("Your collection is worth ");</tt>
+<br><tt>&nbsp; 36.&nbsp;&nbsp;&nbsp;&nbsp; System.out.print&nbsp;&nbsp;
+(dollars + " dollars and ");</tt>
+<br><tt>&nbsp; 37.&nbsp;&nbsp;&nbsp;&nbsp; System.out.println (change&nbsp;
++ " cents.");</tt>
+<br><tt>&nbsp; 38.</tt>
+<br><tt>&nbsp; 39.&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp; 40. }</tt>
+<h4>
+Comments on the Program</h4>
+Lines 23, 25, 28, 31, and 32 need a bit of discussion. In line 23, the
+variable <tt>nickels</tt> is set to the result of calling a special <i>input
+method,</i> <tt>Keyboard.readInt()</tt>. This input method allows the user
+to enter one integer value from the keyboard. Line 25 similarly sets pennies
+to the result of a call to <tt>Keyboard.readInt()</tt>. We'll study the
+<tt>Keyboard</tt>
+facilities in detail a bit later in the course; for now, this is all you
+need.
+<p>Line 28 computes the value of an arithmetic expression and stores it
+in <tt>totalCents</tt>. The asterisk (<tt>*</tt>) is used in programming
+to indicate multiplication; the expression is evaluated as though it were
+written <tt>(5 * nickels) + pennies</tt>, that is, first the number of
+nickels is multiplied by 5, then the number of pennies is added in.
+<p>Line 31 contains the expression <tt>totalCents / 100</tt>. The slash
+(<tt>/</tt>) is used in programming to indicate division. Because <tt>dollars</tt>,
+<tt>totalCents</tt>,
+and <tt>100</tt> are all <i>integers</i> (whole numbers), the division
+operation finds the <i>quotient</i> of the division, and throws the <i>remainder</i>
+away. That is, if <tt>totalCents</tt> is <tt>1256</tt>,
+<tt>dollars</tt>
+becomes <tt>12</tt>.
+<p>Line 32 contains the expression <tt>totalCents % 100</tt>. The percent
+sign (%) is used in Java to indicate <i>remainder. </i>The operation divides
+<tt>totalCents</tt>
+by <tt>100</tt>, keeps the <i>remainder,</i> and throws away the <i>quotient.</i>That
+is, if <tt>totalCents</tt> is <tt>1256</tt>, change becomes <tt>56</tt>.
+<h4>
+Testing</h4>
+Run the program and enter the required data according to your test plan.
+In this case, the program handles only one set of data per run, so each
+test case will require a separate run of the program. Make sure your actual
+results agree with the ones you predicted in the test plan. Running the
+test plan for this program will be the first part of your first project
+in this course.
+</body>
+</html>

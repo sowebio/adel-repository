@@ -1,0 +1,76 @@
+--          Copyright © 1998 Philippe J. Gabrini
+WITH Chaînes, Ada.Text_IO;
+PROCEDURE Chiffrer IS
+-- Exemples de chiffrement basés sur des substitutions polyalphabétiques
+-- et des carrés de Vigenère.
+
+SUBTYPE Alphabet IS Character RANGE 'A'..'Z';
+TYPE Carré IS ARRAY (Alphabet, Alphabet) OF Alphabet;
+
+PROCEDURE CréerCarré(Vigenère: IN OUT Carré; Clé: IN Chaînes.TypChaîne) IS
+Choisi: ARRAY (Alphabet) OF Boolean;
+Premier, Dernier, Second, Colonne: Character;
+BEGIN
+  FOR Car IN Alphabet LOOP	-- pas de caractère choisi
+    Choisi(Car) := False;
+  END LOOP;
+  Premier := Chaînes.Élément(Clé, 1);
+  Second := 'A';
+  FOR Index IN 1..Chaînes.Longueur(Clé) LOOP 
+    -- clef = début du premier alphabet
+    Dernier := Chaînes.Élément(Clé, Index);
+    IF NOT Choisi(Dernier) THEN	-- choisir caractère
+      Vigenère(Premier, Second) := Dernier;
+      Second := Character'Succ(Second);
+      Choisi(Dernier) := True;
+    END IF;
+  END LOOP;
+  FOR Car IN Alphabet LOOP	-- reste du premier alphabet
+    IF NOT Choisi(Car) THEN
+      Vigenère(Premier, Second) := Car;
+      Second := Character'Succ(Second);
+      Choisi(Car) := True;
+    END IF;
+  END LOOP;
+  Dernier := Premier;
+  FOR Car IN Alphabet RANGE 'B'..'Z' LOOP	-- tous les autres alphabets
+    Second := Vigenère(Premier, Car);
+    FOR Colonne IN Alphabet RANGE 'A'..'Y' LOOP	
+      -- rotation Second à partir de Dernier
+      Vigenère(Second, Colonne) := Vigenère(Dernier, Character'Succ(Colonne));
+    END LOOP;
+    Vigenère(Second, 'Z') := Vigenère(Dernier, 'A');
+    Dernier := Second;
+  END LOOP;
+END CréerCarré;
+
+PROCEDURE Coder(Message: IN OUT Chaînes.TypChaîne; Clé: IN Chaînes.TypChaîne;
+                Vigenère: IN Carré) IS
+-- Coder Message en utilisant Clé et un carré de Vigenère
+LongueurClé, IndiceClé: Natural;
+BEGIN
+  LongueurClé := Chaînes.Longueur(Clé);
+  IndiceClé := 1;
+  FOR Index IN 1..Chaînes.Longueur(Message) LOOP
+    Chaînes.RemplacerÉlément(Message, Index, 
+                             Vigenère(Chaînes.Élément(Clé, IndiceClé),
+	                           Chaînes.Élément(Message, Index)));
+    IndiceClé := IndiceClé + 1;
+    IF IndiceClé >= LongueurClé THEN
+      IndiceClé := 1;
+    END IF;
+  END LOOP;
+END Coder;
+
+PROCEDURE Décoder(Message: IN OUT Chaînes.TypChaîne; Clé: IN Chaînes.TypChaîne;
+                  Vigenère: IN Carré) IS
+-- Décoder Message using Clé and Vigenère square
+BEGIN
+  NULL;
+END Décoder;
+
+BEGIN
+  Message1 := Chaînes.À_Dynamique("LESPARASITESMEBROUILLENTLECOUTE");
+END Chiffrer;
+
+

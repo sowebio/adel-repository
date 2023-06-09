@@ -1,0 +1,279 @@
+--          Copyright © 1998 Philippe J. Gabrini
+WITH Ada.Text_IO, Ada.Integer_Text_IO;
+PROCEDURE TriPolyphasé IS
+-- Application de l'algorithme de tri polyphasé à un fichier
+-- d'enregistrements
+--             P. Gabrini     Juin 1994
+
+N: CONSTANT Natural := 6;
+SentinelleFdf: CONSTANT Integer := Integer'Last;
+ 
+SUBTYPE NoFichier IS Natural RANGE 1..N;
+TYPE VecteurCourant IS ARRAY (NoFichier) OF Integer;
+TYPE VecteurFichier IS ARRAY (NoFichier) OF Ada.Text_IO.File_Type;
+TYPE VecteurNoSérie IS ARRAY (NoFichier) OF Natural;
+TYPE VecteurNoFichier IS ARRAY (NoFichier) OF NoFichier;
+ 
+PROCEDURE CalculerDistribution(Diff, Fibo: IN OUT VecteurNoSérie;
+							                 Fichier: IN OUT NoFichier;
+                               Niveau: IN OUT Natural) IS
+-- Selectionner le fichier pour la prochaine série.
+-- Fichier: fichier courant.
+-- Fibo: distribution idéale pour niveau.
+-- Diff: séries factices pour ce niveau (Diff(i) décroît quand
+-- i croît et Diff(N) =0.
+
+Ancien: Natural;
+BEGIN 
+  IF Diff(Fichier) < Diff(Fichier+1) THEN  -- prochain fichier
+    Fichier := Fichier + 1;
+  ELSE
+    IF Diff(Fichier) = 0 THEN              -- nouveau niveau
+      Niveau := Niveau + 1;
+      Ancien := Fibo(1);
+      FOR Index IN 1..N-1 LOOP
+        -- calculer prochaine rangée pour les tables Diff et Fibo
+        Diff(Index) := Ancien + Fibo(Index+1) - Fibo(Index);
+        Fibo(Index) := Ancien + Fibo(Index+1);
+      END LOOP;
+    END IF;
+    Fichier := 1;                          -- commencer au premier fichier
+  END IF;        
+  Diff(Fichier) := Diff(Fichier) - 1; -- remplacer série factice par vraie série
+END CalculerDistribution;
+
+PROCEDURE CopierÉlément(Entrée: IN Ada.Text_IO.File_Type;
+                        EntCourante: IN OUT Integer;
+             	          Sortie: IN OUT Ada.Text_IO.File_Type;
+                        SortCourante: IN OUT Integer) IS
+-- Copier un élément du fichier Entrée au fichier Sortie et mettre à jour
+-- les valeurs de l'élément courant.
+BEGIN
+  SortCourante := EntCourante;
+  Ada.Integer_Text_IO.Put(File => Sortie, Item => SortCourante);
+  IF NOT Ada.Text_IO.End_Of_File(Entrée) THEN
+    Ada.Integer_Text_IO.Get(File => Entrée, Item => EntCourante);
+  ELSE
+	EntCourante := SentinelleFdf;  -- pour être sûr de ne rien perdre
+  END IF;
+END CopierÉlément;
+
+PROCEDURE CopierSérie(Entrée: IN Ada.Text_IO.File_Type;
+                      F: IN OUT VecteurFichier; NuméroFichier: IN NoFichier;
+                      Courant: IN OUT Integer;
+                      FCourant: IN OUT VecteurCourant) IS
+-- Copier une série ascendante du fichier Entrée au fichier F(NuméroFichier)
+BEGIN
+  LOOP
+    CopierÉlément(Entrée, Courant, F(NuméroFichier), FCourant(NuméroFichier));
+    EXIT WHEN Ada.Text_IO.End_Of_File(Entrée)
+              OR (Courant < FCourant(NuméroFichier));
+  END LOOP;
+END CopierSérie;
+
+PROCEDURE TrierPolyphasé(Entrée: IN OUT Ada.Text_IO.File_Type;
+                         F: IN OUT VecteurFichier;
+                         Résultant: OUT NoFichier) IS
+-- Tri d'un fichier d'entiers, Entrée.  Des séries de longueur 
+-- diverses sont d'abord distribuées dans les fichiers F(1),F(2),
+--  ... ,F(N-1).  Le tri est fait en combinant (fusionnant) ces 
+-- séries d'abord sur F(N), puis les séries restantes de F(N),F(1),
+-- ... ,F(N-2) sur F(N-1), et ainsi de suite.  Le tri est fait en
+-- plusieurs passes. Les entiers triés se trouveront dans le fichier
+-- F(Résultant).
+
+Index, IndexFichierN: NoFichier;
+Diffn, Ancien, Niveau: Natural;
+Idéal,                          -- distribution idéale
+Diff: VecteurNoSérie;        -- différences entre niveaux antérieur et courant
+IndexFichier: VecteurNoFichier; -- indices of rotating files
+ÉltCourant: VecteurCourant;     -- éléments courants de chaque fichier
+
+  PROCEDURE ÉtablirSéries(Idéal, Diff: IN OUT VecteurNoSérie;
+  					      Niveau: IN OUT Natural) IS
+  -- Initialiser tables Idéal et Diff pour niveau 1.  Ouvrir fichiers
+  -- F(Index) et distribuer les séries initiales à partir d'Entrée.
+  Fichier: NoFichier;
+  Courant: Integer;
+  ÉltCourant: VecteurCourant; -- éléments courants de chaque fichier
+      
+  BEGIN
+    FOR Index IN 1..N-1 LOOP 	-- initialiser et ouvrir tous les fichiers
+      Idéal(Index) := 1;
+	    Diff(Index) := 1;
+	    Ada.Text_IO.Reset(F(Index), Ada.Text_IO.Out_File);
+	  END LOOP;
+    Niveau := 1;
+    Fichier := 1;
+    Idéal(N) := 0;
+    Diff(N) := 0;
+    Ada.Text_IO.Reset(Entrée, Ada.Text_IO.In_File);
+    -- ouvrir fichier d'entrée et lire premier élément
+    Ada.Integer_Text_IO.Get(File => Entrée, Item => Courant);
+    LOOP 				-- distribuer N-1 séries initiales
+      CalculerDistribution(Diff, Idéal, Fichier, Niveau);
+      CopierSérie(Entrée, F, Fichier, Courant, ÉltCourant);
+      EXIT WHEN Ada.Text_IO.End_Of_File(Entrée) OR (Fichier = N-1);
+	  END LOOP;
+    -- distribuer reste des séries
+    WHILE NOT Ada.Text_IO.End_Of_File(Entrée)
+            OR (Courant /= SentinelleFdf) LOOP 
+      CalculerDistribution(Diff, Idéal, Fichier, Niveau);
+      -- ÉltCourant(Fichier) est le dernier élément écrit sur F(Fichier)
+      IF ÉltCourant(Fichier) <= Courant THEN
+        -- nouvelle série peut être integrée avec série précédente
+        CopierSérie(Entrée, F, Fichier, Courant, ÉltCourant);
+        IF Ada.Text_IO.End_Of_File(Entrée) THEN
+          Diff(Fichier) := Diff(Fichier) + 1;
+        ELSE -- copier une nouvelle série tout de même
+          CopierSérie(Entrée, F, Fichier, Courant, ÉltCourant);
+        END IF;
+      ELSE -- nouvelle série
+        CopierSérie(Entrée, F, Fichier, Courant, ÉltCourant);
+      END IF;
+    END LOOP;
+  END ÉtablirSéries;
+
+  PROCEDURE FusionnerSéries(Idéal, Diff: IN OUT VecteurNoSérie;
+                            Niveau: IN OUT Natural;
+					                  IndexFichier: IN OUT VecteurNoFichier;
+                            ÉltCourant: IN OUT VecteurCourant) IS
+  -- Fusionner IndexFichier(1)...IndexFichier(N-1) dans IndexFichier(N).
+  IndexMin: NoFichier;
+  IndexDisp, Ancien: Natural;
+  Élément, Min: Integer;
+  FichiersDisp: VecteurNoFichier; -- indices des fichiers cycliques
+
+  BEGIN
+    Ancien := Idéal(N-1);
+    LOOP -- fusionne une série
+      IndexDisp := 0;
+      FOR Index IN 1..N-1 LOOP
+        IF Diff(Index) > 0 THEN -- ne tient pas compte des séries factices
+          Diff(Index) := Diff(Index) - 1;
+        ELSE
+          IndexDisp := IndexDisp + 1;
+          FichiersDisp(IndexDisp) := IndexFichier(Index); -- garder fichiers
+        END IF;
+      END LOOP;
+      IF IndexDisp = 0 THEN
+        Diff(N) := Diff(N) + 1;
+      ELSE
+        -- fusionner les premières séries des fichiers 
+        -- FichiersDisp(1)...FichiersDisp(IndexDisp) dans IndexFichier(N)
+        LOOP
+          Index := 1;
+          IndexMin := 1;
+          Min := ÉltCourant(FichiersDisp(1));
+          WHILE Index < IndexDisp LOOP -- chercher élément minimum
+            Index := Index + 1;
+            Élément := ÉltCourant(FichiersDisp(Index));
+            IF Élément < Min THEN
+              Min := Élément;
+              IndexMin := Index;
+            END IF;
+          END LOOP;
+          CopierÉlément(F(FichiersDisp(IndexMin)),
+                        ÉltCourant(FichiersDisp(IndexMin)),
+                        F(IndexFichier(N)), ÉltCourant(IndexFichier(N)));
+          IF (Ada.Text_IO.End_Of_File(F(FichiersDisp(IndexMin)))
+		         AND ÉltCourant(FichiersDisp(IndexMin)) = SentinelleFdf)
+             OR (ÉltCourant(FichiersDisp(IndexMin)) 
+                                    < ÉltCourant(IndexFichier(N))) THEN
+			      -- éliminer fichier disponible avec série épuisée
+			      FichiersDisp(IndexMin) := FichiersDisp(IndexDisp);
+            IndexDisp := IndexDisp - 1;
+          END IF;
+          EXIT WHEN IndexDisp = 0;
+		    END LOOP;
+      END IF;
+      Ancien := Ancien - 1;
+      EXIT WHEN Ancien = 0;
+	  END LOOP;
+  END FusionnerSéries;
+
+BEGIN
+  ÉtablirSéries(Idéal, Diff, Niveau);
+  FOR Index IN 1..N-1 LOOP -- ouvrir fichiers originaux
+    IndexFichier(Index) := Index;
+    Ada.Text_IO.Reset(F(Index), Ada.Text_IO.In_File);
+    Ada.Integer_Text_IO.Get(File => F(Index), Item => ÉltCourant(Index));
+  END LOOP;
+  IndexFichier(N) := N;
+
+  LOOP	-- fusionner N-1 fichiers dans le Nième fichier
+    Diff(N) := 0;
+    -- Préparer fichier sortie suivant
+    Ada.Text_IO.Reset(F(IndexFichier(N)), Ada.Text_IO.Out_File);
+    FusionnerSéries(Idéal, Diff, Niveau, IndexFichier, ÉltCourant);
+    -- Déplacer cycliquement les fichiers pour que la prochaine étape fusionne
+    -- F(N), F(1), ... ,F(N-2) dans F(N-1)
+    Ada.Text_IO.Reset(F(IndexFichier(N)), Ada.Text_IO.In_File); -- + récent
+    Ada.Integer_Text_IO.Get(File => F(IndexFichier(N)), 
+                            Item => ÉltCourant(IndexFichier(N)));
+    IndexFichierN := IndexFichier(N);
+    Diffn := Diff(N);
+    Ancien := Idéal(N-1);
+    FOR Index IN REVERSE 2..N LOOP
+      -- déplacer fichiers cycliquement et calculer distribution
+      -- pour niveau précédent
+      IndexFichier(Index) := IndexFichier(Index-1);
+      Diff(Index) := Diff(Index-1);
+      Idéal(Index) := Idéal(Index-1) - Ancien;
+    END LOOP;
+    IndexFichier(1) := IndexFichierN;
+    Diff(1) := Diffn;
+    Idéal(1) := Ancien;
+    Niveau := Niveau - 1;
+    EXIT WHEN Niveau = 0;
+  END LOOP;
+  Résultant := IndexFichier(1);
+END TrierPolyphasé;
+
+Entrée: Ada.Text_IO.File_Type;
+F: VecteurFichier;
+Germe, Entier: Integer;
+Rés: NoFichier;
+Index: Natural;
+ 
+BEGIN      -- Tri Polyphasé
+  Ada.Text_IO.Create(File => F(1), Name => "PFile1.dat");
+  Ada.Text_IO.Create(File => F(2), Name => "PFile2.dat");
+  Ada.Text_IO.Create(File => F(3), Name => "PFile3.dat");
+  Ada.Text_IO.Create(File => F(4), Name => "PFile4.dat");
+  Ada.Text_IO.Create(File => F(5), Name => "PFile5.dat");
+  Ada.Text_IO.Create(File => F(6), Name => "PFile6.dat");
+  Ada.Text_IO.Create(File => Entrée, Name => "Poly.dat");
+  Germe := 561;
+  FOR Index IN 1..100 LOOP
+    Ada.Integer_Text_IO.Put(File => Entrée, Item => Germe);
+    Germe := (31 * Germe) MOD 997 + 5;
+  END LOOP;
+  Ada.Text_IO.Reset(Entrée, Ada.Text_IO.In_File);
+  FOR Index IN 1..100 LOOP
+    Ada.Integer_Text_IO.Get(File => Entrée, Item => Entier);
+    Ada.Integer_Text_IO.Put(Item => Entier, Width => 6);
+    IF Index MOD 10 = 0 THEN  Ada.Text_IO.New_Line; END IF;
+  END LOOP;
+  Ada.Text_IO.New_Line; Ada.Text_IO.New_Line;
+  TrierPolyphasé(Entrée, F, Rés);
+  Ada.Text_IO.Put(Item => "Results in F-");
+  Ada.Integer_Text_IO.Put(Item => Rés, Width => 1);
+  Ada.Text_IO.New_Line;
+  Ada.Text_IO.Reset(F(Rés), Ada.Text_IO.In_File);
+  Index := 0;
+  WHILE (Index < 100) AND NOT Ada.Text_IO.End_Of_File(F(Rés)) LOOP
+    Ada.Integer_Text_IO.Get(File => F(Rés), Item => Entier);
+    Ada.Integer_Text_IO.Put(Item => Entier, Width => 6);
+    Index := Index + 1;
+    IF Index MOD 10 = 0 THEN Ada.Text_IO.New_Line; END IF;
+  END LOOP;
+  Ada.Text_IO.New_Line;
+  Ada.Text_IO.Close(F(1));
+  Ada.Text_IO.Close(F(2));
+  Ada.Text_IO.Close(F(3));
+  Ada.Text_IO.Close(F(4));
+  Ada.Text_IO.Close(F(5));
+  Ada.Text_IO.Close(F(6));
+  Ada.Text_IO.Close(Entrée);
+END TriPolyphasé;

@@ -1,0 +1,11 @@
+A lot of example programs by Mike Feldman use a basic ANSI based SCREEN
+package. For reasons best known to themselves, Microsoft decided not to
+implement the ANSI interfaces for Windows (Win32) console programs.
+
+This archive contains a version of the SCREEN package that will work on
+Windows. It is suitable for both GNAT and ObjectAda.
+
+To try it out, build (gnatmake) the smiley program.
+
+Have fun!
+Jerry.

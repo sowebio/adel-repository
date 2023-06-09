@@ -1,0 +1,24 @@
+NT CONSOLE v0.3
+---------------
+
+This is the third release of the NT console support package. As usual
+the package does NOT require a Win32 binding and will work with both
+GNAT (tested with v3.11p) and ObjectAda (tested with 7.1.2).
+
+ObjectAda users please note that you need to link in the "user32.lib"
+and "libc.lib" API libraries (Command line users, make sure the LIB
+environment variable points to the APILIB directory and add "-ll
+user32.lib -ll libc.lib" to the build command).
+
+The demo program comes from my own current working field this time...
+
+As the version number indicates, further versions are expected, but they
+depend on your comments/questions/bug reports.
+
+Note, this version includes the option to en/disable the screen cursor.
+
+The Clear_Screen function now takes non-standard console sizes into
+account.
+
+Enjoy!
+Jerry.

@@ -1,0 +1,311 @@
+--          Copyright © 1998 Philippe J. Gabrini
+WITH Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, Chaînes, Ada.Calendar;
+WITH Ada.Numerics.Discrete_Random;
+PROCEDURE PatternMatching IS
+ 
+PatronMini: CONSTANT Natural := 2;
+PatronMaxi: CONSTANT Natural := 15;
+EssaisMax: CONSTANT Natural := 100;
+Affiche: CONSTANT Boolean := True;
+      
+TYPE SorteRecherche IS (Recherche_Simple, Knuth_Morris_Pratt, Boyer_Moore, Rabin_Karp);
+SUBTYPE LongueurPatron IS Natural RANGE PatronMini..PatronMaxi;
+SUBTYPE Essais IS Natural RANGE 1..EssaisMax;
+TYPE TableDonnées IS ARRAY (SorteRecherche, LongueurPatron, Essais) OF Duration;
+SUBTYPE Plage IS Natural RANGE 0..1000;
+
+PACKAGE Aléatoire IS NEW Ada.Numerics.Discrete_Random(Plage);
+PACKAGE ES_Durée IS NEW Ada.Text_IO.Fixed_IO(Num => Duration);
+ 
+Germe: Aléatoire.Generator;
+
+FUNCTION LettreAléatoire RETURN String IS
+-- Engendre une lettre minuscule de "a" à "z" selon sa fréquence
+ValeurAléatoire: Plage := Aléatoire.Random(Germe);
+BEGIN
+  IF    ValeurAléatoire < 93 THEN RETURN "a";
+  ELSIF ValeurAléatoire < 107 THEN RETURN "b";
+  ELSIF ValeurAléatoire < 141 THEN RETURN "c";
+  ELSIF ValeurAléatoire < 174 THEN RETURN "d";
+  ELSIF ValeurAléatoire < 333 THEN RETURN "e";
+  ELSIF ValeurAléatoire < 347 THEN RETURN "f";
+  ELSIF ValeurAléatoire < 362 THEN RETURN "g";
+  ELSIF ValeurAléatoire < 371 THEN RETURN "h";
+  ELSIF ValeurAléatoire < 455 THEN RETURN "i";
+  ELSIF ValeurAléatoire < 460 THEN RETURN "j";
+  ELSIF ValeurAléatoire < 463 THEN RETURN "k";
+  ELSIF ValeurAléatoire < 516 THEN RETURN "l";
+  ELSIF ValeurAléatoire < 545 THEN RETURN "m";
+  ELSIF ValeurAléatoire < 617 THEN RETURN "n";
+  ELSIF ValeurAléatoire < 649 THEN RETURN "o";
+  ELSIF ValeurAléatoire < 673 THEN RETURN "p";
+  ELSIF ValeurAléatoire < 681 THEN RETURN "q";
+  ELSIF ValeurAléatoire < 746 THEN RETURN "r";      
+  ELSIF ValeurAléatoire < 825 THEN RETURN "s";
+  ELSIF ValeurAléatoire < 898 THEN RETURN "t";
+  ELSIF ValeurAléatoire < 960 THEN RETURN "u";
+  ELSIF ValeurAléatoire < 980 THEN RETURN "v";
+  ELSIF ValeurAléatoire < 981 THEN RETURN "w";
+  ELSIF ValeurAléatoire < 984 THEN RETURN "x";
+  ELSIF ValeurAléatoire < 985 THEN RETURN "y";
+  ELSE RETURN "z";
+  END IF;
+END LettreAléatoire;
+ 
+PROCEDURE MotAléatoire(Mot: OUT Chaînes.TypChaîne) IS
+-- Engendre une suite de lettres aléatoires, basée sur des fréquences données,
+-- de longueur suivante:
+-- 1 lettre à 7 lettres : chacune avec une fréquence de 0.125 
+-- 8 lettres à 10 lettres : chacune avec une fréquence de 0.04166 
+ValeurAléatoire, LongueurMot: Natural;
+BEGIN
+  ValeurAléatoire := (Aléatoire.Random(Germe) * 7)/1000;
+  IF ValeurAléatoire = 0 THEN 
+    LongueurMot := 7 + (Aléatoire.Random(Germe) * 3)/1000;
+  ELSE
+    LongueurMot := ValeurAléatoire;
+  END IF;
+  Mot := Chaînes.ChaîneVide;
+  FOR Compteur IN 1..LongueurMot LOOP
+    Chaînes.Insérer(Mot, Chaînes.Longueur(Mot)+1, LettreAléatoire);
+  END LOOP;
+END MotAléatoire;
+ 
+PROCEDURE EngendrerChaîne(LongueurChaîne: IN Natural;
+                          Chaîne: OUT Chaînes.TypChaîne) IS
+-- Engendrer une suite de "Mots" séparés par une seule espace de sorte que
+-- Chaîne ait comme longueur LongueurChaîne.
+Copie: Chaînes.TypChaîne:= Chaînes.ChaîneVide;
+BEGIN
+  Chaîne := Chaînes.ChaîneVide;
+  WHILE Chaînes.Longueur(Chaîne) < LongueurChaîne LOOP
+    MotAléatoire(Copie);
+    Chaînes.Insérer(Chaîne, Chaînes.Longueur(Chaîne)+1, Chaînes.À_Statique(Copie));
+    Chaînes.Concaténer(Chaîne, ' ');
+  END LOOP;
+  IF Chaînes.Longueur(Chaîne) > LongueurChaîne THEN
+    Chaînes.Supprimer(Chaîne, LongueurChaîne+1, Chaînes.Longueur(Chaîne));
+  END IF;
+END EngendrerChaîne;
+ 
+PROCEDURE VérifierAbsence(Patron: IN OUT Chaînes.TypChaîne; 
+                          Texte: IN Chaînes.TypChaîne;
+                          Succès: OUT Boolean) IS
+-- Vérifier que Patron n'est pas une sous-chaîne de Texte; s'il l'est
+-- mettre Patron à la chaîne vide. 
+BEGIN
+  Succès := Chaînes.Position(Texte, Chaînes.À_Statique(Patron)) = 0;
+  IF NOT Succès THEN
+    Patron := Chaînes.ChaîneVide;
+  END IF;
+END VérifierAbsence;
+ 
+PROCEDURE ChoisirPatron(LongueurPatron: IN Natural;
+                        Patron: IN OUT Chaînes.TypChaîne;
+                        Texte: IN Chaînes.TypChaîne) IS
+-- Engendrer un patron de longueur LongueurPatron qui ne soit PAS dans Texte. 
+Réponse: Boolean;
+BEGIN
+  Patron := Chaînes.ChaîneVide;
+  LOOP
+    FOR Compteur IN 1..LongueurPatron LOOP
+      Chaînes.Insérer(Patron, Chaînes.Longueur(Patron)+1, LettreAléatoire);
+    END LOOP;
+	  VérifierAbsence(Patron, Texte, Réponse);
+    EXIT WHEN Réponse;
+  END LOOP;
+END ChoisirPatron;
+ 
+
+FUNCTION RechercheSimple(Patron, Texte: Chaînes.TypChaîne) RETURN Natural IS
+-- Recherche Patron dans Texte.  Retourne indice du patron dans le texte
+-- sinon retourne zéro.
+Carac, Pat, LongueurPatron, LongueurTexte: Natural;
+BEGIN
+  LongueurPatron := Chaînes.Longueur(Patron);
+  LongueurTexte := Chaînes.Longueur(Texte);
+  Pat := 1;
+  IF LongueurPatron <= LongueurTexte THEN
+    Carac := 1;
+    LOOP
+      IF Chaînes.Élément(Patron, Pat) = Chaînes.Élément(Texte, Carac) THEN
+        Pat := Pat + 1;
+        Carac := Carac + 1;
+      ELSE
+        Carac := Carac - Pat + 2;  -- avance dans Texte
+        Pat := 1;
+      END IF;
+      EXIT WHEN (Pat > LongueurPatron) OR (Carac > LongueurTexte);
+	  END LOOP;
+  END IF;
+  IF (Pat > LongueurPatron) THEN   -- trouvé
+    RETURN Carac - LongueurPatron;
+  ELSE
+    RETURN 0;
+  END IF;
+END RechercheSimple;
+ 
+FUNCTION KnuthMorrisPratt(Patron, Texte: Chaînes.TypChaîne) RETURN Natural IS
+-- Recherche Patron dans Texte.  Retourne indice du patron dans le texte
+-- sinon retourne zéro.
+PatronMaxi: CONSTANT Natural := 80;
+TYPE Table IS ARRAY (1..PatronMaxi) OF Integer;
+ 
+  PROCEDURE CalculerRecul(Patron: IN Chaînes.TypChaîne;
+                          TableRecul: IN OUT Table) IS
+  -- Calculer la table des sauts pour les caractères du patron.
+  LongueurPatron, Pat1, Pat2: Integer;
+  BEGIN
+    LongueurPatron := Chaînes.Longueur(Patron);
+    Pat1 := 1;
+    Pat2 := 0;
+    TableRecul(1) := 0;
+    LOOP	-- faire correspondre le patron avec lui-même
+      IF (Pat2 = 0) OR ELSE
+         (Chaînes.Élément(Patron, Pat1) = Chaînes.Élément(Patron, Pat2)) THEN
+        Pat1 := Pat1 + 1;
+        Pat2 := Pat2 + 1;
+        IF Chaînes.Élément(Patron, Pat1) /= Chaînes.Élément(Patron, Pat2) THEN
+          TableRecul(Pat1) := Pat2;
+        ELSE
+          TableRecul(Pat1) := TableRecul(Pat2);
+        END IF;
+      ELSE
+        Pat2 := TableRecul(Pat2);
+      END IF;
+      EXIT WHEN Pat1 >= LongueurPatron;
+	  END LOOP;
+  END CalculerRecul;
+  
+Carac, Pat, LongueurPatron, LongueurTexte: Integer;
+TableRecul: Table;
+
+BEGIN
+  CalculerRecul(Patron, TableRecul);
+  LongueurTexte := Chaînes.Longueur(Texte);
+  LongueurPatron := Chaînes.Longueur(Patron);
+  Carac := 0;
+  Pat := 0;
+  LOOP
+    IF (Pat = 0) OR ELSE
+       (Chaînes.Élément(Texte, Carac) = Chaînes.Élément(Patron, Pat)) THEN
+      Carac := Carac + 1;
+      Pat := Pat + 1;
+    ELSE	-- prendre raccourci
+      Pat := TableRecul(Pat);
+    END IF;
+    EXIT WHEN (Pat > LongueurPatron) OR (Carac > LongueurTexte);
+  END LOOP;
+  IF Pat > LongueurPatron THEN  -- succès
+    RETURN Carac - LongueurPatron;
+  ELSE                          -- échec
+    RETURN 0;
+  END IF;
+END KnuthMorrisPratt;
+ 
+FUNCTION BoyerMooreSimple(Patron,Texte: Chaînes.TypChaîne) RETURN Natural IS
+ 
+TYPE TableCaractères IS ARRAY (Character RANGE ' '..'ÿ') OF Natural;
+ 
+  PROCEDURE CalculerSauts(Patron: IN Chaînes.TypChaîne;
+                          TableSauts: OUT TableCaractères) IS
+  LongueurPatron: Natural;
+  BEGIN
+    LongueurPatron := Chaînes.Longueur(Patron);
+    FOR Car IN Character RANGE ' '..'ÿ' LOOP
+      TableSauts(Car) := LongueurPatron;
+    END LOOP;
+    FOR Index IN 1..LongueurPatron  LOOP
+      TableSauts(Chaînes.Élément(Patron, Index)) := LongueurPatron - Index;
+    END LOOP;
+  END CalculerSauts;
+ 
+LongueurPatron, LongueurTexte, IndiceChaîne, IndiceVérif: Natural;
+IndicePatron, Avance: Natural;
+TableSauts: TableCaractères;
+ 
+BEGIN
+  CalculerSauts(Patron, TableSauts);
+  LongueurPatron := Chaînes.Longueur(Patron);
+  LongueurTexte := Chaînes.Longueur(Texte);
+  IndiceChaîne := LongueurPatron;
+  IndiceVérif := IndiceChaîne;
+  IndicePatron := LongueurPatron;
+  LOOP 
+    IF Chaînes.Élément(Texte, IndiceVérif) 
+        = Chaînes.Élément(Patron, IndicePatron) THEN
+      IndiceVérif := IndiceVérif - 1;
+      IndicePatron := IndicePatron - 1;
+    ELSE
+	    Avance := TableSauts(Chaînes.Élément(Texte, IndiceVérif));
+	    IF Avance = 0 THEN    -- assurons-nous d'avancer
+	      Avance := 1;
+	    END IF;
+      IndiceChaîne := IndiceChaîne + Avance;
+	    IndiceVérif := IndiceChaîne;
+      IndicePatron := LongueurPatron;
+    END IF;
+    EXIT WHEN (IndicePatron = 0) OR (IndiceChaîne > LongueurTexte);
+  END LOOP;
+  IF IndicePatron = 0 THEN 
+    RETURN IndiceVérif + 1; 
+  ELSE 
+    RETURN 0; 
+  END IF; 
+END BoyerMooreSimple;
+ 
+FUNCTION RabinKarp(Patron, Texte: Chaînes.TypChaîne) RETURN Natural IS
+-- Recherche de Patron dans Texte. Retourne l'indice du patron dans le
+-- texte ou zéro si pas trouvé.
+Premier: CONSTANT Natural := 5000011;  -- gros nombre premier
+Base: CONSTANT Natural := 256;         -- nombre de caractères
+
+HachéPatron, HachéTexte, Puissance: Natural;
+LongueurTexte, LongueurPatron, Index: Natural;
+BEGIN
+  LongueurPatron := Chaînes.Longueur(Patron);
+  LongueurTexte := Chaînes.Longueur(Texte);
+  Puissance := 1;
+  FOR Compteur IN 1..LongueurPatron-1 LOOP
+    -- calculer Base à la puissance (LongueurPatron-1)
+    Puissance := (Puissance * Base) MOD Premier;
+  END LOOP;
+  HachéPatron := 0;
+  FOR Indx IN 1..LongueurPatron LOOP
+    -- calculer nombre de hachage du patron
+    HachéPatron := (HachéPatron * Base 
+	         + Character'Pos(Chaînes.Élément(Patron, Indx))) MOD Premier;
+  END LOOP;
+  HachéTexte := 0;
+  FOR Indx IN 1..LongueurPatron LOOP
+    -- calculer nombre de hachage du texte
+    HachéTexte := (HachéTexte * Base 
+           + Character'Pos(Chaînes.Élément(Texte, Indx))) MOD Premier;
+  END LOOP;
+  Index := 1;
+  WHILE (HachéPatron /= HachéTexte) AND 
+        (Index <= LongueurTexte - LongueurPatron) LOOP
+    -- calculer nouveau nombre de hachage de la tranche de texte
+    HachéTexte := (HachéTexte + Base * Premier
+            - Character'Pos(Chaînes.Élément(Texte, Index)) * Puissance) MOD Premier;
+    HachéTexte := (HachéTexte * Base
+            + Character'Pos(Chaînes.Élément(Texte, Index + LongueurPatron))) MOD Premier;
+    Index := Index + 1;
+  END LOOP;
+  IF Index <= LongueurTexte - LongueurPatron THEN
+    RETURN Index;
+  ELSE
+    RETURN 0;
+  END IF;
+END RabinKarp;
+ 
+BEGIN
+  Aléatoire.Reset(Germe);
+  -- engendrer le texte à rechercher
+ 
+  -- engendrer données de recherche
+ 
+  -- afficher résultats moyens
+  Ada.Text_IO.New_Line; Ada.Text_IO.New_Line;
+END PatternMatching;
+

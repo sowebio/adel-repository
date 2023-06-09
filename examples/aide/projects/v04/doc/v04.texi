@@ -1,0 +1,5067 @@
+\input texinfo   @c -*-texinfo-*-
+
+@c-----------------------------------------------------------
+@c Texinfo header
+@c-----------------------------------------------------------
+@c %**start of header
+@setfilename lady.info
+@settitle Light Embeddable Ada Database
+@afourpaper
+@c @paragraphindent none
+@c @firstparagraphindent insert
+@c %**end of header
+@c-----------------------------------------------------------
+
+@c-----------------------------------------------------------
+@c Document header
+@c-----------------------------------------------------------
+@set AIDE_Version 1.03
+@set EN
+
+@ifset FR
+@documentlanguage fr
+@documentencoding ISO-8859-1
+@end ifset
+@c-----------------------------------------------------------
+
+@c-----------------------------------------------------------
+@c PdfTex header
+@c-----------------------------------------------------------
+@ifset FR
+@tex
+\pdfinfo{                             
+    /Author   (Stephane Riviere)
+    /Title    (Ada Instant Development Environment)
+    /Subject  (Manuel d'utilisation de AIDE - Version Francaise)  
+    /Keywords (Ada IDE AIDE Texinfo)
+}
+@end tex
+@end ifset
+
+@ifset EN
+@tex
+\pdfinfo{                             
+    /Author   (Stephane Riviere, translated by Stephane Richard)        
+    /Title    (Ada Instant Development Environment)
+    /Subject  (AIDE user Manual - English version)  
+    /Keywords (Ada IDE AIDE Texinfo)
+}
+@end tex
+@end ifset
+@c-----------------------------------------------------------
+
+ 
+@ifset FR
+@copying
+Ce manuel est destiné à AIDE, Ada Instant Development Environment,
+version @value{AIDE_Version} @*
+Copyright @copyright{} 2001, 2002, 2003, 2004, Stéphane Rivière. @*
+Ce document peut être copié, en partie ou entièrement, sous n'importe
+quelle forme et par n'importe quel moyen pourvu que les altérations
+soient clairement repérées et que la notice de copyright soit inclue
+sans modification dans toutes les copies.
+@end copying
+@end ifset
+
+@ifset EN
+@copying
+This manual is intended for AIDE, Ada Instant Development Environment,
+version @value{AIDE_Version} @*
+Copyright @copyright{} 2001, 2002, 2003, 2004, Stéphane Rivière. @*
+This document may be copied, in whole or in part, in any form or by any
+means, as is or with alterations, provided that alterations are clearly
+marked as alterations and this copyright notice is included
+unmodified in any copy.
+@end copying
+@end ifset
+
+@titlepage
+
+@title Ada Instant Development Environment
+
+@subtitle Version @value{AIDE_Version}
+
+@ifset FR
+@subtitle Édition du @today{}
+@end ifset
+
+@ifset EN
+@subtitle Release of @today{}
+@end ifset
+
+@author Stéphane Rivière
+
+@page
+
+@ifset FR
+Cette distribution est dédiée à Dino Risi, à l'inénarrable Vittorio
+Gasmann et à Jean-Louis Trintignant pour un film météore, sublime,
+grave, infiniment léger et d'une absolue nostalgie : @emph{Le
+Fanfaron}.
+@end ifset
+
+@ifset EN
+This distribution is dedicated to Dino Risi, Vittorio Gasmann and
+Jean-Louis Trintignant for a sublime, profound and immensely light movie
+: @emph{The Boaster}.
+@end ifset
+
+@sp 1
+
+@ifset FR
+Les citations en tête de chapitre sont des extraits de @emph{Murphy's
+Law and other reasons why things go wrong de A. Bloch}. Elles
+proviennent du site @url{www.adalog.fr} créé par Jean-Pierre Rosen.
+@end ifset
+
+@ifset EN
+The chapter heading quotes are extracted from @emph{Murphy's
+Law and other reasons why things go wrong de A. Bloch}. They come from
+@url{www.adalog.fr} site created by Jean-Pierre Rosen.
+@end ifset
+
+@sp 1
+
+@ifset FR
+Toute ma reconnaissance à l'équipe d'ACT-Europe et à leurs
+développeurs ; Émmanuel Briot, Joël Brobecker et Arnaud Charlet, sans
+qui cette distribution n'aurait pu voir le jour.  Remerciements à
+Jeffrey Creem, amical @emph{gourou} GCC et GNAT, à Earnie Boyd, le
+créateur de l'environnement MSys, plus généralement à tous les auteurs
+des outils GNU et plus parti@-culièrement à tous les abonnés des
+listes de diffusion d'ACT-Europe et d'Ada-France. Merci à Fabrice
+Popineau, mainteneur de fp@TeX{}, ainsi qu'à toute l'équipe du
+@TeX{}Live.
+@end ifset
+
+@ifset EN
+I'm very grateful to the ACT-Europe team and their software engineers
+; Émmanuel Briot, Joël Brobecker and Arnaud Charlet, without whom this
+distribution could not come into the world. Thanks to Jeffrey Creem,
+friendly GCC and GNAT @emph{guru}, to Earnie Boyd, Msys author, more
+generally to all GNU tools authors and more particularly to the
+ACT-Europe et d'Ada-France mailing-lists subscribers. Thanks to
+Fabrice Popineau, fp@TeX{} maintainer, as well as @TeX{}Live team.
+@end ifset
+
+@sp 1
+
+@ifset FR
+Je tiens à remercier également : Enrique Bellido, François Bergeret,
+Ludovic Brenta, Martin Carlisle, Daniel Feneuille, Gautier de
+Montmollin, Pascal Obry, Thomas Quinot, Jean-Pierre Rosen, Samuel
+Tardieu et Luigi Zaffalon.
+@end ifset
+
+@ifset EN
+I would also want to thank : Enrique Bellido, François Bergeret,
+Ludovic Brenta, Martin Carlisle, Daniel Feneuille, Gautier de
+Montmollin, Pascal Obry, Thomas Quinot, Jean-Pierre Rosen, Samuel
+Tardieu et Luigi Zaffalon.
+@end ifset
+
+@sp 1
+
+@ifset FR
+Ainsi que : Adalog, l'académie de l'US Air Force et l'École
+d'ingénieurs de Genève.
+@end ifset
+
+@ifset EN
+As well as : Adalog, US Air Force Academy and the Geneva Engineer
+School.
+@end ifset
+
+@sp 1
+
+@ifset FR
+@cartouche
+@strong{AIDE permet l'utilisation immédiate sous Windows des outils de
+développement Ada produits par ACT-Europe. Si vous développez des
+applications dans un contexte professionnel, il peut être
+particulièrement avisé de contacter ACT-Europe. Un support adapté à
+vos besoins, en ligne directe avec les créateurs de GNAT, Glide, GVD
+et GPS, représente la meilleure assurance pour le succès de vos
+développements et vous recevrez en priorité les dernières mises à jour
+logicielles.}
+@end cartouche
+@end ifset
+
+@ifset EN
+@cartouche
+@strong{AIDE allows immediate use, under Windows, of ACT-Europe Ada
+development tools. If you professionaly use AIDE, it could be wised to
+contact ACT-Europe. A suited support to your needs directly from the
+GNAT, Glide, GVD & GPS authors could mean the best assurance of
+success for yours projects and you will receive the last software
+updates first.}
+@end cartouche
+@end ifset
+
+@vskip 0pt plus 1filll
+
+@insertcopying
+
+@*
+Contact :
+@sp 1
+Stéphane Rivière @*
+Élevage de Rochebrune @*
+La Morinière @*
+17550 Dolus d'Oléron @*
+France
+@sp 1
+email : @email{stephane@@rochebrune.org} @*
+@url{http://stephane.rochebrune.org} @* @*
+
+mailing-list AIDE : @email{aide@@rochebrune.org}
+
+@end titlepage
+
+@contents
+
+@c --------------------------------------------------------------------
+@chapter Introduction
+@c --------------------------------------------------------------------
+
+@ifset FR
+@emph{On peut écrire très proprement dans n'importe quel langage, y
+compris C.  On peut écrire salement dans n'importe quel langage,
+y compris Ada.  Mais Ada est le seul langage où il soit plus fatigant
+d'écrire salement que proprement. Jean-Pierre Rosen}
+@end ifset
+
+@ifset EN
+@emph{One can write neatly in any language, including C. One can write
+badly in any language, including Ada. But Ada is the only language
+where it is more tedious to write badly than neatly. Jean-Pierre Rosen}
+@end ifset
+
+@ifset FR
+@section Préalables
+
+L'auteur n'est pas un expert Ada, ni un utilisateur éclairé des outils
+libres ACT et GNU : n'hésitez pas à améliorer AIDE par vos
+suggestions.
+@end ifset
+
+@ifset EN
+@section Prior notices
+
+The author is not an Ada expert nor a well-informed ACT and GNU free
+tools user : suggestions in order to improve AIDE are welcome.
+
+Just for your information AIDE means help in french, so...
+@end ifset
+
+@sp 1
+
+@ifset FR
+@cartouche
+Toute @emph{aide à AIDE} est @emph{adamantimement} souhaitée, en
+particulier dans les directions évoquées au paragraphe ``Évolutions'',
+situé en dernière page du manuel.
+@end cartouche
+@end ifset
+
+@ifset EN
+@cartouche
+All @emph{help to AIDE} is @emph{deeply} encouraged, in particular
+around the english translation of the original french AIDE
+manual. This is a big work in progress. I have left untouched the
+untranslated parts in french to ease both the translators work and the
+english readers with french skills : I apologize for this
+inconvenience. The english translation is know mainly managed by
+Stéphane Richard, webmaster of Adaworld, @url{http://www.adaworld.com}. Many
+thanks to him !
+@end cartouche
+@end ifset
+
+@sp 1
+
+@ifset FR
+Voici tout d'abord quelques précisions sur le sens donné à certains
+termes utilisés dans ce document. Ces définitions sont proposées à
+titre indicatif ; elles ne prétendent pas être correctes d'un point de
+vue technique ou juridique :
+
+@itemize @bullet
+@item
+@emph{Libre} désigne tout logiciel disponible en sources et utilisable
+sans restriction dans un contexte commercial, selon une licence de type
+LGPL, BSD, Mozilla ou apparentée ;
+@item
+@emph{Windows} désigne les système d'exploitation Microsoft à noyau
+NT, tels NT4, W2K ou XP, à l'exclusion des systèmes basés MS-DOS, de
+type Windows 95, 98 et Me ;
+@item
+@emph{Unix} désigne les systèmes d'exploitation Linux, FreeBSD, OpenBSD,
+NetBSD mais aussi tous les Unix propriétaires ou apparentés, connus pour
+être supportés par les outils GNU ;
+@item
+@emph{Multi-plateforme} est la faculté de créer un logiciel sur et
+pour différents systèmes d'exploitation (Windows, Unix) et différentes
+plateforme matérielles (x86, power pc, etc.) ;
+@item
+Langage @emph{à la mode} désigne les langages dont les qualités propres
+ne peuvent expliquer rationnellement leur succès, tels C++ ou Java ;
+@item
+Langage @emph{propriétaire} désigne des langages appartenant à une
+société, tels Visual Basic ou C# pour Microsoft ou Delphi pour Borland.
+@end itemize
+@end ifset
+
+@ifset EN
+First, a few details about the given meanings to some terms used in this
+manual. Theses defines are proposed as a rough guide; they do not
+claim to be technically or legally corrects :
+
+@itemize @bullet
+@item
+@emph{Libre} refer to all software wich comes with its source code and
+usable without restriction in a business context, according to a LGPL,
+BSD, Mozilla or similar licence schemes;
+@item
+@emph{Windows} refer to Microsoft NT kernel operating systems, like
+NT4, W2K ou XP, excluding MS-DOS based systems, like Windows 95, 98 and Me ;
+@item
+@emph{Unix} refer to  Linux, FreeBSD, OpenBSD, NetBSD operating
+systems but also to all proprietary Unix known to be supported by GNU
+tools ;
+@item
+@emph{Multi-platform} is the ability to create software working for
+several operating systems (Windows, Unix) and several hardware
+platforms (x86, power pc, etc.) ;
+@item
+@emph{fashionable} languages refer to languages about which own
+abilities can't rationally explain their success, like C++ ou Java ;
+@item
+@emph{proprietary} languages refer to languages which belong to a
+company, like Visual Basic or C# for Microsoft or Delphi for Borland.
+@end itemize
+@end ifset
+
+@sp 1
+
+@ifset FR
+Dénomination des principaux outils de AIDE :
+
+@itemize @bullet
+@item
+@emph{Glide} est l'IDE classique de AIDE. Basé sur l'éditeur EMACS,
+Glide comporte un mode Ada évolué et une gestion de projet intégrée,
+ainsi que le débuggeur graphique @emph{GVD} ou @emph{Gnu Visual
+Debugger}.
+@item
+@emph{GPS} ou @emph{Gnat Programming System}, est un IDE graphique
+très prometteur, de nouvelle génération, et complètement écrit en
+Ada.
+@item
+@emph{Console MSys} est le shell Unix disponible avec AIDE, pour
+lancer les programmes utilisables en mode commande, associé à
+l'éditeur mode texte @emph{FTE}.
+@end itemize
+@end ifset
+
+@ifset EN
+AIDE main tools naming :
+
+@itemize @bullet
+@item
+@emph{Glide} is the AIDE classic IDE. Based on the EMACS editor,
+Glide has an advanced Ada-mode, an integrated project management and a
+graphical debugger : @emph{GVD} (standing for @emph{Gnu Visual
+Debugger}).
+@item
+@emph{GPS} or @emph{Gnat Programming System}, is a new generation and
+very promising graphical IDE, fully written in Ada.
+@item
+@emph{Console MSys} is the Unix shell coming with AIDE, for command
+line programs. It is coupled with @emph{FTE} a simple text mode editor.
+@end itemize
+@end ifset
+
+@page
+
+@ifset FR
+@section Présentation
+
+Ce document décrit AIDE, Ada Instant Development Environment, un
+environnement intégré de développement Ada pour Windows utilisant
+uniquement des outils libres et multi-plateformes et permettant de
+développer des applications également multi-plateformes.
+@end ifset
+
+@ifset EN
+@section Introduction
+
+This document describes AIDE, Ada Instant Development Environment, an
+Ada integrated developement environment for Windows exclusively
+using Free and multi-platforms tools as well as allowing multi-platform
+software development.
+@end ifset
+
+@sp 1
+
+@ifset FR
+AIDE est unique par sa licence, son intégration, son installation, son
+absence d'impact sur le système et le choix des environnements de
+développement :
+@itemize @bullet
+@item
+Tous les outils nécessaires sont libres, intégrés et déjà configurés ;
+@item
+AIDE est immédiatement utilisable par une simple copie ;
+@item
+Aucune entrée n'est créée dans la registry ;
+@item
+Aucun fichier n'est copié dans un quelconque répertoire système ;
+@item
+Aucune variable système n'est créée ou modifiée à l'extérieur de AIDE ;
+@item
+AIDE permet de choisir entre trois modes de développements : un mode
+IDE généraliste basé Emacs (Glide), un mode IDE graphique spécialisé
+Ada (GPS) ou même une simple ligne de commande (Bash). Pour ce dernier
+choix, un éditeur très simple est proposé (Fte).
+@end itemize
+@end ifset
+
+@ifset EN
+AIDE is most unusual by its licence, integration and intallation
+mode. It also leaves the system registry untouched and your choice 
+of  three different development environment to suit your needs :
+
+@itemize @bullet
+@item
+all needed tools are free, deeply integrated and already configured ;
+@item
+AIDE is immediatly useable after a simple copy ;
+@item
+No entry need be created in the registry ;
+@item
+No files copied in any system directory ;
+@item
+No system variable created or modified outside AIDE ;
+@item
+AIDE allows three development mode : a general IDE Emacs based (Glide),
+an Ada specialized graphical IDE (GPS) or even a simple command line
+console (Bash). The latter comes with a very simple, but powerful,
+editor (Fte).
+@end itemize
+@end ifset
+
+@sp 1
+
+@ifset FR
+Les principaux composants utilisés sont :
+
+@itemize @bullet
+@item
+GNAT 3.15p, GtkAda 2.2.0, GPS 1.4.0, GNU Emacs 21.1.1 avec Glide
+3.15p, MSys 1.0.8 ;
+@item
+UPX 1.22 et UCL 1.01 ;
+@item
+GS 7.05, a2ps 4.13, PSutils 1.17 et File 4.03.
+@end itemize
+
+Les versions de ces logiciels ne sont pas nécessairement, et
+c'est volontaire, les dernières disponibles, mais l'ensemble forme un
+tout cohérent, fiable et, autant que faire se peut, testé.
+@end ifset
+
+@ifset EN
+The main components used are :
+
+@itemize @bullet
+@item
+GNAT 3.15p, GtkAda 2.2.0, GPS 1.4.0, GNU Emacs 21.1.1 with Glide
+3.15p and MSys 1.0.8 ;
+@item
+UPX 1.22, UCL 1.01 ;
+@item
+GS 7.05, a2ps 4.13, PSutils 1.17 and File 4.03.
+@end itemize
+
+The releases dates are not necessarily, and deliberatly, the
+latest but the whole set is coherent and, as far we know,
+reliable.
+@end ifset
+
+@ifset FR
+@section Démarche
+
+@subheading Se prémunir des aléas de l'avenir
+
+AIDE est né de la lassitude d'être asservi à des langages
+@emph{propriétaires} tout en réaffirmant que GNU n'est pas Unix et qu'il
+devait être possible de montrer aux développeurs Windows qu'une solution
+commune Windows @emph{et} Unix pouvait exister, sans devoir leur imposer
+de quitter leur système habituel.
+
+L'important est de travailler avec l'environnement le plus
+approprié. Et, pour beaucoup d'entre nous, et certainement aussi,
+malgré nous, Unix n'est pas encore, ou ne sera jamais, l'environnement
+le plus facilement disponible ou le plus adapté. Les développeurs
+@emph{hardware}, par exemple, doivent utiliser des outils logiciels
+propriétaires, incontournables, et seulement disponibles sous Windows.
+
+Enfin, si choisir son environnement de développement peut être le
+résultat d'une démarche personnelle, c'est quand même le marché qui
+détermine l'environnement d'exécution. Aussi la portabilité des outils
+de développement et leur faculté à produite un code réellement
+portable est une réponse pragmatique aux incertitudes de l'avenir et à
+la diversité des possibles.
+@end ifset
+
+@ifset EN
+@section Rationale
+
+@subheading To protect oneself against future uncertainties
+
+AIDE was born out of boredom of being subjected to @emph{proprietary} languages
+while reaffirming that GNU is not Unix and it should be possible to show
+Windows developers that a common Windows @emph{and} Unix could exist without
+the need to quit their usual systems.
+
+The important thing is to work with the most appropriate environment
+for the task at hand.  And, for a lot of us and also not by choice,
+Unix is not the easiest environment nor is it the most adapted one.
+@emph{Hardware} developers, for example, must use proprietary software
+only available for windows.
+
+Finally, if choosing a development environment can be the result of a personal
+choosing process, it is still the market that determines the environment that will
+execute the software. Also, the portability of the development tools and their
+ability to produce real portable code is a pragmatic answer to the
+future uncertainty and the diversity of the possibilities.
+@end ifset
+
+@ifset FR
+@subheading Une voie vers plus de liberté
+
+La solution proposée pérennise les acquits, en réaction à la
+versatilité, l'inconsistance ou la stratégie des éditeurs commerciaux,
+qui imposent aux développeurs de nouveaux langages, environnements,
+paramètrages et autres interfaces de programmation. Cette quète
+permanente de @emph{l'outil ultime} se traduit surtout dans les faits
+par la recherche mille fois répétée de la bonne configuration, de la
+bonne syntaxe ou du bon paramètre. Et tout ceci n'est que de la
+cuisine sans intérêt. L'important est ailleurs.
+
+L'idée est donc de proposer au développeur Windows l'environnement le
+plus proche possible de ce que l'on retrouve dans les systèmes
+@emph{Libres}. Cette démarche permettra aussi à des novices du monde
+Unix d'être confrontés en douceur aux remarquables outils de ces
+environnements.
+
+De ce fait, le développeur Windows pourra, s'il le souhaite, passer
+ensuite indifférement d'un système à un autre sans être dépaysé et en
+conservant :
+
+@itemize @bullet
+@item
+Tous ses outils habituels ;
+@item
+Toute la base logicielle déjà écrite.
+@end itemize
+
+Le dernier atoût de cette démarche est, en apparence, moins évident
+mais il est aussi essentiel. Il s'agit de la @emph{qualité} et de la
+@emph{puissance} des outils Libres. Quand on y a goûté, il est @emph{vraiment}
+difficile de s'en passer.
+@end ifset
+
+@ifset EN
+@subheading A path to more freedom
+
+This proposed solution is a direct reaction to the versatility, the 
+commercial editors inconsistant strategy that imposes on developers 
+of new languages, environments, parametric and other programming interfaces.  
+This permanent quest for @emph{the ultimate tool} usually manifests itself 
+in a quest for the perfect configuration, the right syntax or the right 
+parameter. And all this is pretty much without particular interest, the 
+important things lies somewhere else.
+
+The idea is then to propose to Windows developers the closest possible 
+environment that can be found in @emph{free} systems.  This will also allow
+to present these wonderful tools in a soft and easy manner.
+
+Therefore, the Windows developer will be able to, if he or she wishes, jump 
+seamlessly from environment to another without feeling lost and also while
+maintaining :
+
+@itemize @bullet
+@item
+All the usual tools ;
+@item
+All software already written.
+@end itemize
+
+The last advantage of this process is less obvious visually but is still 
+essential. We are talking about the @emph{quality} and @emph{power} of free
+software tools. Once you try them, it's @emph{really} hard to do without.
+@end ifset
+
+@ifset FR
+@section Solution @emph{Libre} multi-plateforme
+
+Les composants sélectionnés, pour leur aptitude à produire des
+applications fiables et pérennes, forment une solution multi-plateforme
+utilisable sur les systèmes Windows et Unix.
+
+Ils ne sont pas sous licence GPL pure, mais sous des licences
+dérivées, moins contraignantes, qui autorisent la création
+d'application commerciales vendues sans les sources@footnote{C'est
+pour cette raison que des solutions comme Qt ou MySQL n'auront jamais
+leur place dans AIDE : il est n'est pas agréable de devoir choisir ses
+d'outils en fonction de la licence choisie pour la diffusion du
+logiciel. La véritable liberté est absolue et n'est pas assujettie à
+une politique, si louable soit-elle.}.
+
+Un schéma étant plus parlant qu'un texte, voici un aperçu de ce que
+permet AIDE, quand Glide est utilisé en association avec les logiciels
+de documentation proposés plus avant dans ce manuel :
+
+@image{dia/glide-vue-ensemble,17cm}
+
+@end ifset
+
+@ifset EN
+@section Multi-platform @emph{Libre} solution
+
+The components have been selected for their ability to produce
+Windows and Unix reliable software.
+
+They are not under pure GPL licence, but under derived licences, less
+restrictive, which allow business software production sold without
+sources@footnote{This is why products like Qt or MySQL will never be
+included in AIDE. It is not pleasant to have to choose its tools
+according to the choosen licence of the end-user product. The true
+freedom is absolute.}.
+
+
+Here is an insight of what AIDE allows when Glide is used in
+association with documentation softwares suggested further in this
+manual.
+
+@image{dia/glide-overview,17cm}
+
+@end ifset
+
+@*
+
+@ifset FR
+On distingue quatre couches :
+
+@itemize @bullet
+@item
+Les @emph{éditeurs} sont représentés en haut du diagramme :
+    @itemize @bullet
+    @item
+    Dia est un éditeur de diagrammes utilisé pour la production des
+    manuels. Ce dessin est un exemple de ses possiblités ;
+    @item
+    Glide est un éditeur multi-langages qui permet, dans le cas qui
+    nous intéresse, de travailler sur des sources Ada, Texinfo et
+    HTML ;
+    @item
+    Gimp est un logiciel de traitement d'images utilisé pour la
+    production des manuels, la création de pages Web et
+    d'interfaces graphiques ;
+    @item
+    Glade est un éditeur d'interface graphique GTK.
+    @end itemize
+@item
+Les @emph{interfaces} sont représentées juste en dessous :
+    @itemize @bullet
+    @item
+    Texinfo est utilisé pour la production de la documentation, une
+    description détaillée est proposée un peu plus loin dans le manuel ;
+    @item
+    AdaWebServer permet de créer une interface utilisateur de type
+    Web, par essence portable et utilisable à distance ;
+    @item
+    GtkAda autorise la création d'une interface utilisateur graphique,
+    liée à l'application, et donc utilisable principalement en local.
+    @end itemize
+@item
+Les @emph{compilateurs} sont au nombre de trois :
+    @itemize @bullet
+    @item
+    Pdf@TeX{} et Makeinfo sont utilisés pour la production de la
+    documentation ;
+    @item
+    GNAT est une suite de compilation Ada complète. Basé GCC,
+    @emph{Gnu Compiler Collection}, GNAT intègre aussi un compilateur
+    C et tous les outils connexes, tels un débuggeur graphique ou un
+    analyseur de performance.
+    @end itemize
+@end itemize
+@end ifset
+
+
+@ifset EN
+One can bring out four main points :
+
+@itemize @bullet
+@item
+@emph{Editors} are shown at the diagram top :
+    @itemize @bullet
+    @item
+    Dia is a diagram editor used for manual production. This draw is
+    an example of its abilities ;
+    @item
+    Glide is a multi-language editor which allows us to work with Ada,
+    Texinfo and HTML sources codes ;
+    @item
+    Gimp is a image processing software used for manual production,
+    web pages writing and graphical interfaces design ;
+    @item
+    Glade is a GTK interface editor used for graphical user interface creation.
+    @end itemize
+@item
+@emph{Interfaces} are shown just below :
+    @itemize @bullet
+    @item
+    Texinfo is used for writing documentation, an in depth description
+    is provided further in the manual ;
+    @item
+    AdaWebServer allows creation of web user interface, portable and
+    remoted controlled by its very nature ;
+    @item
+    GtkAda allows creation of graphical user interface, deeply linked
+    to the software, mainly used for local purposes.
+    @end itemize
+@item
+@emph{Compilateurs} are three of them :
+    @itemize @bullet
+    @item
+    Pdf@TeX{} and Makeinfo are used for documentation production ;
+    @item
+    GNAT is an very comprehensive Ada command line compiler. Based on GCC,
+    @emph{Gnu Compiler Collection}, GNAT also includes a C compiler
+    with its related tools, like a graphical debugger and a performance
+    profiler.
+    @end itemize
+@end itemize
+@end ifset
+
+@ifset FR
+@subsection Langage
+
+@subsubheading Présentation de Ada
+
+Ce langage n'est pas encore suffisament connu, au moins pour la grande
+majorité d'entre nous, au détriment de beaucoup d'utilisateurs
+potentiels d'ailleurs. Par rapport aux langages @emph{à la mode}, Ada,
+puisque c'est son nom, est plus portable, plus lisible, autorise des
+niveaux d'abstraction plus élevés et possède des fonctionnalités
+inconnues ailleurs. Ada autorise aussi une programmation système plus
+agréable @footnote{Grâce, par exemple, à ses clauses de représentation
+qui suppriment la nécesité d'employer des masques d'octets
+@emph{XORés} pour la manipulation de bits. Cette fonctionnalité
+@emph{fondamentale en programmation système} est absente en C ou
+en assembleur.} et se révèle suffisament léger pour être utilisé sur
+des micro-contrôleurs 8 bits bas de gamme@footnote{Des composants qui
+ne disposent que de quelques dizaines d'octets de mémoire vive et de
+quelques kilo-octets de mémoire programme.}.
+
+Ada est le nom du premier programmeur de l'humanité. Et le premier
+programmeur était une programmeuse : Augusta Ada Byron King, Countess
+of Lovelace. Née en 1815, fille du grand poète Byron, assistante de
+Charles Babbage, elle écrivit les programmes destinés à sa célèbre
+machine.
+
+Ada 95 est une norme militaire américaine @footnote{MIL-STD-1815B} et
+une norme civile internationale @footnote{ISO/IEC 8652:1995}. C'est le
+premier langage orienté objet à avoir été normalisé au niveau
+international. Tous les compilateurs Ada doivent répondre strictement
+à cette norme. Il en existe des centaines différents, pour autant de
+plate-formes différentes, mais tous produisent un code dont le
+comportement est identique.
+
+Ada est utilisé partout où la sécurité prime : Airbus (famille civile
+A3xx et A400 militaire), Alsthom (TGV), Boeing (777, 7E7) , EADS
+(Eurofighter, Ariane, ATV), STS (Météor ligne 14), NASA (alimentation
+électrique de la station spatiale internationale). La liste est
+innombrable. Partout où la sûreté est primordiale, Ada est le langage
+choisi. Ce lien, entre autres, vous donnera quelques exemples
+d'utilisation du langage Ada :
+@url{http://www.seas.gwu.edu/~mfeldman/ada-project-summary.html}.
+@end ifset
+
+@ifset EN
+@subsection Language
+
+@subsubheading Ada introduction
+
+This language is not known enough yet, at least not to the majority
+of us, much to the detriment of many potential users for that matter.
+Compared to the @emph{fashionable} languages, Ada is more portable, 
+more readable, allows for higher abstraction levels and has features
+and functionalities unseen in other languages.  Ada also allows a more 
+comfortable experience in system programming @footnote{Thanks to it's 
+representation clauses that obliterates the need to use bit masking for 
+@emph{XORed} for bit manipulation. This functionality @emph{essential to
+system programming} is simply not there in C or even in Assembly language.} 
+and proves itselt light enough to be usable on low class 8 bit processors 
+@footnote{Components that have at their disposal a couple dozen bytes of RAM 
+and a couple Kilobytes of programming memory.}.
+
+Ada is the name of the first programmer to ever exist in humanity.  And this
+first programmer was a woman : Augusta Ada Byron King, Countess of Lovelace, 
+born in 1815, daughter of Byron, the great poet, Charles Babbage's asistant,
+she wrote programs destined to run on his famous machine.
+
+Ada 95 is an american military norm @footnote{MIL-STD-1815B} as well as an
+international civil norm @footnote{ISO/IEC 8652:1995}, it is the first 
+object oriented language to be standarized at an international level. All
+Ada compilers must strictly adhere to the standard.  There are hundreds of 
+compilers destined to run on that many platforms but all of them will produce
+a code that runs identically.
+
+
+Ada is used  everywhere security is critical:  Airbus (A3xx civil series and 
+A400 military), Alsthom (High speed train), Boeing (777 and 7E7), EADS (Eurofighter,
+Ariane, ATV), STS (line 14 Meteor), NASA (Electric power supply of the International
+Space Station). The list goes on and on.  Everywhere reliability and security must 
+come first, Ada is the language of choice.  This link, among others, will give you
+a few examples of where Ada is used:
+@url{http://www.seas.gwu.edu/~mfeldman/ada-project-summary.html}.
+@end ifset
+
+@ifset FR
+@subsubheading Les effets de la mode
+
+Faisons une pause champètre quelques instants.
+
+Imaginons une automobile bloquée derrière une @emph{voiture sans
+permis}, de cette sorte de mini-voiture ayant souvent l'apparence d'un
+escargot en colère et mené, la plupart du temps, par un pilote hors
+d'âge. C'est une situation banale dans nos campagnes.
+
+Il est par contre moins crédible d'imaginer le conducteur de la
+coquille à roulette se gausser de l'automobile qui le suit - de bien
+près, il est vrai - avec des arguments tels que : @emph{``Ah, ces voitures
+modernes ! trop solides, trop fiables, trop confortables, trop sûres !''}
+
+C'est pourtant à ce niveau que se situent les critiques habituelles
+sur Ada, exprimées par des développeurs qui devraient certainement
+s'assoir un moment au bord de la route, et songer alors à leurs
+derniers bugs ordinaires, habituels et quotidiens de leur @emph{langage
+sans permis}.
+
+Car, au bout du compte, il doit bien y avoir autre chose dans la vie
+d'un programmeur qu'un long chemin grossièrement pavé de dépassement
+de tampon, de ces pointeurs en folie qui vont et viennent au gré des
+saisons et d'anomalies structurellement causées par l'utilisation de
+langages basés sur des concepts @emph{hors d'âge}.
+
+Y a t'il, autour de nous, des développeurs qui monteraient dans un
+avion dont les commandes de vol seraient écrites dans un langage
+@emph{à la mode} ?
+
+Un développeur ne devrait-il pas se montrer aussi exigeant, tant pour
+sa productivité que pour son bien-être, avec son langage informatique
+habituel ?
+@end ifset
+
+@ifset EN
+@subsubheading Fashion effects
+
+Lets take a little break for a few minutes.
+
+lets Imagine a car stuck behind a @emph{car without a permit},
+of this kind of mini-car having often the look of an enraged snail is
+usually driven, most of the time, by a illegally aged driver. This is
+a typical situation here in our fields.
+
+It is, however less credible to imagine the driver of this hotwheel to
+follow too closely, it's true and come up with arguments such as :
+@emph{`` Ah these damn modern cars! Too solid, too reliable, too
+comfortable and to sure''}.
+
+It is, however, exactly at this level that the most usual critics are
+usually done about Ada. These are expressed by programmers that should
+definitively sit down on the side of the road and then think about
+their every day bugs of their @emph{language without a permit}.
+
+Because, at the end of the line, there most be other things in life 
+of a programmer than a long road, roughly paved with buffer overflows, 
+of these wild pointers that come and go with the mood of the day and
+anomalies structurally caused by the use of a language based on the 
+concept of @emph{out of range}.
+
+Is there around us any programmers that would board a plane who's 
+flight commands would be written in one of those @emph{fashionable}
+languages?
+
+Shouldn't a developer be as demanding, for both is performance and his
+well being, with his usual programming language?
+@end ifset
+
+@ifset FR
+@subsubheading Pourquoi utiliser Ada
+
+Ada a été créé parce que le développement est une activité humaine. Les
+humains font des erreurs. Le compilateur Ada est l'ami des
+développeurs. Ada est aussi l'ami des chefs de projet pour les
+développements à grande échelle. Une application Ada s'écrit, s'étend et
+se maintient naturellement. Pour ces qualités, la solution Ada est aussi
+l'amie des gestionnaires.
+
+Ada est le langage des développeurs, des gestionnaires et des utilisateurs heureux.
+
+Parce qu'Ada est un langage agréable par son expressivité et reposant
+par sa fiabilité, les humains impliqués dans Ada sont aussi à l'image de
+leur langage. La communauté Ada est une communauté agréable à fréquenter
+et les rencontres y sont très enrichissantes. Les bibliothèques libres
+disponibles en Ada sont nombreuses et de grande qualité. Enfin, la
+communauté Ada francophone est très active.
+
+Pour vous faire rapidement une idée concrète sur Ada, il est conseillé
+de se rendre sur le site de l'association Ada-France,
+@url{http://www.ada-france.org} et de chercher le document intitulé
+@emph{Enseigner Ada}, écrit par Daniel Feneuille.
+@end ifset
+
+@ifset EN
+@subsubheading Why use Ada
+
+Ada was created because software engineering is a human activity.  Humans
+make mistakes, the Ada compiler is friend to developers.  Ada is also 
+friend to project managers for large scale development.  An Ada application
+is written, expanded and maintained very naturally.  For these reasons, Ada
+is also friend to executives.
+
+Ada is the language of happy programmers, managers and users.
+
+Because Ada is a confortable language by it's expressiveness and a restful
+language by it's reliability, humans involved with Ada also reflect the 
+image of their language.  The Ada community is a very comfortable community
+to visit and most meetings are very enlighting.  Free libraries are numerous 
+and are usually of a very high quality.  Finally, the french Ada community is 
+very highly active.
+
+To allow you to make a quick concrete idea on Ada, it is highly recommended 
+to go to the website @url{http://www.ada-france.org} and look up the document
+entitled @emph{Enseigner Ada} written by Daniel Feneuille.
+
+@end ifset
+
+@ifset FR
+@subsubheading Le mot de la fin
+
+Quand Boeing décida, il y a une décennie, que les logiciels du 777
+@footnote{Le Boeing 777 est plus gros bimoteur du monde et le premier
+Boeing civil à commandes de vol électriques, dix ans après l'A320
+d'Airbus.} seraient exclusivement écrits en Ada, les sociétés
+partenaires du constructeurs firent remarquer qu'elles utilisaient
+depuis longtemps des langages tels que le C, le C++ ou divers
+assembleurs et qu'elles en étaient parfaitement satisfaites.
+
+Boeing répondit simplement que seules les sociétés aptes à fournir des
+logiciels en Ada seraient retenues dans les appels d'offres. Alors les
+sociétés se convertirent à Ada.
+
+Aujourd'hui, le développement des logiciels du Boeing 777, surnommé
+@emph{l'Ada plane}, a été effectué et c'est essentiellement grâce au
+très grand succès commercial de cet avion que Boeing, désormais numéro
+deux mondial depuis trois ans derrière Airbus, a pu maintenir la
+rentabilité de son activité civile.
+
+Et que font désormais les sociétés partenaires de Boeing ? Elles
+continuent à développer leurs nouveaux logiciels en... Ada, et voici
+pourquoi :
+
+@itemize @bullet
+@item
+Elles se sont aperçues que la durée de conversion des développeurs est
+très courte. En une semaine, le développeur est déjà suffisament à
+l'aise pour écrire des programmes en Ada et en moins d'un mois, il se
+sent totalement à l'aise ;
+@item
+Ces sociétés ont fait leur comptes : écrits en Ada, les logiciels
+coûtent moins chers, ils présentent moins d'anomalies, sont prêts
+plus tôt et sont plus facile à maintenir.
+@end itemize
+
+Pour le futur proche, ces constatations se vérifient encore chez
+Boeing : le langage principal du 7E7, son nouveau bimoteur, est
+à nouveau Ada.
+@end ifset
+
+@ifset EN
+@subsubheading The ending word.
+
+When Boeing decided, a decade ago, that all software for the 777
+@footnote{The Boeing 777 is the biggest plane with two motors of 
+the world and the first civil Boeing having electrical flight commands, 
+10 years later the Airbus A320.} would be exclusively written in Ada, 
+the corportate associates of the constructor made the remark that they were
+using, for a long time, languages such as C, C++ and assembly language and
+that they were fully satisfied with them.
+
+Boeing simply answered that only firms that could provide Ada software would
+be considered in job offerings.  Therefore, the firms converted themselves
+to Ada.
+
+Today, the development of software for the Boeing 777 nicknamed
+@emph{The Ada Plane}, has been performed and it is essentially thanks
+to the very big commercial success of this plane that Boeing, now
+number two on a world scale, right behind Airbus, was able to maintain
+the revenues created by its civil activities.
+
+And what do the Boeing partner firms do from now on?  They continue to
+develop their new software in none other than... Ada, and here's why:
+
+@itemize @bullet
+@item
+They noticed that the length of time to convert developers to Ada
+is usually rather short.  In a week, the developer is confortable enough
+to write software in Ada and in less than a month, he feels totally
+comfortable with the language;
+@item
+These firms did their accounting : written in Ada, sofware costs less,
+present less anomalies, are ready sooner and are easier to maintain.
+@end itemize
+
+For the near future, these observations can still be verified at Boeing :
+The main language of the 7E7, it's new two engine plane, is once again, Ada.
+@end ifset
+
+@subsection Interfaces utilisateur
+
+Beaucoup de développements nécessitent une interface utilisateur. La
+bibliothèque d'exécution standard propose les briques de base pour une
+interface utilisateur en mode texte.  Pour une interface utilisateur
+graphique, deux solutions complémentaires sont proposées :
+
+@itemize @bullet
+@item
+GtkAda quand une interface locale de haut niveau est nécessaire ;
+@item
+AWS (Ada Web Server), quand une interface WEB est préférable.
+@end itemize
+
+@subsubheading GtkAda
+
+GtkAda s'appuie sur Gtk (Graphic Tool Kit), la bibliothèque graphique
+originellement conçue pour GIMP (Gtk Image Manipulation Program, le
+logiciel de dessin et de retouche d'image bien connu). Gtk a été depuis
+considérablement développé pour être l'interface graphique de GNOME (une
+des deux majeures interfaces graphiques de Linux avec KDE).
+
+Gtk n'est pas écrit en C++ mais en "C ANSI orienté objet". C'est à dire
+du C ANSI (non C++) utilisé dans une conception logicielle orientée
+objet. Cette approche originale garantit une excellente portabilité et
+une bonne fiabilité. La notion de conception logicielle orientée objet
+est indépendante du langage utilisé. On peut programmer objet en
+assembleur par exemple.
+
+@subsubheading AWS (Ada Web Server)
+
+AWS permet d'intégrer un ou plusieurs serveurs WEB à l'intérieur d'une
+application Ada. Les protocoles @code{http} et @code{https} sont
+implémentés, ainsi qu'un client @code{http} et @code{smtp}.
+
+L'intérêt d'AWS est évident à l'heure du WEB, beaucoup d'applications
+n'ont pas besoin d'une interface graphique évoluée ou, dans d'autres
+cas, ont besoin de pouvoir être accédées à partir d'un quelconque
+navigateur internet. 
+
+@subsection Bibliothèques spécialisées
+
+Ada se distingue aussi d'autres langages par l'exceptionnelle qualité
+et la grande diversité du code librement disponible sur internet.
+
+Un petit aperçu est proposé dans une archive annexe dénommée :
+@file{aide-src-@value{AIDE_Version}.tar.bz2}. Dans ce @emph{digest}
+d'environ 90 Mo compressés, on trouvera des sources :
+
+@itemize @bullet
+@item
+D'ouvrages traitant de Ada ;
+@item
+Pour les microcontrôleurs AVR de Atmel et 68HC11/12 de
+Motorola ;
+@item
+De noyaux exécutifs ou de systèmes d'exploitations (Edu-os, Marte et
+Rtems) ;
+@item
+De plus d'une vingtaine d'applications utilisateurs dans des domaines
+applicatifs et techniques variés ;
+@item 
+De plus d'une centaine de packages pour développeurs dans les domaines
+de l'automatique, de la compression, du chiffrement, des applications
+distribuées, des bases de données, des structures de données, du
+déverminage et du test, du traitement du signal, de l'internet, du
+multimédia, du multi-tâche, sans compter les nombreux packages
+systèmes nativement portables, portables via posix, spécifiques
+Windows, Unix, Vms, etc ;
+@item
+De plus d'une vingtaine d'outils pour faciliter la liaison avec
+d'autres langages, de générateurs de documentations, d'éditeurs ou de
+tests.
+@end itemize
+
+@subsection Utilitaires
+
+@subsubheading Navigateur de sources
+
+@code{Alibrowse} est un navigateur de sources dédié à Ada. Il est très simple
+d'emploi et ne créée qu'un seul fichier, de taille modeste, par répertoire. 
+
+@code{Alibrowse} permet de lire très rapidement les spécifications, donc
+l'emploi, des bibliothèques de fonctions (appelées paquetages en Ada)
+disponibles avec AIDE.
+
+Utilisé dans le cadre d'un développement, @code{Alibrowse} permet de
+balayer directement les sources, sans passer par une documentation
+papier ou @code{HTML} @emph{peut-être} obsolète.
+
+Voyons, par exemple, comment naviguer dans la librairie de GNAT,
+située dans @file{/lib/gnat}. À partir de la console MSys, lancer une
+commande @file{aliscan /lib/gnat}. Un fichier d'indexation
+@file{toc.alb} est créé dans le répertoire @file{/lib/gnat}.
+
+Pour naviguer dans la librairie de GNAT, il suffit de taper, toujours à
+partir de la console MSys, @file{alibrowse /lib/gnat/toc.alb}. On peut
+aussi créer un raccourci sur le bureau pour les librairies les plus
+souvent examinées.
+
+Dans AIDE, les répertoires @file{/lib/gnat}, @file{/lib/gtkada} et
+@file{/lib/win32ada} sont déjà indexés.
+
+@subsection Production de la documentation
+
+AIDE est une solution de développement complète. La documentation fait
+partie du logiciel. AIDE intègre donc des outils documentaires
+puissants, cohérents et parfaitement intégrés entre eux.
+
+Le chapitre 6 est entièrement dédié à cet aspect du développement.
+
+@c --------------------------------------------------------------------
+@chapter Ada Instant Development Environment
+@c --------------------------------------------------------------------
+
+@emph{Les investissements en fiabilité des programmes en C augmenteront
+jusqu'à dépasser le coût probable des erreurs ou jusqu'à ce que
+quelqu'un insiste pour tout recoder en Ada. Synthèse des lois de Gilb}
+
+@section Généralités
+
+@subsection Historique
+
+Début 2002, AIDE 0.50 proposait un environnement de développement
+Ada pour Windows NT avec GtkAda 1.3, immédiatement opérationnel après
+une simple copie. AIDE 0.50 comportait un environnement basé soit sur
+Adagide, soit sur Emacs/Glide. Cette première version posait deux
+problêmes : un environnement de développement hybride, soit
+minimaliste et non portable (Adagide) soit puissant mais plus complexe
+(Glide) et un framework graphique basé sur Gtk 1.3, au @emph{look &
+feel} Unix, déroutant pour un utilisateur Windows.
+
+Début 2003, la distribution expérimentale AIDE 0.74 permettait, sous
+windows NT, et avec l'aide de GnatGcc 3.2, GtkAda 2.2 et MSys 1.0.8,
+d'obtenir un environnement Ada complet, similaire à celui rencontré
+sur Unix, mais permettant de créer des applications graphiques sous
+Windows avec GtkAda 2.2. Cet environnement pouvait aussi utiliser
+Glide.
+
+Début 2004, la distribution d'aujourd'hui, AIDE @value{AIDE_Version}
+représente une synthèse des deux démarches précédentes, avec cette
+fois des outils mieux intégrés et toujours avec GtkAda 2.2, afin
+d'obtenir un @emph{look & feel} irréprochable sous Windows.
+
+Cette nouvelle solution utilise la version GNAT d'ACT, qui est un
+compilateur plus sûr et plus complet aujourd'hui que le GnatGcc 3.2 de
+AIDE 0.74, l'environnement MSys, qui est un environnement Unix sous
+Windows et GPS, en remplacement de l'IDE non portable Adagide et
+toujours Glide, pour les développeurs préférant un IDE classique, sans
+compter de nombreux autres nouveaux outils connexes.
+
+@subsection Organisation de la distribution
+
+La distribution est composée de paquets au format @file{TAR.BZ2}. Le
+choix de ce format@footnote{Total Commander, le meilleur clone de
+Norton Commander pour Windows, est disponible en shareware totalement
+fonctionnel et illimité sur @url{http://www.ghisler.com}. Extrèmement
+fiable, puissant mais pourtant très intuitif, ce gestionnaire de
+fichiers gère le format @file{TAR.BZ2}, parmi des dizaines d'autres, y
+compris les plus exotiques sous Windows, comme les paquets Debian ou
+Red-Hat !} permet une amélioration de la compression d'environ 20% par
+rapport au format @file{ZIP}.
+
+Le tableau ci-dessous donne le volume indicatif de chaque paquet. 
+
+@cartouche 
+@multitable @columnfractions .27 .11 .62
+@item Nom du fichier @tab Volume @tab Libellé
+@item 
+@file{aide-@value{AIDE_Version}.tar.bz2}
+@tab 75 Mo
+@tab AIDE 1.0 complet, avec sa documentation (bz2).
+@item 
+@file{aide-doc-@value{AIDE_Version}.tar.bz2}
+@tab 60 Mo
+@tab Documentation (faqs, livres, tutoriaux, cours, etc...).
+@item
+@file{aide-src-@value{AIDE_Version}.tar.bz2}
+@tab 90 Mo
+@tab Sources (applications, packages, OS, etc...).
+@item
+@file{aide-tls-@value{AIDE_Version}.tar.bz2}
+@tab 150 Mo 
+@tab Outils (compilateurs, bindings, éditeurs, etc...).
+@item   
+@file{aide-app-@value{AIDE_Version}.tar.bz2}
+@tab 7 Mo
+@tab Applications Ada disponibles en binaire seulement.
+@end multitable
+@end cartouche
+
+Pour commencer, seul @file{aide-@value{AIDE_Version}.tar.bz2} est
+nécessaire et suffisant. Sa taille @emph{relativement} limitée (75 Mo)
+autorise un téléchargement par liaison internet à bas débit en 8
+heures environ.
+
+Pour acquérir plus d'informations sur Ada en général,
+@file{aide-doc-@value{AIDE_Version}.tar.bz2} est, dans un deuxième
+temps, fortement recommandé.
+
+@file{aide-src-@value{AIDE_Version}.tar.bz2} contient une énorme quantité
+d'applications et de bibliothèques écrites en Ada, toutes en
+sources. On y trouve même trois OS ou des sources pour
+micro-contrôleurs 8 bits. C'est un @emph{must-have} et une source
+d'inspiration permanente.
+
+@file{aide-tls-@value{AIDE_Version}.tar.bz2} contient non seulement tous
+les outils nécessaires au développement, sous forme séparée (par
+opposition à l'intégration de AIDE), mais il contient aussi des outils
+annexes et les sources de GPS et GVD, référentiels passionnants pour
+les adeptes de la programmation avec GtkAda.
+
+@file{aide-app-@value{AIDE_Version}.tar.bz2} contient deux applications
+graphiques complètes, mais hélas sans les sources : l'une est un
+logiciel d'astronomie et l'autre une application d'aide à la recherche
+en musicologie. Il peut être intéressant de les étudier pour apprécier
+les remarquables possibilités de GtkAda et, pourquoi pas, contacter
+les auteurs afin de leur demander des conseils.
+
+@sp 1
+
+Les deux fichiers suivants forment une distribution expérimentale
+@footnote{Rappellons que GNAT est composé d'un frontend écrit en Ada
+relié à GCC (GNU Compiler Collection). Aux alentours de la version
+2.9, une évolution de GCC, rendue nécessaire pour le C++, a rendu le
+frontend GNAT incompatible avec GCC. Toutes les versions de GNAT sont
+depuis créés avec GCC 2.8.1, ce qui ne manquerait pas, à terme, de
+poser des problêmes d'évolution, puisque GCC en est aujourd'hui à la
+version 3.4.
+
+Pour pallier à ce problême, GNAT a été intégré à GCC, ce
+qui représente une chance formidable pour Ada. Mais l'intégration
+n'est pas encore mature, c'est pourquoi Aide @value{AIDE_Version}
+continue d'utiliser la lignée GNAT 3.x de ACT-Europe, qui s'emploie
+actuellement très activement à la fiabilisation de l'intégration de
+GNAT dans GCC. 
+
+Pour des informations plus précises sur l'évolution de GNAT, lancer
+une recherche avec les mots clés ``ludovic brenta debian policy''.},
+
+@c fin footnote commencée à ...distribution expérimentale
+
+totalement séparée de AIDE. C'est une validation expérimentale du
+futur de GNAT et propose d'évaluer l'intégration de GNAT dans GCC 3.2.
+
+@cartouche
+@multitable @columnfractions .27 .11 .62
+@item Nom du fichier @tab Volume @tab Libellé
+@item
+@file{aide-gcc-0.74.tar.bz2}
+@tab 98 Mo 
+@tab GnatGcc 3.2, GtkAda 2.2, MSys 1.0.8 et Emacs/Glide
+@item
+@file{aide-0.50.tar.bz2}
+@tab 50 Mo
+@tab AIDE 0.50, contient Emacs/Glide pour le package ci-dessus.
+@end multitable
+@end cartouche
+
+@file{aide-gcc-0.74.tar.bz2} contient la distribution. Si vous désirez
+utiliser Emacs/Glide, et uniquement dans ce cas, vous devrez aussi
+disposer de @file{aide-0.50.tar.bz2}. Cette distribution expérimentale
+contient une documentation en français et en anglais décrivant, pas à
+pas, le processus de construction, jusqu'aux tests de validation.
+
+@subsection Installation et désinstallation de AIDE
+@subsubheading Installation
+
+Pour installer AIDE :
+
+@itemize @bullet
+@item
+Décompressez le contenu de @file{aide-@value{AIDE_Version}.tar.bz2}
+dans @file{c:\aide} ;
+@item
+Posez les fichiers @file{c:\aide\glide.lnk}, @file{c:\aide\gps.lnk} et
+@file{c:\aide\msys.lnk} sur votre bureau. Les trois icones ainsi
+créées vous permettront d'accéder aux trois modes de développements
+inclus dans AIDE.
+
+@end itemize
+
+Un chemin différend de @file{c:\aide} peut être défini en modifiant un
+paramètre dans @file{c:\aide\aide.cmd}. Veuillez vous référer aux
+questions courantes, un peu plus loin dans ce chapitre.
+
+Le fichier @file{c:\aide\aide.cmd} permet aussi de lancer directement
+l'un des trois modes de développement de AIDE. En appelant
+@file{c:\aide\aide.cmd} sans paramètres, vous obtenez l'usage de la
+procédure :
+
+@smallexample
+
+Usage : aide [glide [file]] or [gps [file]] or [msys]  
+
+Examples : aide glide [file] : run Glide IDE with [file]
+           aide gps [file]   : run GPS IDE with [file]
+           aide msys         : run Msys console
+
+You can also use predefined glide.lnk, gps.lnk and msys.lnk
+
+@end smallexample
+
+Limitations connues :
+
+@itemize @bullet
+@item
+Le nom d'utilisateur de votre session Windows ne doit pas comprendre
+de caractère accentué.
+@item
+Si vous modifiez le chemin de base de AIDE, par défaut @file{c:\aide},
+le nouveau chemin ne doit pas comporter d'espace ou de caractère
+accentué.
+@end itemize
+
+@subsubheading Désinstallation
+
+Pour désinstaller AIDE, il suffit de supprimer le répertoire
+@file{c:\aide} et les icônes de AIDE présentes sur le bureau.
+
+@subsection Prise en main
+
+@subsubheading Lancer Aide
+
+Cliquez sur l'une des trois icônes, tout est déjà configuré et prêt à
+l'emploi : Il n'y a plus qu'à développer !
+
+@center{Icône de Glide}
+
+@image{img/glide} 
+
+@center{Icône de GPS}
+
+@image{img/gps}
+
+@center{Icône de la console Msys}
+
+@image{img/aide}
+
+Suivez les conseils des chapitres 3, 4 & 5 pour tester les
+environnements proposés, afin de choisir celui qui vous convient le
+mieux.
+
+@subsubheading Multi-utilisateurs
+
+Plusieurs utilisateurs différents peuvent utiliser AIDE. Chacun trouvera
+son répertoire personnel, automatiquement créé à la première
+utilisation, derrière le répertoire @file{c:\aide\home}.
+
+Le prompt du shell est de la forme : @code{[utilisateur]
+répertoire_courant >}
+
+@subsubheading Impression dans AIDE
+
+L'impression est effectuée grâce à a2ps et ghostscript. Il y a moyen
+de faire autrement (voir la documentation de GPS, par exemple), mais
+on est alors dans une logique propriétaire ; non libre et non
+portable.
+
+La solution proposée ici est plus performante, portable et fonctionne à
+l'identique sous Windows et sous Unix. Elle fait appel aux outils libres
+a2ps et ghostscript.
+
+Elle ne nécessite aucune configuration, intègre un pretty-printing avec 
+reconnaissance du type de fichier et lance automatique le sélecteur
+d'imprimante Windows.
+
+Ces outils permettent aussi au développeur de disposer d'une couche
+d'impression portable à bon compte, pourvu qu'il n'ait pas besoin d'une
+mise en page trop évoluée (essentiellement mode texte avec tags suivant
+une feuille de style choisie). 
+
+Cette couche d'impression est suffisante pour éditer des états texte
+avec les attributs de caractères courants. Elle autorise aussi une
+sortie au format .PS ou .PDF, ce qui peut se révêler utile.
+
+@subsubheading Validation sommaire de l'installation
+
+Vous pouvez tester rapidement votre installation, aussi bien en mode
+texte qu'en mode graphique, par la procédure ci-dessous :
+
+@itemize @bullet
+@item 
+Lancez une console Msys par la commande @file{c:\aide\msys.cmd}
+@key{RET} ;
+@item
+En vous plaçant dans le répertoire @file{/examples/gnat} par
+la commande @file{cd /examples/gnat} @key{RET},
+lancez la compilation des programmes en mode texte par la commande
+@file{make} @key{RET}. Les programmes se lancent au fur et à mesure de
+leur compilation ;
+@item
+En vous plaçant dans le répertoire @file{/examples/gtkada/testgtk} par
+la commande @file{cd /examples/gtkada/testgtk} @key{RET}, lancez la
+compilation du test complet GtkAda par la commande @file{maketest}
+@key{RET}. Lancez ensuite le programme par la commande @file{testgtk}
+@key{RET} et découvrez la richesse de l'environnement graphique Gtk.
+@end itemize
+
+@page
+
+@section Structure de la distribution
+
+J'ai tenté de créer une arborescence consistante, modulaire, peu
+profonde, dans la limite des contraintes techniques rencontrées avec les
+différents composants de la distribution, entre autres, des problêmes de
+conversion de chemins posix. 
+
+Le répertoire /bin et ses descendants ne doivent contenir que des
+exécutables pouvant utiliser des chemins posix.
+
+Toutes les remarques sont les bienvenues.
+
+@smallexample
+
+* = Racine de la distribution, @file{c:\aide} par défaut.
+
+*---bin       binaires posix : glide, gps, msys
+|
++---binw      binaires natifs : a2ps, ghostscript, ghostview, gnat
+|
++---doc       documentation
+|   |
+|   +---gnat  
+|   +---gps
+|   +---gs
+|   +---gsview
+|   +---gtk
+|   +---gtkada
+|   \---msys
+|
++---etc       configuration
+|   |
+|   +---e            emacs
+|   +---emacs        emacs : stuff suppressed from original emacs etc directory
+|   +---fte          fte
+|   +---icons        emacs
+|   +---pango        gtk
+|   +---tutor        emacs : gvd tutorial
+|   +---gtk-2.0      gtk
+|   \---a2ps         a2ps
+|       doc-x        emacs
+|       gs           gs 
+|       news         emacs
+|       problems     emacs
+|       profile      msys
+|       tutorial     emacs
+|       fstab.smaple msys
+|       config.site  msys
+|       rgb.txt      emacs
+|
++---examples  exemples et tutoriaux
+|   |
+|   +---adabrowse 
+|   +---adadoc
+|   +---aide
+|   +---glut32
+|   +---gnat
+|   +---gps
+|   +---gtkAda
+|   \---win32Ada
+|
++---home      racine des répertoires utilisateurs
+|   |
+|   +---Utilisateur_1
+|   \---Utilisateur_n
+|
++---info      emacs : emplacement des fichiers infos     
+|
++---lib       bibliothèques gnat, gtkada et win32ada
+|   |
+|   +---gnat
+|   +---gtk-2.0
+|   +---gtkada
+|   +---include
+|   \---win32ada
+|
++---lisp      emacs : emplacement des fichiers lisp
+|
++---share     fichiers partagés
+|   |
+|   +---a2ps
+|   +---file
+|   +---gps
+|   +---ispell
+|   +---make
+|   \---themes
+|
+\---tmp
+
+@end smallexample
+
+Notes : 
+
+@itemize @bullet
+@item
+Les exécutables GPS sont : @file{cbrowser.exe}, @file{dbimp.exe}, @file{gpr2make.exe},
+@file{gprcmd.exe}, @file{gps.exe} et @file{winps.exe} ;
+@item
+Les exécutables Glide sont : @file{fns-21.1.1.el}, @file{addpm.exe},
+@file{cmdproxy.exe}, @file{ctags.exe}, @file{ddeclient.exe}
+@file{ebrowse.exe}, @file{emacs.exe}, @file{getfile.exe},
+@file{glideint.exe}, @file{hex1.exe}, @file{movemail.exe} et
+@file{runemacs.exe} ;
+@item
+Les sources lisp de Glide, adaptées à Aide, sont :
+@file{ada-aunit.el}, @file{ada-mode.el}, @file{ada-prj.el},
+@file{ada-stmt.el}, @file{ada-support.el} @file{ada-vms.el},
+@file{ada-xref.el}, @file{cua-mode.el}, @file{glide.el},
+@file{glide-debug.el}, @file{glide-externel.el}, @file{subdirs.el} et
+@file{glide_version.txt}. Le fichier @file{dlgopen.el} a été rajoûté
+pour rétablir une fonctionnalité de compatibilité supprimée dans la
+nouvelle version de Glide.
+@item
+Les exécutables de la chaine d'impressions sont @file{gs.exe}, @file{a2ps.exe} et
+@file{file.exe}.
+@item
+Les utilisateurs sont créés au lancement de AIDE par la Console
+MSys. Leur répertoire de travail est situé derrière le répertoire
+@file{home}. Le nom utilisé pour le répertoire de travail correspond au
+nom de l'utilisateur.
+@end itemize
+
+@section  Questions courantes
+
+@subsection Généralités
+
+@subsubheading Changer le répertoire par défaut de AIDE
+
+Question : Le répertoire par défaut @file{c:\aide} ne me convient pas.
+
+Réponse : Le répertoire racine @file{c:\aide} peut être modifié dans
+@file{c:\aide\aide.cmd}, grâce au paramètre @code{ADA_ROOT}. 
+
+Si vous changez autre chose que l'unité disque, il vous faudra aussi
+modifier, dans le fichier @file{c:\aide\etc\a2ps}, le paramètre
+@code{LibraryPath} qui contient par défaut le chemin
+@code{/aide/share/a2ps}.
+
+Le nouveau chemin ne doit pas comporter d'espace ou de caractère
+accentué.
+
+@subsubheading Compilation avec certains répertoires
+
+Question : J'ai des problèmes de compilation dans certains répertoires (mais pas tous) ?
+
+Réponse : Vérifiez que le chemin de votre projet ne comporte pas
+d'espaces dans les noms (si c'est le cas, remplacez les espaces par des
+soulignés "_")
+
+@subsubheading Problême avec make
+
+Question : J'ai créé mon premier fichier makefile, mais ça ne marche pas.
+
+Réponse : Dans les règles de dépendances, il faut utiliser @key{TAB} (la touche de tabulation). 
+
+Exemple : les trois lignes saisies telles que ci-dessous...
+
+@cartouche
+@smallexample
+
+hello.exe:@key{RET}
+@key{TAB}gnatmake hello.adb@key{RET}
+@key{TAB}hello.exe@key{RET}
+
+@end smallexample
+@end cartouche
+
+...apparaîtrons ainsi...
+
+@cartouche
+@smallexample
+
+hello.exe:
+      gnatmake hello.adb
+      hello.exe
+@end smallexample
+@end cartouche
+
+...et tout rentrera dans l'ordre.
+
+@c---
+@subsection GNAT
+
+@subsubheading Compréhension des messages d'erreur
+
+Question : Je ne comprends pas le message d'erreur du compilateur...
+
+Réponse : Utilisez l'option -gnatf qui rendra Gnat beaucoup plus bavard. 
+
+
+@subsubheading Réduction de la taille des exécutables mode texte
+
+Question : Quand je compile le programme suivant :
+
+@cartouche
+@smallexample
+
+-- hello.adb
+
+withText_IO;
+
+procedure Hello is
+
+begin
+
+Text_IO.Put("Hello");
+
+end Hello;
+
+@end smallexample
+@end cartouche
+
+J'obtiens un exécutable de taille importante, peut-on la réduire ?
+
+Réponse : Tout dépend des options de compilation et d'édition des liens
+utilisées, ainsi que de l'usage ou non d'un compresseur d'exécutable.
+
+Si l'on compile sans options particulières par @code{gnatmake hello}, on
+obtient un exécutable d'environ 210 Ko.
+
+En utilisant la commande suivante, @code{gnatmake hello -f -a -g -gnato
+-gnatwa -fstack-check}, on obtient un exécutable beaucoup plus gros :
+520 Ko
+
+Options utilisées :
+@itemize @bullet
+@item 
+-a : intègre les .ali, même en lecture seule ;
+@item 
+-f : force la compilation des packages non prédéfinis ;
+@item
+-g : intègre dans l'exécutable les informations nécessaire au débuggage ;
+@item
+-gnato : contrôle des dépassements ;
+@item
+-gnatwa : valide tous les avertissements ;
+@item
+-fstack-check : contrôle de la pile.
+@end itemize
+
+Par contre, en utilisant d'autres options @code{gnatmake hello -f -a -O2
+-m386 -ffast-math -gnatp -largs -s}, on obtient un exécutable minuscule
+: 65 Ko. En utilisant le packer UPX avec cette dernière version, on
+tombe à 30 Ko.
+
+Options utilisées :
+@itemize @bullet
+@item 
+-a : intègre les .ali, même en lecture seule ;
+@item 
+-f : force la compilation des packages non prédéfinis ;
+@item
+-O2 : optimise au niveau 2 ;
+@item
+-m386 :
+@item
+--fast-math :
+@item
+-gnatp : Supprimer tous les contrôles à l'exécution ;
+@item
+-largs -s : demande à l'éditeur de liens de suppriemr tous les symbôles.
+@end itemize
+
+Quelle est la meilleure approche ? Tout dépends du but recherché. Avec
+les exemples ci-dessus et la documentation livrée avec AIDE, en
+particulier les manuels du compilateur GNAT, vous pourrez choisir les
+options les plus appropriées au but fixé.
+
+@subsubheading Comment débugguer
+
+Question : Comment débugguer mon application ?
+
+Réponse : Compilez avec la ligne suivante : 
+
+gnatmake testgtk -g -s 
+
+-g pour intégrer les informations de debug
+-s pour demander à gnatmake de recompiler les packages déjà créés mais sans l'option -g 
+
+@subsubheading Gagner du temps en débuggage
+
+Question : Mon développement est assez important et le basculement de 
+la version débug à la version finale et vice versa m'oblige à recompiler
+toute mon application.
+
+Réponse : Au niveau de votre répertoire source :
+
+@itemize @bullet
+@item
+Créez deux sous-répertoires (nommés dans cet exemple @file{ACU_debug} 
+et @file{ACU_final}, ACU = Ada Compiled Units) ;
+@item
+Créez un batch pour la version debug : @file{md.cmd}, contenant la 
+ligne : @code{gnatmake -s -g -aOACU_debug <monsource>} ;
+@item
+Créez un batch pour la version finale : @file{mf.cmd}, contenant la 
+ligne : @code{gnatmake -s -O2 -aOACU_final <monsource> -largs -s} ;
+@item
+Compilez une première fois en "final", avec @file{mf}, puis déplacez 
+tous les @file{.ali} et les @file{.o} dans @file{.\ACU_final} ;
+@item
+Compilez une première fois en "debug", avec @file{md}, puis déplacez
+tous les @file{.ali} et les @file{.o} dans @file{.\ACU_debug}.
+@end itemize
+
+Vous basculez de mode simplement en changeant de batch, seuls 
+les packages modifiés entre temps seront recompilés.
+
+@subsubheading Debugger dans le runtime GNAT
+
+Question : Je voudrais suivre une session de débuggage jusque 
+dans la bibliothèque d'exécution GNAT.
+
+Réponse : Compilez avec la ligne suivante : @code{gnatmake testgtk -a
+-f}.
+
+Options utilisées :
+@itemize @bullet
+@item 
+-a pour intégrer les .ali, même en lecture seule ;
+@item 
+-f pour forcer la compilation des packages non prédéfinis.
+@end itemize
+
+@subsubheading Développement multi-langage
+
+Question : Peut-on mélanger dans un même développement des sources 
+Ada avec celles d'autres langages ?
+
+Réponse : Le support C est natif et ne pose aucun problème, voir les
+exemples. Le support de la plupart des autres langages pose peu de
+problêmes. Une exception notable pour l'instant : le support C++
+semble difficile à réaliser sous win32, l'auteur n'y suis
+personnellement pas arrivé, de la façon évoquée dans les exemples. Le
+mieux est de mettre tout le code C++ dans une DLL et ensuite d'appeler
+cette DLL@footnote{Cette situation est appellée à évoluer avec
+l'intégration de GNAT dans GCC}.
+
+@subsubheading Accès aux DLL
+
+Question : Peut-on accéder à des DLL écrites dans un autre langage ou au
+contraire créer des DLL en Ada accessible à d'autres langages ?
+
+Réponse : Vous trouverez toutes les réponses sur
+@url{http://www.adapower.com} (entre autres).
+
+@c---
+@subsection GtkAda
+
+@subsubheading Console texte dans une application GtkAda
+
+Question : Quand je compile une application GtkAda, j'ai toujours une
+console qui s'ouvre à l'exécution du programme. 
+
+Réponse : Compilez avec la ligne suivante : 
+
+@code{gnatmake testgtk -largs -mwindows}. 
+
+Bien sûr, il ne faudra pas que votre programme sorte aussi du texte sur
+la console.
+
+@subsubheading Réduction de la taille des exécutables GtkAda
+
+Question : Quand je compile une application GtkAda, j'obtiens des
+exécutables énormes.
+
+Réponse : Pour un programme faisant 2 Mo, compilez avec la ligne
+suivante :
+
+@code{gnatmake <options> -O2 <programme> -largs -s}
+
+Options utilisées :
+@itemize @bullet
+@item
+-O2 : optimise au niveau 2 ;
+@item
+-largs -s : demande à l'éditeur de liens de supprimer tous les symbôles.
+@end itemize
+
+L'application ne fait plus que 1 Mo.
+
+Puis utilisez le packer upx fourni.
+
+L'application ne fait plus que 250 Ko.
+
+@section Anomalies
+
+@subsubheading Message d'erreur lors de l'impression avec a2ps
+
+Anomalie : L'impression délivre un message d'erreur : @emph{file.exe:
+Cannot map `c:/aide/share/file/magic.mgc' (Permission denied)}.
+
+Solution : Dans l'attente d'en comprendre l'origine et de traiter le
+problême (sic), l'ignorer, puisqu'il semble sans conséquence.
+
+@subsubheading Implémentation OpenGL avec GtkAda
+
+Anomalie : L'implémentation d'OpenGL avec GtkAda n'est pas fonctionnelle
+sous Windows.
+
+Solution : Mettre à jour le code OpenGl de GtkAda pour Windows.
+
+@page
+
+@section  Fichiers remarquables
+
+@subsection @file{c:\aide\aide.cmd}
+
+Le paramètrage de la partie Windows de AIDE est dans ce fichier,
+essentiellement sous forme de variables d'environnements. C'est par ce
+principe que AIDE se passe de toute configuration du système et ne
+nécessite aucune installation. Si tous les programmes agissaient de
+même, @emph{quand ils le peuvent}, la vie serait plus simple.
+
+@smallexample
+
+@include ../../../aide.cmd
+
+@end smallexample
+
+@subsubheading AIDE root path
+
+La variable @env{ADA_ROOT} détermine la racine de AIDE. C'est, @emph{à
+priori}, la seule variable que vous pourriez souhaiter changer dès la
+copie de AIDE, si le chemin @file{c:\aide} ne vous satisfaisait pas.
+
+@subsubheading Main internal paths
+
+La variable système @env{PATH} est redéclarée pour prendre en compte les
+chemins d'exécutables spécifiques à AIDE. Cet ajoût n'est effectif que
+dans l'environnement de AIDE et disparait à la fermeture de AIDE.
+
+La variable @env{HOME} détemine le répertoire de travail de
+l'utilisateur courant, elle est basée sur la variable système
+@env{USERNAME}.
+
+Les variables systèmes @env{TEMP} et @env{TMP} sont redéclarées pour
+rediriger les fichiers temporaires vers le répertoire @file{tmp},
+standard sous Unix.
+
+La variable @env{GS_LIB} définit les emplacements des scripts,
+bibliothèques et polices de Ghostscript. 
+
+La variable @env{GS_CONFIG} définit le fichier de configuration de
+Ghostscript. Ce fichier est très important. Apprendre à le modifier vous
+ouvrira plein de possibilités, comme par exemple, créer des fichiers
+@file{PDF}, au format Acrobat. Reportez-vous à la documentation.
+
+La variable @env{A2PS_CONFIG} définit le fichier de configuration de
+@file{a2ps}.
+
+La variable en commentaire @env{MAGIC} représente une tentative dénuée
+de succès pour éviter un message d'anomalie, sans conséquences
+visibles, lors des impressions avec a2ps.
+
+La variable @env{ADA_INCLUDE_PATH} contient tous les chemins visités par
+GNAT pour trouver les paquetages dont il a besoin. Par défaut, la
+variable @env{ADA_OBJECTS_PATH} contient les mêmes informations.
+
+La variable @env{GCC_EXEC_PREFIX} définit l'emplacement du code de
+démarrage de GCC, en l'espèce le fichier @file{crt2.o}. Cette variable
+est nécessaire pour éviter d'avoir à placer @file{crt2.o} dans chaque
+répertoire de travail...
+
+La variable @env{C_INCLUDE_PATH} définit l'emplacement des fichiers
+d'en-têtes @file{.h} du langage C. C'est utile lors de projets mixtes ou
+pour tester les exemples fournis.
+
+@page
+
+@subsection @file{c:\aide\etc\profile}
+
+@smallexample
+
+@include ../../../etc/profile
+
+@end smallexample
+
+@c --------------------------------------------------------------------
+@chapter Développement avec Glide
+@c --------------------------------------------------------------------
+
+@emph{Mon système d'exploitation est Emacs et Windows est son
+driver.}
+
+@section Présentation
+
+Glide est aujourd'hui la solution de développement Ada la plus
+aboutie. Basée sur Emacs, un logiciel surpuissant et complètement
+configurable, elle n'a pour l'instant aucun équivalent.
+
+Emacs est le type même de logiciel qui vous donne mille fois en retour
+l'investissement de départ que vous avez bien voulu lui
+consentir. Modifiable et configurable à l'infini, Emacs permet enfin
+au développeur d'utiliser @emph{une seule et même interface} pour tous
+ses travaux de saisie : les programmes, la documentation et le
+courrier. À l'usage, le gain de productivité est flagrant.
+
+@section Lancement
+
+Glide peut être lancé par la commande @file{c:\aide\aide.cmd glide
+[nom de fichier]} ou par le lien @file{c:\aide\glide.lnk},
+éventuellement posé au préalable sur le bureau.
+
+@section Test de l'installation
+
+Dans Glide, allez dans le @emph{buffer} des nouveaux fichiers par
+@code{Buffer/*scratch*}.
+
+Saisir le programme suivant :
+
+@cartouche
+@smallexample
+
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Bonjour_Monde_1 is
+begin
+   Put_Line ("Bonjour Monde 1 !");
+end; 
+
+@end smallexample
+@end cartouche
+
+Sauvez le programme sous le nom @file{c:\aide\home\<votre
+login>\bonjour_monde_1.adb} par la commande @code{File/Save Buffer As...}.
+
+Compilez en appuyant sur @key{F4}.
+
+À l'issue de la compilation, lancez le programme par
+@code{Ada/Run}. Une nouvelle fenêtre apparait avec le résultat de
+l'exécution :
+
+@cartouche
+@smallexample
+
+Bonjour Monde 1 !
+
+Process run finished
+
+@end smallexample
+@end cartouche
+
+@section Impression
+
+Une impression de type @emph{pretty-printer} est intégrée dans
+Glide. 
+
+Choisissez une sortie couleur par @code{File/Postscript Print Buffer}
+ou noir et blanc par @code{File/Postscript Print Buffer (B+W)}.
+
+Pour une impression standard, choisissez @code{File/Print Buffer}.
+
+@section Commandes clavier
+
+Les commandes Glide dans AIDE sont basées Wordstar pour les plus
+importantes, avec quelques arrangements. Les autres commandes restent
+des classiques d'Emacs. 
+
+La bonne nouvelle est que vous pouvez tout changer sans trop d'effort,
+hormis celui de parcourir la doc d'Emacs, très explicite et d'étudier
+le fichier @file{.emacs} de votre répertoire personnel dans
+@file{c:\aide\home}.
+
+@subheading Commandes fichier
+
+@multitable @columnfractions .20 .60 .20
+@item @key{F2} @tab Sauve le fichier courant
+@item @key{F3} @tab Ouvre un fichier
+@item @key{SHIFT}-@key{F3} @tab Ouvre un projet
+@item @key{F4} @tab Construit l'application
+@item @key{SHIFT}-@key{F4} @tab Compile le source courant
+@end multitable
+
+@subheading Commandes de bloc
+
+@multitable @columnfractions .20 .60 .20
+@item @key{CTRL}-@key{SPACE} @tab Puis sélection du bloc avec @key{UP} ou @key{DOWN}
+@item @key{F5} @tab Copie un bloc sélectionné
+@item @key{F6} @tab Déplace un bloc sélectionné
+@item @key{F7} @tab Colle un bloc sélectionné
+@end multitable
+
+@subheading Commandes curseur
+
+@multitable @columnfractions .20 .60 .20
+@item @key{HOME} @tab Début de ligne
+@item @key{END} @tab Fin de ligne
+@item @key{CTRL}-@key{HOME} @tab Début de fichier
+@item @key{CTRL}-@key{END} @tab Fin de fichier 
+@item @key{CTRL}-@key{LEFT} @tab Mot précédent
+@item @key{CTRL}-@key{RIGHT} @tab Mot suivant
+@end multitable
+
+@subheading Commandes de recherche et de remplacement
+
+@multitable @columnfractions .20 .60 .20
+@item @key{CTRL}-@key{S} @tab Recherche vers l'avant (poursuivre la recherche
+en retapant @key{CTRL}-@key{S} à nouveau)
+@item @key{CTRL}-@key{R} @tab Recherche et remplacement avec
+confirmation ('y' pour remplacer, 'n' pour laisser tel quel, ? pour
+l'aide détaillée)
+@item @key{ESC}-@key{P} @tab Dans une recherche en cours, parcours de
+l'anneau des chaînes de recherche déjà utilisées
+
+@end multitable
+
+@subheading Commandes d'édition
+
+@multitable @columnfractions .20 .60 .20
+@item @key{CTRL}-@key{B} @tab Reformate le paragraphe
+@item @key{CTRL}-@key{G} @tab Efface le minibuffer 
+@item @key{CTRL}-@key{P}-lettre @tab Insère un caractère de contrôle
+@item @key{CTRL}-@key{T} @tab Efface le mot à droite
+@item @key{CTRL}-@key{E} @tab Efface du curseur à la fin de la ligne
+@item @key{CTRL}-@key{Y} @tab Supprime la ligne
+@item @key{CTRL}-@key{U} @tab Annule la dernière modification
+@end multitable
+
+@subheading Commandes CTRL-K-C
+
+@multitable @columnfractions .20 .60 .20
+@item @key{CTRL}-@key{K}-@key{C} @tab Colle un bloc sélectionné
+@item @key{CTRL}-@key{K}-@key{K} @tab Déplace un bloc sélectionné
+@item @key{CTRL}-@key{K}-@key{Y} @tab Efface un bloc sélectionné
+@item @key{CTRL}-@key{K}-@key{R} @tab Insère un fichier au curseur
+@item @key{CTRL}-@key{K}-@key{W} @tab Exporte un bloc sélectionné dans un fichier
+@end multitable
+
+@c@subheading Commandes CTRL-Q-A de compatibilité
+@c
+@c@multitable @columnfractions .20 .60 .20
+@c@item @key{CTRL}-@key{Q}-@key{A} @tab Recherche et remplacement avec confirmation
+@c@item @key{CTRL}-@key{Q}-@key{F} @tab Recherche
+@c@end multitable
+
+@subheading Commandes d'édition pour les caractères français et européens
+
+@multitable @columnfractions .20 .60 .20
+@item @key{CTRL}-@key{SHIFT}-@key{2} @tab É
+@item @key{CTRL}-@key{SHIFT}-@key{7} @tab È
+@item @key{CTRL}-@key{SHIFT}-@key{9} @tab Ç
+@item @key{CTRL}-@key{SHIFT}-@key{0} @tab À
+@item @key{ALT}-@key{A} @tab @@ae@{@} (@ae{})
+@item @key{ALT}-@key{SHIFT}-@key{A} @tab @@AE@{@} (@AE{})
+@item @key{ALT}-@key{O} @tab @@oe@{@} (@oe{})
+@item @key{ALT}-@key{SHIFT}-@key{O} @tab @@OE@{@} (@OE{})
+@item @key{ALTGR}-@key{E} @tab EUR (symbole monétaire européen)
+@end multitable 
+
+L'usage de ces caractères est conseillé pour une documentation de
+qualité. Les caractères @ae{}, @AE{}, @oe{} et @OE{} et EUR
+nécessitent un traitement particulier car ils appartiennent au nouveau
+jeu de caractère ISO-8859-15 ou Latin-9, remplaçant l'ancien
+ISO-8859-1 ou Latin-1.
+
+@section Questions courantes
+
+<<<TODO>>>
+
+@section Anomalies
+
+<<<TODO>>>
+
+@c --------------------------------------------------------------------
+@chapter Développement avec GPS
+@c --------------------------------------------------------------------
+
+@section Présentation
+
+GPS est une solution émergente de développement complètement
+graphique. Elle n'atteint pas, dans cette version, le degré d'efficacité
+de Glide, mais le fait que GPS soit intégré dans AIDE vous permet de
+vous faire votre opinion par vous-même. De toute manière GPS est déjà
+suffisament mûr pour une utilisation professionnelle.
+
+@section Lancement
+
+GPS peut être lancé par la commande @file{c:\aide\aide.cmd gps
+[nom de fichier]} ou par le lien @file{c:\aide\gps.lnk},
+éventuellement posé au préalable sur le bureau.
+
+@section Test de l'installation
+
+Dans GPS, créez un nouveau fichier par @code{File/New}.
+
+Saisir le programme suivant :
+
+@cartouche
+@smallexample
+
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Bonjour_Monde_2 is
+begin
+   Put_Line ("Bonjour Monde 2 !");
+end; 
+
+@end smallexample
+@end cartouche
+
+Sauvez le programme sous le nom @file{c:\aide\home\<votre
+login>\bonjour_monde_2.adb} par la commande @code{File/Save As...}.
+
+Compilez en appuyant sur @key{F4}.
+
+À l'issue de la compilation, lancez un shell par
+@code{Build/Run/Custom...}, saisissez @file{cmd} dans la zone
+@emph{Enter the command to run} et appuyez sur @key{RET}, un shell
+s'ouvre dans la fenêtre en bas à droite.
+
+Dans ce shell, vérifiez que vous êtes bien dans le répertoire
+@file{c:\aide\home\<votre login>\}. Vous pouvez voir vos fichiers par
+la commande @code{ls}, suivie de @key{RET}.
+
+Tapez @file{bonjour_monde_2}, suivi de @key{RET} pour voir le résultat.
+
+@section  Questions courantes
+
+<<<TODO>>>
+
+@section Anomalies
+
+@subsubheading Utilisation du 'Project wizard'
+
+Anomalie : L'utilisation du 'Project wizard' créé une option de
+compilation (pretty printer) générant des erreurs avec GNAT 3.15p, qui
+ne la supporte pas.
+
+Solution : Ne pas utiliser le 'Project Wisard' ou le corriger après sa
+création en supprimant la section 'pretty printer'.
+
+@subsubheading Système d'aide HTML
+
+Anomalie : Le système d'aide de GPS n'accepte pas de gros fichiers
+HTML. Le chargement est très lent et la totalité du fichier n'est pas
+accessible.  
+
+Solution : Fractionner et formater le document HTML à l'image des
+fichiers d'aide HTML fournis avec GPS.
+
+@c --------------------------------------------------------------------
+@chapter Développement avec Msys
+@c --------------------------------------------------------------------
+
+@section Présentation
+
+On a toujours besoin d'une petite ligne de commande sur son Windows,
+surtout quand cette console est une console Unix, capable d'exécuter
+des scripts bash et toutes les commandes classiques d'un terminal Unix
+!
+
+@section Lancement
+
+Msys peut être lancé par la commande @file{c:\aide\aide.cmd msys} ou
+par le lien @file{c:\aide\msys.lnk}, éventuellement posé au préalable
+sur le bureau.
+
+@section Test de l'installation
+
+Lancez l'éditeur de la console par @code{fte}, suivi de @key{RET}.
+Appuyez alors sur @key{F3} et saisissez le nom du fichier, soit
+@file{bonjour_monde_3.adb}, suivi de @key{RET}.
+
+Puis saisissez le texte du programme :
+
+@cartouche
+@smallexample
+
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Bonjour_Monde_3 is
+begin
+   Put_Line ("Bonjour Monde 3 !");
+end; 
+
+@end smallexample
+@end cartouche
+
+Sauvez le programme par @key{F2} et quittez par @key{Alt-X}.
+
+Compilez par la commande @code{gnatmake bonjour_monde_3}.
+
+À l'issue de la compilation, lancez @file{bonjour_monde_3} pour voir le
+résultat.
+
+@section Questions courantes
+
+<<<TODO>>>
+
+@section Anomalies
+
+<<<TODO>>>
+
+@c --------------------------------------------------------------------
+@chapter Documentation avec Texinfo
+@c --------------------------------------------------------------------
+
+@section Généralités
+
+@subsection L'enfer du développeur
+
+La production de la documentation utilisateur et technique d'un
+logiciel pose souvent problême. 
+
+C'est une tâche mal aimée et demandant du temps car elle impose
+- entres autres - des connaissances typographiques et de mise en page
+pour la forme, mais aussi pour le fond des contraintes de vocabulaire,
+de style et des compétences linguistiques propres à la @emph{rédaction
+technique}.
+
+Des aspects spécifiques de synchronisation viennent aussi affecter
+cette activité :
+
+@itemize @bullet
+@item
+Synchronisation entre documentations identiques mais dans des langues
+différentes ;
+@item
+Synchronisation entre documentations différentes sur la forme mais
+similaires sur le fond (aide en ligne et manuels utilisateurs) ;
+@item
+Synchronisation entre documentation technique et code source.
+@end itemize
+
+Le maintien de la cohérence d'une documentation est un problême très
+complexe. Enfin, pour achever de compliquer la situation, la
+documentation est, le plus souvent, effectuée avec des outils
+inadéquats.
+
+Ce tableau d'ensemble une fois dressé, il est aisé de comprendre que
+la @emph{doc}, ainsi familièrement appelée, est @emph{l'enfer} du
+développeur.
+
+@subsection La solution Texinfo
+
+Compte tenu de la situation évoquée ci-dessus, une solution
+@emph{Libre} a été développée : Texinfo.
+
+Texinfo est un système qui décharge le rédacteur des problêmes de
+synchronismes et de mise en page tout en assurant la production de
+la documentation sous tous les formats utiles, aussi bien pour
+l'aspect utilisateur que technique.
+
+Voici quelques éléments supplémentaires sur Texinfo : 
+
+@itemize @bullet
+@item
+Texinfo est très simple à apprendre et à utiliser. Texinfo n'est pas
+un logiciel @sc{WYSIWYG}, mais un langage à balises très simple à
+utiliser@footnote{Texinfo est incomparablement plus accessible que
+@TeX{} et ne demande aucun apprentissage particulier.} et parfaitement
+adapté au problême à résoudre ;
+@item
+Texinfo est capable de produire, à partir d'un source unique, des
+sorties au formats @file{HTML}, @file{PDF}, @file{TXT}, @file{PS},
+@file{INFO} et même @file{HLP}, le format des fichiers d'Aide
+Windows. Avec une seule saisie et un seul fichier, vous obtenez le
+manuel papier en @file{PDF}@footnote{Avec création automatique de la
+hiérarchie de signets pour la navigation et les liens hypertextes à
+partir du sommaire.} ou @file{PS}, l'aide en ligne intégrée
+@file{INFO} ou @file{HLP}, et la documentation internet et l'aide en
+ligne via la sortie @file{HTML} ;
+@item
+Texinfo produit des documents de qualité professionnelle : le
+résultat typographique de la sortie papier est exceptionnel, sans que
+l'utilisateur ait besoin de s'investir à ce niveau, ce qui n'est pas
+rien, car la typographie est un art.
+@end itemize
+
+Après beaucoup d'années d'expérience, l'auteur croit pouvoir vous
+assurer que Texinfo est @emph{sans équivalent} pour produire la
+documentation utilisateur d'un logiciel.
+
+@section Installation pour les manuels imprimables
+
+Quoique Texinfo soit pré-installé dans AIDE, Il est nécessaire
+d'installer @TeX{} pour produire des manuels imprimables.
+
+@subsection Installation de @TeX{}
+
+Cette étape a été très soigneusement décrite pour éviter tout
+ambiguïté. 
+
+Téléchargez la distribution de fp@TeX{} à l'adresse
+@url{http://www.fptex.org} puis installez-la en suivant
+@emph{strictement} la procédure ci-dessous :
+
+@itemize @bullet
+@item
+Lancer le programme d'installation @file{TexSetup} ;
+@item
+Sélectionner @emph{Install for all user} et pressez @key{Suivant} ;
+@item
+Même si fp@TeX{} est placé sur un CD-ROM, sélectionnez @emph{Local
+directory / ZIP files} et pressez @key{Suivant} ;
+@item
+Choisissez un répertoire d'installation ne comportant pas d'espaces,
+par exemple @file{c:\tex}, et pressez @key{Suivant}, le programme
+d'installation examine le contenu de fp@TeX{} ;
+@item
+Sur la fenêtre @emph{TeXLive Setup Wizard}, dans la liste @emph{Choose
+a scheme to install}, assurez vous que @emph{Generic basic TeXLive
+scheme} est bien sélectionné ;
+@item
+Cochez @emph{I want to customize selected scheme} et pressez
+@key{Suivant} ;
+@item 
+Ouvrez l'arborescence @emph{texlive} ;
+@item 
+Effectuez les opérations suivantes :
+             @itemize @bullet
+             @item
+             Laisser tex-basic sélectionné ;
+             @item
+             Laisser tex-documentation sélectionné ;
+             @item
+             Laisser tex-etex sélectionné ;
+             @item
+             Ouvrez tex-extrabin, laisser tex-basic sélectionné et sélectionnez
+             texinfo ;
+             @item
+             Sélectionnez tex-langfrench ;
+             @item
+             Laisser tex-latex  sélectionné;
+             @item
+             Laisser tex-pdftex sélectionné ;
+             @item
+             Sélectionner tex-psutils.
+             @end itemize
+
+@end itemize
+
+Puis pressez @key{Suivant} afin de poursuivre et laissez ensuite
+l'installation de fp@TeX{} se terminer. 
+
+Vous disposez alors d'un environnement @TeX{} prêt à l'emploi.
+
+@subsection Installation de Texinfo dans Tex
+
+Les instructions ci-dessous considèrent que votre installation de
+@TeX{} est placée dans @file{c:\tex}
+
+Pour installer Texinfo dans @TeX{}, trois étapes suffisent :
+
+@itemize @bullet
+@item
+Créez le répertoire @file{c:\tex\texmf\tex\texinfo} ;
+@item
+Copiez tous les fichiers situés dans @file{c:\aide\share\texinfo} vers
+le répertoire @file{c:\tex\texmf\tex\texinfo} ;
+@item
+Mettez à jour votre installation de @TeX{} par @file{Démarrer /
+Programmes / TeXLive / Maintenance / Rebuild ls-R filenames databases}
+ou par la commande @file{c:\tex\bin\win32\mktexlsr.exe}.
+@end itemize
+
+Vous disposez alors d'un environnement Texinfo prêt à l'emploi pour la
+production de manuels imprimables. 
+
+@subsection Test de l'installation
+
+Pour tester votre nouvel environnement de production de documentation,
+lancer Glide et charger le source de la documentation de AIDE :
+@file{c:\aide\doc\aide\aide.texi}, puis compiler-le par la commande
+@key{F9}.
+
+Une fois la compilation terminée, vous disposez, dans le même
+répertoire, d'un fichier au format PDF, dénommé
+@file{aide.pdf}. Cerise sur le gâteau, l'arborescence de signets et
+les hyperliens sont automatiquement créés !
+
+À partir de ce même fichier source @file{aide.texi}, il est possible
+de créer des sorties HLP, HTML, INFO, PS, TXT, etc...
+
+Habituellement, vous écrivez votre manuel une fois et vous en dérivez
+@emph{au moins} deux compilations ; la sortie HTML pour l'aide en
+ligne intégrée dans le logiciel et la sortie PDF pour la documentation
+papier.
+
+@section Formation Texinfo
+
+Le manuel de Texinfo est inclu dans AIDE, les autres documentations
+pertinentes sont situées dans @file{c:\tex\texmf\doc}. 
+
+Ce manuel lui-même utilise Texinfo. Ses sources sont disponibles dans
+le répertoire @file{c:\aide\doc\aide\manuals} et sont un bon exemple
+des possiblités de Texinfo.
+
+@section Documentation utilisateur
+
+@subsection Règles typographiques
+
+La production de manuels en français avec Texinfo est pré-intégrée
+dans AIDE, par l'intermédiaire de Glide et d'autres utilitaires
+permettant la création de documentation en français avec une
+typographie correcte, en particulier capable de traiter les caractères
+@ae{}, @AE{}, @oe{} et @OE{}, mais aussi les majuscules accentuées
+telles que É, È, À et Ç @footnote{Extraits du @emph{Lexique des règles
+typographiques en usage à l'imprimerie nationale} : En français,
+l'accent a pleine valeur orthographique. On veillera à utiliser
+systématiquement les capitales accentuées, y compris la préposition
+À. On évitera ainsi de désorienter le lecteur ou même de l'induire en
+erreur comme ce pourrait être le cas dans les deux exemples suivants :
+@emph{LÉGITIME et LÉGITIMÉ}, ou bien @emph{MODÈLE et MODELÉ}.}.
+
+@subsection Internationalisation  
+
+Par l'intermédiaire de la fonction @code{@@ifset} de Texinfo, il est
+possible de gérer, dans un seul fichier, plusieurs versions
+linguistiques d'une seule et même documentation. Cette disposition est
+très intéressante pour maintenir la cohérence du document et faciliter
+le travail du traducteur.
+
+Texinfo inclut nativement le support du tchèque, de l'allemand, de
+l'anglais, de l'espagnol, du français, de l'italien, du néerlandais,
+du norvégien, du polonais, du portugais et du turc. Il est aisé de
+rajoûter une nouvelle langue.
+
+@section Documentation technique
+
+Une documentation technique fiable implique d'avoir un référentiel
+unique : les sources du logiciel documenté. Pour ce faire AIDE propose 
+AdaDoc, logiciel d'extraction de spécifications commentées, avec un
+module Texinfo spécialement étudié à cette occasion.
+
+Avec son module Texinfo, Adadoc produit, à partir d'une spécification
+Ada, un document Texinfo automatiquement généré, prêt à inclure dans la
+documentation technique.
+
+Beaucoups de temps a été consacré à l'écriture de ce module pour
+proposer un résultat harmonieux, dans la lignée des manuels
+Texinfo. Toutefois, l'auteur reste à l'écoute pour toute suggestion
+d'amélioration ou rapport d'anomalie.
+
+Plus généralement, Adadoc est capable de générer des sorties
+aux formats suivants :
+
+@itemize @bullet
+@item
+@code{XML} ;
+@item
+La@TeX{} ;
+@item
+@code{HTML}, pour l'aide en ligne ou la documentation internet ;
+@item
+@code{Texinfo}, pour les manuels imprimables.
+@end itemize
+
+Adadoc dispose d'une documentation complète en anglais et en français
+et permet l'ajoût de nouveaux modules de sortie.
+
+AdaDoc possède son propre @emph{parser} Ada, et ne nécessite pas de
+compilateur basé @emph{ASIS}. Il n'utilise donc pas les fichiers
+@file{.ALI}. 
+
+@subsection Utilisation de Adadoc
+
+Pour générer un document Texinfo @file{v04-crt.texi} à partir de la
+spécification @file{v04-crt.ads}, il suffit de taper @file{adadoc -T
+c:\aide\lib\aide\v04\v04-crt.ads}. Le document généré pourra être
+inclu dans la documentation technique au format Texinfo grâce à la
+commande @code{@@include}.
+
+Pour l'usage général d'Adadoc, se référer à la documentation
+jointe. Pour l'usage particulier du module Texinfo d'Adadoc, se
+référer au paragraphe suivant.
+
+@subsection Référence du module Texinfo
+
+@subsubheading Usage
+
+@noindent
+@strong{Message d'aide Adadoc}
+
+@smallexample
+AdaDoc create a documentation in different format
+from an Ada95 specification package.
+
+Use : adadoc (option) (File_Name)
+
+Options :
+  -x          : don't delete XML file after generating output.
+  -c          : don't try to extract comments from the specification.
+  -b          : don't ask to 'press <enter>' for batch use.
+  -Hstylsheet : generate HTML file. stylsheet is optional.
+  -L          : generate LaTeX file.
+  -Tns        : generate Texinfo file. -n : numbered output -s : stand-alone output.
+
+Example : adadoc -x -Hfid spec.ads spec2.ads ...
+
+AdaDoc by Julien Burdy and Vincent Decorges
+Texinfo module by Stephane Riviere
+Web => http://adadoc.sf.net
+AdaDoc is freely available under the GPL license.
+Version 2.02t
+@end smallexample
+
+@noindent
+@strong{Paramètres}
+
+@multitable @columnfractions .10 .90
+@item @code{-c} @tab Supprime l'extraction des commentaires.
+@item @code{-b} @tab Mode "Batch" sans confirmation par 'press 
+enter' en cas d'ereur, afin d'effectuer des traitements par lots.
+@item @code{-T} @tab Sélectionne le mode Texinfo
+@item @code{-n} @tab Option spécifique Texinfo : sélectionne la 
+sortie Texinfo avec numérotation.
+@item @code{-s} @tab Option spécifique Texinfo : sélectionne la 
+sortie Texinfo autonome. La sortie par défaut est prévue pour être 
+incluse dans un document Texinfo principal par la commance
+@code{@@include}.  
+@end multitable
+
+@noindent
+@strong{Exemples}
+
+@itemize @bullet
+@item
+@code{adadoc -b -T *.ads} : Traiter en mode batch toutes les spécifications du
+répertoire courant pour une génération Texinfo ;
+@item
+@code{adadoc -Tns test.ads} : Générer une sortie Texinfo autonome et
+numérotée de la spécification @file{test.ads}.
+@end itemize
+
+@subsubheading Caractères spéciaux
+
+Le caractère @@ est utilisé par Adadoc comme tag d'extraction des
+commentaires d'en-tête de source. Ce même caractère est aussi le tag
+principal du langage Texinfo. Pour qu'un caractère @@ soit généré en
+sortie, il est nécessaire de le doubler dans le source, exemple :
+@code{nom@@@@domaine.org}.
+
+Quoique accepté par Ada, l'usage des caractères accentués dans les
+noms de variables est incompatible avec Adadoc.
+
+Les caractères accentués sont déconseillés dans les commentaires de
+codes sources, pour des raisons de présentation dans la génération
+Texinfo. Dans le cas d'une documentation technique en français, il
+est possible d'y remédier en pré-traitant les fichiers Texinfo générés
+par Adadoc avec l'utilitaire Free Recode, inclu dans la distribution
+et utilisé pour la génération des manuels en français.
+
+@subsubheading Commentaires
+
+L'insertion des commentaires, dans le module Texinfo, diffère largement
+des autres modules Adadoc.
+
+En raison de la largeur limitée des manuels imprimables, l'insertion
+des commentaires en ligne a été principalement limitée aux en-têtes de
+fonction et de procédure.
+
+Pour ces deux cas, afin de se conformer aux usages en matière de
+documentation, les commentaires sont désormais placés après la liste
+des paramètres (les autres modules affichent les commentaires entre le
+nom de la fonction et la liste des paramètres).
+
+Cette fonction a aussi été améliorée au niveau de l'extraction. Les
+commentaires extraits, placés au dessus de la définition, se limitent
+aux deux premières lignes blanches consécutives
+rencontrées@footnote{Dans les autres modules, la limite de départ est
+la première expression Ada rencontrée, ce qui est évidemment gênant si
+des commentaires généraux ont été insérés au dessus des commentaires
+de la procédure ou de la fonction.}.
+
+Se référer au fichier @file{c:\aide\lib\aide\v04\v04-crt.ads} pour un
+exemple de commentaires compatibles avec une extraction Adadoc.
+
+@subsubheading Insertion de l'opérateur @code{=>}
+
+L'opérateur Ada @code{=>}, composé des deux caractères @code{=} et
+@code{>}, est traduit par le symbole @result{} pour une meilleure
+typographie.
+
+@section Logiciels complémentaires
+
+Afin d'illustrer vos manuels et vos aides en ligne, deux logiciels
+complémentaires sont suggérés :
+
+@itemize @bullet
+@item
+Gimp : Logiciel de traitement d'images généraliste, disponible en
+version Windows à partir de : 
+@url{http://www.gimp.org/~tml/gimp/win32/downloads.html} ;
+@item
+Dia : Logiciel d'édition de diagrammes, disponible en version Windows
+à partir de : @url{http://www.dia-installer.sourceforge.net}.
+@end itemize
+
+Ces deux logiciels, comme toujours libres et multi-plateformes,
+permettent de produire des images et des diagrammes au format
+@file{EPS}, @file{PNG} et @file{JPG}.
+
+Le format @file{EPS} sera converti en @file{PDF} grâce à la commande
+@file{epstopdf nomfic.eps}, qui produira un fichier @file{nomfic.pdf}
+nécessaire à Pdf@TeX{} pour la production des manuels au format
+Acrobat.
+
+Les formats @file{PNG} et @file{JPG} seront indifférement utilisés
+pour la production de l'aide en ligne au format @file{HTML}.
+
+Enfin, il est intéressant de remarquer que Gimp, Dia et Glade sont tous les
+trois basés sur GTK et proposent une interface utilisateur conçue dans
+le même esprit.
+
+@section Questions courantes
+
+@subsubheading Correction des erreurs
+
+Question : Où puis-je trouver les messages d'erreurs suite à une
+compilation Texinfo interrompue ?
+
+Réponse : Dans le fichier @emph{log} de votre document :
+@file{votre_document.log}. Aller à la fin du fichier et regarder la
+ligne incriminée. De retour dans votre document, allez à la ligne
+indiquée et corriger l'erreur de syntaxe.
+
+@subsubheading Mise à jour automatique du sommaire
+
+Question : Le sommaire et les signets de mon manuel ne sont pas à
+jour.
+
+Réponse : La concordance entre le texte du manuel d'une part et,
+d'autre part, le sommaire et l'arborescence des signets nécessite une
+compilation supplémentaire !
+
+La première compilation produit un manuel dont le texte est à jour. La
+seconde compilation @footnote{La seconde compilation pourra être
+forcée par l'ajoût puis la suppression d'un espace à la fin d'une
+ligne.}, @emph{qui doit être effectuée sans que le texte ait changé},
+créera un sommaire et des signets à jour par rapport au texte.
+
+@subsubheading Caractères accentués dans les titres
+
+Question : Je n'arrive plus à compiler mon document mais il ne semble
+pas qu'il y ait d'erreur de syntaxe.
+
+Réponse : Vous employez peut être un caractère accentué non valide,
+tels le @emph{ç}, dans un titre ou un sous titre. Supprimez le
+problême en deux étapes :
+
+@itemize @bullet
+@item
+Nettoyez votre répertoire de travail en supprimant les fichiers
+@file{*.fn}, @file{*.ky}, @file{*.log}, @file{*.pg}, @file{*.toc},
+@file{*.tp}, @file{*.vr} ;
+@item
+Modifier le titre ou le sous titre contenant le caractère non valide.
+@item
+Recompilez, le problême doit avoir disparu.
+@end itemize
+
+@c --------------------------------------------------------------------
+@chapter Initiation au développement
+@c --------------------------------------------------------------------
+
+@emph{Si les architectes construisaient les maisons comme les
+programmeurs écrivent les programmes, le premier picvert venu détruirait
+la civilisation. Seconde loi de Weinberg}
+
+@section Présentation
+
+Ce chapitre n'a aucune prétention pédagogique. Toutefois, si vous
+assimilez la méthode proposée, vous en saurez déjà beaucoup plus que la
+plupart des @emph{informaticiens de gestion} des années 70, grands
+utilisateurs de @emph{goto} et adeptes de la programmation
+@emph{spaghetti}.
+
+@subheading Une méthode pour construire des fondations solides
+
+Pour devenir un développeur, il faut posséder une méthode, posséder au
+sens de maîtriser, pour arriver, à terme, à une utilisation de la
+méthode comme un réflexe si bien ancré qu'on ne s'en aperçoit plus.
+
+C'est la maîtrise d'une méthode qui distingue l'authentique développeur
+de l'amateur sans formation. C'est encore elle qui permet d'écrire de
+très gros programmes sans effort ni problême de fiabilité.
+
+La méthode de programmation proposée est simple et efficace. Cette
+méthode de programmation @emph{modulaire et structurée} permet de
+créer facilement et de maintenir harmonieusement des programmes de
+taille quelconque, du plus simple au très complexe. Elle fut très en
+vogue dans les années 80, avant l'apparition des méthodes orientées
+objet.
+
+Cette méthode sera accompagnéed'une initiation à l'algèbre de Boole,
+algèbre très simple et indispensable à l'écriture de programmes bien
+construits.
+
+@subheading Ce qu'il faut éviter pour débuter
+
+La @emph{mode} est désormais à l'objet, mis à toutes les sauces et
+sans discernement. En effet, les langages et les méthodes utilisant
+des objets, qui rajoûtent toujours de la complexité dans le code créé
+par le compilateur, peuvent être néfastes dans certaines circonstances
+: développement embarqué à petit budget ou à très haute fiabilité,
+grandes contraintes d'occupation mémoire, etc... Cette approche objet
+peut être aussi complètement inutile en regard du problême à résoudre.
+
+Il en va des méthodes comme des outils, il faut toujours utiliser la
+méthode appropriée au problême à résoudre. Il est des cas où l'approche
+objet est de loin préférable à tout autre, par exemple pour conçevoir
+des interfaces graphiques.
+
+De même, la programmation évènementielle, grande affaire des interfaces
+graphiques, a fait apparaitre une génération de développeurs qui
+éprouvent des difficultés à écrire une application autonome, gèrant
+seule ses entrées-sorties et écrite dans les règles de l'art.
+
+Quand vous aurez assimilé la méthode proposée, nécessaire et suffisante
+pour faire de vous de bons développeurs tous terrains, il sera toujours
+temps de monter d'un cran et de regarder du coté de chez
+HOOD@footnote{Se reporter à la bibliographie en fin de manuel.}.
+
+De même, quand vous serez devenu un familier de la programmation
+linéaire@footnote{Linéaire, par opposition à évènementielle, dans ce
+contexte.}, c'est à dire des programmes se lisant du début à la fin,
+avec une continuité dans les sources, il sera aussi temps pour vous de
+découvrir la programmation évènementielle, par exemple avec GtkAda !
+
+En conclusion, l'important est d'apprendre à faire les fondations avant
+d'apprendre à poser une toiture. Et pour bien commencer, il faut
+commencer modestement, et manipuler des concepts simples.
+
+@section Débuter en Ada
+@subsection Livre compagnon
+
+Si vous êtes déjà un développeur, la documentation associée vous
+suffira. Par contre si vous débutez en programmation, un livre
+compagnon vous est proposé (à l'inverse de l'usage, où c'est plutôt
+le CD qui est le compagnon du livre ;-).
+
+C'est un livre recommandé pour les débutants adultes , dans la
+collection @emph{Reprendre ses études}. Il se nomme @emph{Initiation
+et auto-formation à la programmation informatique} de @emph{Canesi et
+Suc}, aux éditions @emph{Ellipses}.
+
+C'est un livre de prix modique (20 EUR) et aux qualités pratiques
+exceptionnelles (les auteurs sont professeurs au CNAM) pour convaincre
+un péri-développeur, genre administrateur système qu'il est capable de 
+devenir un véritable développeur.
+
+Ce n'est pas un livre permettant d'acquérir une méthode, ni un cours
+Ada, c'est uniquement, et c'est sa grande qualité, un livre destiné 
+à faire le premier pas, celui qui est le plus dur.
+
+Quoique tous les exemples soient en Ada, Initiation et auto-formation 
+à la programmation informatique donne aussi quelques éléments de 
+comparaison en évoquant les autres langages courants, avec quelques 
+listings, comparaison qui tourne naturellement à l'avantage de Ada, 
+car le lecteur néophyte préfèra instinctivement un code naturellement 
+lisible et expressif à un code cryptique et inexpressif.
+
+Initiation et auto-formation à la programmation informatique est
+disponible en 48h sur @url{http://www.eyrolles.com} (où il a été
+commandé), mais n'importe quel autre site en ligne fera aussi bien
+l'affaire.
+
+@subsection Exercices pour faire le premier pas
+
+Toujours pour faire le premier pas, avant de poursuivre avec
+l'apprentissage d'une méthode d'analyse, des exemples en Ada vous sont
+proposés, afin de débuter et de se familiariser avec la syntaxe.
+
+Ils proviennet du CNAM @footnote{Selon
+@url{http://lmi17.cnam.fr/~barthe/APA_EAD/common/apropos.html}, tous
+les documents du site web de l'UV Algorithmique-Programmation A1 sont
+sous copyright du CNAM et de l'auteur. Leur reproduction sans
+modification est autorisée pour un usage non commercial. Tout autre
+utilisation est soumise à l'accord de l'auteur.}, plus précisément de
+l'équipe de l'enseignant-chercheur François Barthélemy email :
+@email{barthe@@cnam.fr} . De plus amples informations sont disponibles
+sur @url{http://lmi17.cnam.fr/~barthe/FB/index.html}.
+
+Suivant notre propre expérience, l'indentation et la présentation des
+programmes a été sensiblement améliorée et certains programmes ont été
+ajoûtés, tels @file{bonjter.adb}.
+
+@subsubheading Comment écrire et tester les exercices ?
+
+Reportez vous aux sections ``test de l'installation'' des chapitres 3,
+4 & 5, suivant l'environnement que vous avez adopté, afin de lire un
+exemple complet de saisie d'un programme.
+
+Bonne découverte de AIDE !
+
+@page
+@subsubheading Programme 1
+
+Écrire un programme qui affiche bonjour.
+
+@cartouche
+@smallexample
+
+-- bonj.adb
+
+with ADA.TEXT_IO;  -- necessaire pour faire put (affichage) et get (saisie) ..
+                   -- des chaines de caractères
+procedure bonj is
+
+begin
+
+  ADA.TEXT_IO.put("Bonjour");
+  ADA.TEXT_IO.new_line; -- retour à la ligne
+
+end bonj;
+
+@end smallexample
+@end cartouche
+
+Une variante avec l'utilisation de @code{use}.
+
+@cartouche
+@smallexample
+
+-- bonjbis.adb
+
+with ADA.TEXT_IO;  -- necessaire pour faire put (affichage) et get (saisie) ...
+                   -- des chaines de caractères
+use ADA.TEXT_IO;   -- evite de mettre ADA.TEXT_IO. avant put, get, ...
+
+procedure bonjbis is
+
+begin
+
+  put("Bonjour");
+  new_line; -- retour à la ligne
+
+end bonjbis;
+
+@end smallexample
+@end cartouche
+
+Une autre variante avec l'utilisation de @code{renames}.
+
+@cartouche
+@smallexample
+
+-- bonjter.adb
+
+with ADA.TEXT_IO;  -- necessaire pour faire put (affichage) et get (saisie) ...
+                   -- des chaines de caractères
+
+procedure bonjter is
+
+package tio renames ADA.TEXT_IO;  -- permet d'ameliorer la lisibilite
+                                  -- en gardant le nom du package lie
+                                  -- aux procedures ou au fonctions 
+begin
+
+  tio.put("Bonjour");
+  tio.new_line; -- retour à la ligne
+
+end bonjter;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 2
+
+Saisie et affichage d'entiers. Utilisation du @code{if then else endif}
+: Écrire un programme qui demande deux nombres entiers à l'utilisateur
+et affiche le plus grand des deux.
+
+@cartouche
+@smallexample
+
+with ADA.TEXT_IO; use ADA.TEXT_IO;
+with ADA.INTEGER_TEXT_IO; use ADA.INTEGER_TEXT_IO;
+
+procedure compare is
+
+a, b : integer; -- declaration des variables
+
+begin
+
+  put_line("Bonjour, je peux vous calculer le plus grand de deux nombres ");
+  put("Entrez le premier nombre : ");
+  get(a);
+
+  put("Entrez le second nombre : ");
+  get(b);
+  
+  put("Le plus grand est ");
+
+  if (a >= b) then 
+     put(a);
+
+  else
+     put(b);
+
+  end if;
+
+  new_line;
+
+end compare;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 3
+
+Saisie et affichage de réels : @'Ecrire un programme qui demande deux
+nombres réels à l'utilisateur et affiche le plus grand des deux.
+
+@cartouche
+@smallexample
+
+-- compare_reel.adb
+
+with ADA.TEXT_IO; use ADA.TEXT_IO;
+with ADA.FLOAT_TEXT_IO; use ADA.FLOAT_TEXT_IO; -- pour saisie et affichage de reels
+
+procedure compare_reel is
+
+a, b : float; -- declaration des variables
+
+begin
+
+  put_line("Bonjour, je peux vous calculer le plus grand de deux nombres ");
+  put("Entrez le premier nombre reel : ");
+  get(a);
+
+  put("Entrez le second nombre reel : ");
+  get(b);
+  
+  put("Le plus grand est ");
+
+  if (a >= b) then 
+     put(a, fore => 3, aft => 1, exp => 0);
+
+  else 
+     put(b, fore => 3, aft => 1, exp => 0);
+
+  end if;
+     
+  new_line;
+
+end compare_reel;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 4
+
+Saisie et affichage sur un type énuméré : Écrire un programme qui
+demande un jour de la semaine à l'utilisateur sous la forme Lundi,
+Mardi, Mercredi, ...ou Dimanche. Le programme doit ensuite afficher le
+jour rentré par l'utilisateur et son lendemain.
+
+@cartouche
+@smallexample
+
+-- jours.adb
+
+with ADA.TEXT_IO; use ADA.TEXT_IO;
+
+procedure jours is
+
+type tjour is (Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche);
+
+-- pour faire des put et des get sur le type tjour, voici ce qu'il faut faire
+
+package tjour_io is new ADA.TEXT_IO.ENUMERATION_IO(tjour); use tjour_io;
+
+jour : tjour;
+
+begin
+
+  put("entrez un jour : ");   -- put qui vient de ADA.TEXT_IO
+  get(jour);                  -- get qui vient de tjour_io
+
+  -- on affiche ici le jour rentre par l'utilisateur
+  put(jour);                  -- put qui vient de tjour_io
+  new_line;
+
+  -- et ici le lendemain
+  put("Le lendemain est : ");
+
+  if jour = Dimanche then 
+     put(Lundi);
+
+  else 
+     put(tjour'succ(jour));
+
+  end if;
+
+  new_line;
+
+end jours;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 5
+
+Exercice sur les boucles : écrire un programme qui affiche : 
+
+@verbatim
+        1 2 3
+        4 5 6
+        7 8 9
+@end verbatim
+
+@cartouche
+@smallexample
+
+-- aff_carre.adb
+
+with ADA.TEXT_IO;
+use ADA.TEXT_IO;
+
+procedure aff_carre is
+
+begin
+
+  for i in 1..9 loop
+
+      put(integer'image(i));
+
+      if (i mod 3) = 0 then 
+         new_line;
+      end if;
+
+  end loop;
+
+end aff_carre;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 6
+
+Exercice sur les boucles et les conversions de types : Écrire un
+programme qui affiche la correspondance entre livres et kilogrammes pour
+les nombres allant de 1 à 10 :
+
+@verbatim
+    1 livre = 0.45 Kg
+    2 livre = 0.91 Kg
+    etc...
+@end verbatim
+
+Indication : Float(n) convertit l'entier n en le nombre réel correspondant.     
+
+@cartouche
+@smallexample
+
+-- conversion.adb
+
+with ADA.TEXT_IO, ADA.FLOAT_TEXT_IO;
+use ADA.TEXT_IO, ADA.FLOAT_TEXT_IO;
+
+procedure conversion is
+
+taux : constant float := 0.45;
+
+begin
+
+  for i in 1..10 loop
+
+      put (integer'image(i) & " livre = ");
+      put (Float(i)* taux, fore => 2, aft => 2, exp =>0);
+      put (" Kg");
+
+      new_line;
+
+  end loop;
+
+end conversion;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 7
+
+Exercice sur les boucles : écrire un programme qui affiche la table 
+de multiplication de 8
+
+@cartouche
+@smallexample
+
+-- mult_8.adb
+
+with ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+use ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+
+procedure mult_8 is
+
+mult : constant integer := 8;
+
+begin
+
+  put ("Voici la table de multiplication de "); 
+  put(mult); 
+  new_line;
+
+  for i in 1..9 loop
+      put (mult); put (" x "); put(i); put ( " = " );
+      put (mult * i);
+
+      new_line;
+
+  end loop;
+
+end mult_8;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 8
+
+Exercice sur les boucles : Écrire un programme qui affiche les tables de
+multiplication des nombres allant de 2 à 9.
+
+@cartouche
+@smallexample
+
+-- mult_tout.adb
+
+with ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+use ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+
+procedure mult_tout is
+
+begin
+
+  for mult in 2..9 loop
+
+      put ("Voici la table de multiplication de "); 
+      put(mult); 
+      new_line;
+
+      for i in 1..9 loop
+
+          put (mult); 
+          put (" x "); 
+          put(i); 
+          put ( " = " );
+          put (mult * i);
+
+          new_line;
+
+      end loop;
+
+      put ("------------------"); new_line;
+
+  end loop;
+
+end mult_tout;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 9
+
+Exercice sur le type caractère : écrire un programme qui affiche 
+les caractères représentés par les nombres de 32 à 126. 
+
+Indication : @code{character'val(n)} donne le caractère dont le code
+ASCII est le nombre n.
+
+@cartouche
+@smallexample
+
+-- car_32_126.adb
+
+with ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+use ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+
+procedure car_32_126 is
+
+begin
+
+  for n in 32..126 loop
+      put ("Le caractere dont le code ASCII est ");
+      put (n, width => 3);
+      put_line (" est " & character'val (n));  
+
+  end loop;
+
+end car_32_126;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 10
+
+Exercice sur l'alternative @code{case} : écrire un programme qui 
+demande un caractère à l'utilisateur et affiche le type de ce 
+caractère (lettre, chiffre, caractère de ponctuation ou autre).
+
+@cartouche
+@smallexample
+
+-- car_tri.adb
+
+with ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+use ADA.TEXT_IO, ADA.INTEGER_TEXT_IO;
+
+procedure car_tri is
+
+c : character;
+
+begin
+
+ loop
+
+    put ("Entrez un caractere (* pour finir) : ");
+    get (c);
+
+    exit when c='*';
+
+    put ("Ce caractere est " );
+
+    case c is
+         when 'a'..'z'|'A'..'Z'        => 
+              put_line ("une lettre");
+
+         when '1'..'9'                 => 
+              put_line ("un chiffre");
+
+         when '.'|';'|','|'?'|'!'|':'  => 
+              put_line ("un carac. de ponctuation");
+
+         when others                   => 
+              put_line ("un carac. non classe");
+
+    end case;
+
+    new_line;   
+
+  end loop;
+
+end car_tri;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 11
+
+Exercice sur la saisie, l'affichage et l'utilisation de chaînes 
+de caractères : écrire un programme qui demande la saisie d'une 
+chaîne de 40 caractères au maximum, puis l'affiche et affiche 
+la chaîne @emph{miroir}.
+
+@cartouche
+@smallexample
+
+-- chaine.adb
+
+with ADA.TEXT_IO; use ADA.TEXT_IO;
+
+procedure chaine is
+
+taille : constant integer := 40;
+ch : string(1..taille);
+
+long : integer; --longueur de chaine
+
+x : character;
+
+begin
+  
+  put("Donnez la chaine : ");
+  get_line (ch, long);   -- après l'appel, long contient le nombre de
+                         -- caractères effectivement saisis 
+
+  put("Voici votre chaine : ");
+  put_line (ch(1..long));  -- uniquement les caractères utiles
+
+  -- on inverse la chaine
+
+  for i in 1 .. (1+long)/ 2 loop
+
+      -- on echange les contenus des cases i et long+1-i
+      x := ch(i);
+      ch(i) := ch(long+1-i);
+      ch(long+1-i):= x;
+
+  end loop;
+
+  put("Voici la chaine miroir : ");
+  put_line (ch(1..long));  
+
+end chaine;
+
+@end smallexample
+@end cartouche
+
+@page
+@subsubheading Programme 12
+
+Exercice sur les tableaux : écrire un programme qui déclare un 
+tableau de 5 entiers contenant les valeurs 10, 20, 30, 40 et 50 
+puis calcule et affiche la somme des élèments de ce tableau.
+
+@cartouche
+@smallexample
+
+-- somme_tab.adb
+
+with ADA.TEXT_IO; use ADA.TEXT_IO;
+with ADA.INTEGER_TEXT_IO; use ADA.INTEGER_TEXT_IO;
+
+procedure somme_tab is
+
+-- declaration des variables
+tab : array (1..5) of integer := (10,20,30,40,50);
+S : integer := 0;
+
+begin
+  for i in tab'range loop
+      S := S + tab(i);
+  end loop;
+
+  put (" La somme des elements du tableau est : ");
+  put (S);
+  new_line;  
+
+end somme_tab;
+
+@end smallexample
+@end cartouche
+
+@page
+@section Débuter en conception
+
+@subsection Inventaire des outils
+
+Pour concevoir un programme, il faut  :
+
+@itemize @bullet
+@item
+Posséder une méthode d'analyse ;
+@item
+Connaître quelques rudiments d'algèbre de boole ;
+@item
+Maîtriser un langage.
+@item
+Avoir une bonne culture générale et du @emph{savoir faire}, c'est à dire
+posséder les trucs & astuces du métier ;
+@end itemize
+
+De ces quatre éléments, le premier est le plus dur à acquérir, mais
+j'espère que les lignes qui vont suivre vont vous aider dans ce domaine.
+
+J'aurais pu rajoûter @emph{du papier, un crayon et une gomme}, tant il
+est vrai que ces trois objets sont toujours à la base d'un bon programme
+et qu'il ne faut surtout pas se précipiter à coder ce qui vous passe par
+la tête.
+
+Vous remarquerez que la connaissance d'un langage vient après la
+théorie. C'est normal. Comme l'analyse précède l'écriture, la maîtrise
+de la conception précède la maîtrise d'un langage.
+
+Toutefois, la joie de programmer doit rester le moteur de votre
+motivation, c'est pour cette raison que nous avons commencé ce chapitre
+par quelques programmes très simples : pour vous donner envie de
+poursuivre !
+
+@subsection Un premier exemple
+
+Tout le monde programme, le garagiste, le facteur et le cuisinier. Vous
+ne le saviez pas ? Alors commençons donc par nous faire cuire un @oe{}uf
+!
+
+Maîtriser une méthode d'analyse permet d'analyser un problême, même très
+complexe, et de le décomposer, @emph{par raffinements successifs}, en
+une somme de problêmes un à un si évidents à résoudre que l'on arrête
+alors l'analyse en déclarant qu'elle est terminée !
+
+Donc, nous allons nous faire cuire un @oe{}uf, un @oe{}uf dur pour être
+précis. Mais pourriez-vous détailler sans hésitation un tel processus,
+en apparence très simple ? Voyons celà ensemble.
+
+@subsubheading La décomposition du problême
+
+On pourrait, par exemple, commencer par décomposer, @emph{par raffiner},
+l'action de cuire un @oe{}uf en deux grandes étapes : la
+@emph{préparation} et la @emph{cuisson}.
+
+Puis on pourrait reprendre ces deux grandes étapes en les raffinant à
+leur tour :
+
+@itemize @bullet
+@item
+La @emph{préparation}, c'est poser la casserole sur le feu, la remplir
+d'eau et mettre un @oe{}uf dedans@tie{};
+@item
+La @emph{cuisson}, c'est allumer le gaz, attendre que l'eau se mette à
+bouillir, attendre 10 mn pour la cuisson@footnote{C'est beaucoup, mais
+ça n'est pas gênant, sauf si vous les aimez mollets.}, puis couper le
+gaz.
+@end itemize
+
+Cette démarche est connue sous l'appellation de @emph{décomposition par
+raffinements successifs}. Cette décomposition achevée, il est
+indispensable de la représenter visuellement, grâce au DSP, le
+@emph{Diagramme Structuré de Programme}.
+
+@image{dia/dsp-oeufdur-1,16cm}
+
+Ce DSP est très pratique car il fonctionne en deux dimensions :
+
+@itemize @bullet
+@item
+Dans le plan vertical, on descend du plus complexe au plus simple ;
+@item
+Dans le plan horizontal, le sens de la lecture représente naturellement,
+@emph{chronologiquement}, les tâches à effectuer.
+@end itemize
+
+Et il est à double usage :
+
+@itemize @bullet
+@item
+Dans un premier temps, il vous permet d'acquérir une @emph{vue
+d'ensemble} sur le problême à résoudre et de vous assurer que votre
+analyse est cohérente et complète ;
+@item
+Dans un deuxième temps, puisque chaque boite représente une action si
+simple à résoudre qu'elle ne requiert pas d'analyse supplémentaire, le
+DSP vous permet de passer directement à la seconde phase : @emph{le
+pseudo-code} !
+@end itemize
+
+En créant ce DSP, nous avons @emph{modularisé} notre problême. C'est à
+dire que nous avons décomposé notre problême en une suite de
+@emph{modules} élémentaires. En écrivant le pseudo-code, nous allons
+décrire le fonctionnement de chaque @emph{module} en utilisant des
+@emph{structures}. Ces @emph{structures} forment les briques de base de
+la programmation @emph{structurée}, sans @emph{goto}, ni code
+@emph{spaghetti}.
+
+@subsubheading Le pseudo-code
+
+Le pseudo-code est la traduction informatique, sous formes de
+structures, du DSP déjà écrit. Le DSP et le pseudo-code sont liés. Ils
+doivent être en cohérence l'un envers l'autre et c'est souvent en
+contrôlant cette cohérence, au moment d'écrire le pseudo-code, que l'on
+s'aperçoit que le niveau de détail du DSP est incorrect. S'il est trop
+élevé, le pseudo-code contient des modules inutiles, qui ne contiennent
+pas de traitement méritant d'être modularisé. Par contre, si le niveau
+de détail n'est pas assez élevé, le pseudo-conde contient des modules
+beaucoup trop chargés.
+
+Avant d'entrer dans le détail de l'écriture générale d'un pseudo code,
+voyons un petit exemple, avec notre @oe{}uf dur, pour se mettre en
+bouche justement.
+
+@cartouche
+@smallexample
+
+debut *** cuire un oeuf ***
+
+      faire *** préparer la cuisson ***
+      faire *** cuire l'oeuf ***        
+
+fin   *** cuire un oeuf ***
+
+@end smallexample
+@end cartouche
+
+Dans ce premier pseudo-code, qui représente le module principal du
+programme @emph{cuire un @oe{}uf}, l'analogie entre DSP et pseudo-code
+apparait clairement. Le terme @emph{faire} devant @emph{préparer la
+cuisson} représente l'appel au module @emph{preparer la cuisson} et
+chaque module commence par @emph{debut 'nom du module'} et finit par
+@emph{fin 'nom du module'}.
+
+Passons à l'écriture du module @emph{préparer la cuisson}.
+
+@cartouche
+@smallexample
+
+debut *** préparer la cuisson ***
+
+      faire *** poser la casserole sur le feu ***
+
+      tant que "casserole n'est pas remplie"
+               remplir d'eau
+      fin tant que
+
+      faire *** mettre un oeuf ***
+
+fin   *** préparer la cuisson ***
+
+@end smallexample
+@end cartouche
+
+C'est alors qu'un problême apparait. Il apparait que le module
+@emph{poser la casserole sur le feu} représente une action très
+simple. Elle est si simple qu'elle ne mérite pas, en fait, d'être isolée
+dans un module. Laisser l'analyse telle que, sans rien changer,
+aboutirait à rendre le programme beaucoup plus complexe qu'il ne le
+mérite.
+
+Nous allons donc simplifier le pseudo-code.
+
+@cartouche
+@smallexample
+
+debut *** preparer la cuisson ***
+
+      poser la casserole sur le feu
+
+      tant que "casserole n'est pas remplie"
+               remplir d'eau
+      fin tant que
+
+      mettre un oeuf
+
+fin   *** preparer la cuisson ***
+
+@end smallexample
+@end cartouche
+
+Il est donc apparu que le niveau de détail du DSP était trop élevé. Les
+actions du dernier rang : @emph{casserole sur le feu}, @emph{remplir
+d'eau}, @emph{etc...} ne méritaient pas, à elles seules, un module
+séparé.
+
+Il faut les regrouper dans les modules de rang supérieur :
+@emph{préparer la cuisson} et @emph{cuire l'@oe{}uf}.
+
+Le DSP devient donc :
+
+@image{dia/dsp-oeufdur-2,16cm}
+
+L'analyse de la cuisson de l'@oe{}uf se termine avec le pseudo-code du
+dernier module :
+
+@cartouche
+@smallexample
+
+debut *** cuire l'oeuf ***
+
+      allumer le gaz
+
+      tant que "l'eau ne bout pas"
+               attendre
+      fin tant que
+
+      tant que "pas 10 minutes écoulées
+               attendre
+      fin tant que
+
+      couper le gaz
+
+fin   *** cuire l'oeuf ***
+
+@end smallexample
+@end cartouche
+
+Après cet exemple d'introduction, nous allons examiner en détail cette
+méthode d'analyse.
+
+@section Programmation Générale, Modulaire et Structurée
+
+Cette méthode s'appelle PGMS. On retrouve cette démarche dans des
+dizaines d'autres méthodes, se différentiant essentiellement par leurs
+signes, leurs vocabulaires, l'esthétique des dessins de diagrammes,
+etc...
+
+L'acronyme PGMS trouve son origine dans l'enseignement dispensé par le
+regretté Institut Control Data@footnote{Aussi connu sous l'acronyme
+CDI, pour @emph{Control Data Institute}. L'auteur n'a pas gardé le
+manuel traitant de PGMS et le regrette bien aujourd'hui.}, installé
+dans les années 80 à @emph{Chinatown}, dans le XIIIème arrondissement
+de Paris.
+
+@subsection Le DSP
+
+Écrire un DSP, @emph{Diagramme Structuré de Programme}, c'est
+identifier, décomposer et hiérarchiser des fonctions dans un ensemble
+cohérent, afin de permettre l'écrire du pseudo-code du programme.
+
+@subsubheading Détail de la démarche
+
+La démarche de création du DSP est un procédé itératif, @emph{qui
+boucle sur lui-même}, pour identifier toutes les tâches à effectuer,
+jusqu'à épuisement des possibilités de raffinement, c'est à dire jusqu'à
+ce qu'on ne puisse plus détailler le problême à résoudre.
+
+Cette démarche est appellée démarche @emph{top-down}, afin de bien
+montrer que l'on part du problême global, @emph{en haut du diagramme},
+pour aller vers le plus petit détail, @emph{vers le bas du diagramme}.
+
+@'A chaque fois que l'on rajoute un niveau de détail, on créé une
+nouvelle ligne.
+
+Pour chaque niveau de détail, les tâches identifiées sont écrites dans
+le sens de lecture, par ordre d'exécution. Elles sont placées dans des
+@emph{boites}. Pour la clarté du DSP, toutes les boites d'un rang
+inférieur sont reliées par des traits à la boite de rang supérieur.
+
+Les  DSP s'écrivent et se lisent toujours :
+
+@itemize @bullet
+@item
+De haut en bas, pour le niveau de détail ;
+@item
+De gauche à droite, pour les étapes chronologiques.
+@end itemize
+
+Exemple :
+
+@image{dia/dsp-exemple,,6cm}
+
+En aucun cas un DSP ne fait apparaitre les tests et autre actions de bas
+niveau qui sont du ressort de la programmation.
+
+Un DSP est à la fois la vue d'ensemble et l'ossature de l'analyse.
+
+L'écriture du DSP est la partie la plus difficile de l'analyse.
+
+@subsection Le pseudo-code
+
+L'écriture du pseudo-code est effectuée à partir du DSP. À chaque
+@emph{boite} du DSP correspondra un @emph{module} dans le pseudo-code.
+
+L'écriture d'un pseudo code s'effecture à partir de briques
+élémentaires, que nous allons examiner dès maintenant.
+
+@subsubheading Le module maitre
+
+Un programme commence et se termine au module maître.
+
+Voici le pseudo-code, aussi appelé @emph{PC}, du DSP précédent,
+décrivant le module principal du programme @code{F} :
+
+@cartouche
+@smallexample
+
+debut *** F ***
+
+      faire *** G ***
+
+      tant que @emph{P} (est vrai)
+           faire *** I ***
+      fin tant que
+
+      faire *** H ***
+
+fin   *** nom du programme ***
+
+@end smallexample
+@end cartouche
+
+Le début d'un module est représenté par @code{*** debut 'nom du module'
+***} et la fin d'un module est représenté par @code{*** fin 'nom du
+module' ***}. 
+
+Le nom du module principal reprend le nom du programme.
+
+@subsubheading Les autres modules
+
+Les autre modules sont écrits de la même manière. Voici le pseudo-code
+du module @code{G} du DSP précédent, décrivant le programme @code{F} :
+
+@cartouche
+@smallexample
+
+debut *** G ***
+
+      faire *** J ***
+     
+      si @emph{Q} (est vrai)
+         faire *** M ***
+
+      finsi
+
+fin   *** G ***
+
+@end smallexample
+@end cartouche
+
+@subsubheading La séquence
+
+La séquence est la forme la plus simple d'un pseudo-code. Elle
+représente juste l'enchainement de plusieurs traitements, qui
+s'exécutent les uns après les autres.
+
+@image{dia/pc-sequence,,7cm}
+
+@subsubheading L'appel à un module
+
+L'appel à un module est représenté par @code{faire *** 'nom du module'
+***}. Les traitements du module appelant s'arrêtent à la ligne de
+l'appel et le module appelé s'exécute. 
+
+@'A la fin du module appelé, ce dernier rend la main au module appelant
+et l'exécution de ce dernier reprend à la ligne suivant l'appel qui
+vient d'être exécuté.
+
+@image{dia/pc-appel,,7cm}
+
+@subsubheading Le si...sinon...finsi
+
+L'alternative est le test le plus simple d'un pseudo-code. En fonction
+de la véracité de la condition de test, le flux du programme est
+aiguillé vers un traitement ou un autre.
+
+@image{dia/pc-alternative,,7cm}
+
+L'alternative est représentée ainsi dans un pseudo-code :
+
+@cartouche
+@smallexample
+  
+si @emph{condition de test} (est vraie)
+   Traitement 1
+
+sinon
+   Traitement 2
+
+finsi
+
+@end smallexample
+@end cartouche
+
+@subsubheading Le si...sinonsi...sinon...finsi
+
+Cette structure est une extension de l'alternative :
+
+@cartouche
+@smallexample
+  
+si      @emph{condition de test 1}
+        Traitement 1
+
+sinonsi @emph{condition de test 2}
+        Traitement 2
+
+sinonsi @emph{condition de test 3}
+        Traitement 3
+            .
+            . 
+            .
+
+sinonsi @emph{condition de test 'n'}
+        Traitement 'n'
+
+sinon
+        Traitement par défaut
+
+finsi
+
+@end smallexample
+@end cartouche
+
+Le traitement par défaut est exécuté quand aucune condition de test n'a
+été vérifiée.
+
+Cette structure est équivalente à une imbrication d'alternatives. Mais
+ces imbrications sont beaucoup moins lisibles, comme le montre l'exemple
+ci-dessous :
+
+@cartouche
+@smallexample
+  
+si @emph{condition de test 1}
+        Traitement 1
+
+   sinon 
+        si @emph{condition de test 2}
+           Traitement 2
+
+        sinon
+             si @emph{condition de test 3}
+                Traitement 3
+       
+             sinon
+                Traitement par défaut
+
+             finsi
+        finsi
+   finsi
+finsi
+
+@end smallexample
+@end cartouche
+
+@subsubheading La sélection...quand...sinon...fin sélection
+
+La sélection est une forme différente de l'alternative car le test n'est
+plus booléen (vrai ou faux) mais fonction du contenu de la valeur
+testée.
+
+Un pseudo-code étant plus parlant : 
+
+@cartouche
+@smallexample
+  
+selection @emph{valeur à tester}
+
+          quand @emph{valeur 1}
+                Traitement 1
+
+          quand @emph{valeur 2}
+                Traitement 2
+
+          quand @emph{valeur 3}
+                Traitement 3
+                   .
+                   . 
+                   .
+
+          quand @emph{valeur 'n'}
+                Traitement 'n'
+
+          quand autres
+                Traitement par défaut
+
+fin selection
+
+@end smallexample
+@end cartouche
+
+Cette structure peut se repésenter ainsi :
+
+@image{dia/pc-selection,,6cm}
+
+@subsubheading Le tant que...fin tant que
+
+Cette structure de boucle est à employer quand on souhaite que le flux
+du programme évite le traitement dans la boucle si la condition est
+fausse au premier passage dans la boucle.
+
+@image{dia/pc-tantque,,7cm}
+
+Le pseudo code d'une telle structure est le suivant :
+
+@cartouche
+@smallexample
+  
+tant que @emph{condition de test} 
+   Traitement
+
+fin tant que
+
+@end smallexample
+@end cartouche
+
+@subsubheading Le boucler... jusqu'à
+
+Cette structure de boucle diffère de la précédente car le traitement
+dans la boucle est effectué une fois @emph{avant} que la condition de
+boucle soit testée. 
+
+De la sorte, on passera toujours au moins une fois dans ce type de boucle.
+
+@image{dia/pc-jusqua,,8cm}
+
+Voici la notation du @emph{ boucler...jusqu'à} en pseudo-code :
+
+@cartouche
+@smallexample
+  
+boucler 
+   Traitement
+
+jusqu'a @emph{condition de test}
+
+@end smallexample
+@end cartouche
+
+Il apparait nettement que le test est effectué @emph{après} un premier
+passage dans la boucle.
+
+@section Algèbre de Boole
+
+Voici un résumé pratique concernant l'algèbre de Boole, qui devrait
+être connue par tous les développeurs.
+
+@subsection Identités, propriétés et lois de Morgan
+
+Deux conventions sont utilisées : 
+
+@itemize @bullet
+@item
+@equiv{} pour l'équivalence. A @equiv{} B signifie que A et B sont
+deux conditions équivalentes et qu'elles sont interchangeables ;
+@item
+NON A pour la négation de A. Si A est vrai, NON A est faux.
+@end itemize
+
+@subheading Identités
+
+@cartouche
+@example
+  
+A OU 0 @equiv{} A        NON (NON A) @equiv A
+A OU 1 @equiv{} A        A OU A @equiv{} A
+A OU (NON A) @equiv{} 1  A ET A @equiv{} A
+A ET (NON A) @equiv{} 0
+
+@end example
+@end cartouche
+
+@subheading Propriétés
+
+@cartouche
+@example
+  
+A ET B @equiv{} B ET A
+A OU B @equiv{} B OU A
+A OU (B OU C) @equiv{} (A OU B) OU C
+A ET (B ET C) @equiv{} (A ET B) ET C
+A OU (B ET C) @equiv{} (A OU B) ET (A OU C)
+A ET (B OU C) @equiv{} (A ET B) OU (A ET C)
+
+@end example
+@end cartouche
+
+@subheading Lois de Morgan
+
+@cartouche
+@example
+  
+NON (A OU B) @equiv{} (NON A) ET (NON B)
+NON (A ET B) @equiv{} (NON A) OU (NON B)
+
+@end example
+@end cartouche
+
+@subsection Conseils pratiques
+
+Dans la description de votre langage courant, vous trouverez
+certainement la description des priorités dans l'évaluation des
+expressions logiques. 
+
+Voici un exemple de priorités d'évaluation :
+
+@enumerate
+@item
+Expression situées dans les parenthèses les plus internes ;
+@item
+Négation ;
+@item
+ET
+@item
+OU
+@item
+À priorité égale, évaluation des expressions de la gauche vers la droite.
+@end enumerate
+
+On pourrait être tenté de tenir compte de ces priorités pour rédiger
+une condition de test la plus courte possible mais c'est à éviter
+absolument pour des raisons de clarté.
+
+Voici trois règles de base à suivre en toute circonstance :
+
+@enumerate
+@item
+Il faut pas hésiter à recourir aux parenthèses pour accroître la
+lisibilité et la fiabilité.
+@item
+Pour travailler ou inverser une condition complexe, il faut, avant
+toute chose rétablir les parenthèses implicites.
+@item
+Une simplification de condition complexe se fait en appliquant les
+lois de Morgan.
+@end enumerate
+
+@section Rédaction des programmes
+
+@subheading Fichiers sources
+
+Un programme est constitué essentiellement de fichiers sources. Ces
+derniers doivent tous être rédigiés avec les mêmes conventions d'écriture.
+
+Chaque source doit contenir un en-tête d'identification et une marque
+de fin de fichier. Ils doivent occuper une bonne partie de la largeur
+du source, afin d'être facilement visualisables.
+
+@subheading Identifiants
+
+Les identifiants doivent être parlants. Il est d'usage en Ada de
+séparer les éléments d'une variable composée par un souligné. Exemple
+: @code{serial_line_rx}. D'autres préfèrent capitaliser :
+@code{Serial_Line_Rx}, mais l'amélioration de la lisibilité n'est pas
+évidente et la vitesse de frappe s'en trouve ralentie.
+
+@subheading Indentation
+
+Un programme lisible est un programme aéré (indentation verticale et
+horizontale). Les exemples ci-dessous vont du moins lisible au plus
+lisible.
+
+@emph{Absence d'indentation} : dans ce premier exemple, l'absence
+complète d'indentation rends la lecture particulièrement difficile.
+
+@cartouche
+@smallexample
+
+début "identifier l'opérateur"
+si opérateur = "+"
+résultat = premier nombre + second nombre
+sinonsi opérateur = "-"
+résultat = premier nombre - second nombre
+sinonsi opérateur = "*"
+résultat = premier nombre * second nombre
+sinonsi opérateur = "/"
+résultat = premier nombre / second nombre
+finsi
+fin "identifier l'opérateur"
+
+@end smallexample
+@end cartouche
+
+@*
+
+@emph{Indentation verticale seulement} : dans ce second exemple,
+l'ajoût de lignes vides rend la lecture plus aisée.
+
+@cartouche
+@smallexample
+
+début "identifier l'opérateur"
+
+si opérateur = "+"
+résultat = premier nombre + second nombre
+
+sinonsi opérateur = "-"
+résultat = premier nombre - second nombre
+
+sinonsi opérateur = "*"
+résultat = premier nombre * second nombre
+
+sinonsi opérateur = "/"
+résultat = premier nombre / second nombre
+
+finsi
+
+fin "identifier l'opérateur"
+
+@end smallexample
+@end cartouche
+
+@*
+
+@emph{Indentation horizontale seulement} : dans ce exemple, la lecture
+n'est pas vraiment améliorée, mais le décalage horizontal des lignes
+permet de mieux voir la structure du programme.
+
+@cartouche
+@smallexample
+
+début "identifier l'opérateur"
+      si      opérateur = "+"
+              résultat = premier nombre + second nombre
+      sinonsi opérateur = "-"
+              résultat = premier nombre - second nombre
+      sinonsi opérateur = "*"
+              résultat = premier nombre * second nombre
+      sinonsi opérateur = "/"
+              résultat = premier nombre / second nombre
+      finsi
+fin   "identifier l'opérateur"
+
+@end smallexample
+@end cartouche
+
+@*
+
+@emph{Indentation horizontale et verticale} : comparez le premier et
+le dernier exemple de cette section consacrée à l'indentation,
+l'amélioration de la lecture est évidente. Imaginez vos yeux après une
+journée de travail sur des sources non ou mal indentées !
+
+@cartouche
+@smallexample
+
+début "identifier l'opérateur"
+
+      si      opérateur = "+"
+              résultat = premier nombre + second nombre
+
+      sinonsi opérateur = "-"
+              résultat = premier nombre - second nombre
+
+      sinonsi opérateur = "*"
+              résultat = premier nombre * second nombre
+
+      sinonsi opérateur = "/"
+              résultat = premier nombre / second nombre
+
+      finsi
+
+fin   "identifier l'opérateur"
+
+@end smallexample
+@end cartouche
+
+@section Développement portable
+
+Un des grands avantages de Ada est de permettre l'écriture, sans grand
+effort, de programme réellement portables. 
+
+L'exemple donné est très simple, mais le principe reste valable pour
+des cas bien plus complexes. Ici, il s'agit d'un programme en mode
+texte qui doit pouvoir fonctionner aussi bien sous Windows que sous
+Linux.
+
+@subheading Le problême
+
+Le problême est le suivant : dès que l'on souhaite écrire à un endroit
+précis de l'écran, la gestion d'écran en mode texte, commune aux
+systèmes Unix et Ms-Dos, via les commandes @emph{ANSI}, s'avère
+malheureusement complètement différente sous Windows. 
+
+On ne peut plus écrire un code source unique pour tous les
+systèmes. Heureusement, Ada va nous sortir de cet écueil.
+
+@subheading La solution
+
+La solution consiste à créer un paquetage @emph{screen}, dont la
+spécification est commune @file{screen.ads} mais dons les corps
+@file{screen.adb}, adaptés pour chaque système d'exploitation, sont
+placés dans deux répertoires distincts : @file{linux} et @file{windows}.
+
+@smallexample
+
+* = racine du répertoire contenant le programme, 
+    @file{c:\aide\examples\aide\crossplatform\prg01}
+
+*---linux
+|   |
+|   \---screen.adb
+|
++---windows
+|   |
+|   \---screen.adb
+|
++---screen.ads
+\---smiley.adb
+
+@end smallexample
+
+Dès lors, pour compiler le programme @file{smiley.adb} pour Windows, il
+suffira de taper, dans une console MSys : @code{gnatmake smiley
+-aIwindows}, pour obtenir :
+
+@image{img/smiley-windows,,6cm}
+
+Pour vérifier, on peut aussi compiler la version Linux @emph{sous
+windows} par la commande : @code{gnatmake smiley -aIlinux}. Ne pas
+oublier d'effacer au préalable les fichiers @file{.o}, @file{.ali} et
+@file{.Exe}.
+
+On obtient alors un affichage complètement incompréhensible : 
+
+@image{img/smiley-linux,10cm}
+
+@c --------------------------------------------------------------------
+@chapter Exemples de programmes
+@c --------------------------------------------------------------------
+
+@emph{Doubler le nombre de programmeurs sur un projet en retard ne fait
+que doubler le retard. Loi de Brook}
+
+@cartouche
+@strong{Les exemples ci-dessous apparaitront au fur et à mesure des versions
+de AIDE. Ils sont susceptibles d'évoluer en fonction des circonstances
+et des retours d'expériences.}
+@end cartouche
+
+@section Une calculatrice en ligne de commande
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@section Une calculatrice en mode texte
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@section Un navigateur de sources en mode texte
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@section Une calculatrice en mode graphique
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@section Un navigateur de sources en mode graphique
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@section Un agenda en mode graphique avec SQL et connexion ODBC
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@section Une bibliothèque de liaison avec C : un binding SQLite
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@section Un agenda en mode graphique avec SQL et connexion directe
+
+@subheading Analyse
+
+<<<TODO>>>
+
+@subheading Implémentation
+
+<<<TODO>>>
+
+@subheading Documentation
+
+<<<TODO>>>
+
+@c --------------------------------------------------------------------
+@chapter Exemples de documentations
+@c --------------------------------------------------------------------
+
+@section Documentation de AIDE
+
+@cartouche
+@strong{Les exemples ci-dessous apparaitront au fur et à mesure des versions
+de AIDE. Ils sont susceptibles d'évoluer en fonction des circonstances
+et des retours d'expériences.}
+@end cartouche
+
+@subheading Description du fichier source
+
+<<<TODO>>>
+
+@subheading Insertion d'images avec GIMP
+
+<<<TODO>>>
+
+@subheading Insertion de diagrammes avec DIA
+
+<<<TODO>>>
+
+@subheading Génération PDF
+
+<<<TODO>>>
+
+@subheading Génération HTML
+
+<<<TODO>>>
+
+@section Documentation de V04
+
+@subheading Description du fichier source
+
+<<<TODO>>>
+
+@subheading Insertion d'une spécification avec AdaDoc
+
+<<<TODO>>>
+
+@subheading Insertion de diagrammes avec DIA
+
+@c@tex
+@c@include  doc/v04-crt.tex
+@c@end tex
+
+<<<TODO>>>
+
+@subheading Génération PDF
+
+<<<TODO>>>
+
+@subheading Génération HTML
+
+<<<TODO>>>
+
+@c --------------------------------------------------------------------
+@appendix Logiciels associés & paquetages Ada
+@c --------------------------------------------------------------------
+
+Tous les logiciels, bibliothèques et paquetages décrits ci-dessous
+sont disponibles en source et libres d'emploi dans un contexte
+commercial.
+
+Sauf mention contraire, le langage employé est Ada et dans ce cas, le
+logiciel est disponible dans
+@file{aide-src-@value{AIDE_Version}.tar.bz2}.
+
+@heading  Base de données SQL
+
+Il existe des bases de données écrites en Ada, mais le temps a manqué
+pour les évaluer et examiner leur licence. Par contre les deux
+bases ci-dessous, complémentaires, s'accordent parfaitement avec Ada.
+
+@subheading SQLite
+
+SQLite est une mini base de données SQL embarquable. L'empreinte est
+minimale et la fiabilité remarquable. Portable et libre, SQLite
+bénéficie d'un excellent support.
+
+SQLite peut être utilisée en Ada grâce à un binding natif disponible
+dans Gnade. Un driver ODBC existe aussi. Il autorise également un accès
+via l'interface ODBC de Gnade. SQLite est écrit en C.
+
+@subheading Firebird
+
+Firebird est la version libre d'Interbase, base de données mature
+existant réputée pour sa fiabilité, sa portabilité et sa compacité. 
+Firebird, comme Postgres, mais à contrario de MySQL, peut être utilisé 
+librement pour une application commerciale. Firebird est nettement plus 
+compact et beaucoup plus simple à metre en @oe{}uvre sous Windows que
+Postgres, tout en proposant de très bonnes performances. Firebird peut 
+aussi être utilisé en base locale, via un jeu de quelques fichiers 
+totalisant environ 1,5 Mo.
+
+Firebird peut être utilisée directement avec Ada grâce à un driver ODBC et
+l'interface ODBC de Gnade. Firebird est écrit en C.
+
+@subheading Glade
+
+Gnade est l'interface ODBC de choix sous Ada. Toutefois, différents
+bindings natifs sont aussi proposés. C'est l'interface idéale pour
+SQLite ou Firebird, par exemple.
+
+@subheading APQ
+
+APQ, binding natif, autorise une connexion de haut niveau avec
+Postgres et MySQL. Une documentation très soignée accompagne ce
+paquetage.
+
+@heading Interface système
+
+@subheading système de fichier
+
+<<<TODO>>>
+
+@subheading écran mode texte
+
+<<<TODO>>>
+
+@subheading ports série
+
+<<<TODO>>>
+
+@heading Formats de fichiers
+
+@subheading dbf
+
+Le format dBase est accessible en lecture et écriture par une
+bibliothèque.
+
+<<<TODO>>>
+
+@subheading html
+
+Différentes implémentations existent en lecture et écriture.
+
+<<<TODO>>>
+
+@subheading pdf
+
+Le format Acrobat peut être généré par l'utilitaire GNU ghostscript.
+
+<<<TODO>>>
+
+@subheading ps
+
+Le format Postscript peut être généré par les utilitaires GNU a2ps 
+puis ghostscript.
+
+<<<TODO>>>
+
+@subheading Unicode
+
+Différentes implémentations existent.
+
+<<<TODO>>>
+
+@subheading xml
+
+Le format xml est accessible en lecture et écriture par une 
+bibliothèque existante.
+
+<<<TODO>>>
+
+@subheading zlib & gzip
+
+Les formats zlib et gzip sont accessibles en lecture et écriture par 
+une bibliothèque existante.
+
+<<<TODO>>>
+
+@heading Interface d'accès aux services internet
+
+@subheading ftp
+
+Une implémentation existe, non directement utilisable.
+
+<<<TODO>>>
+
+@subheading http
+
+Une implémentation cliente et serveur existe.
+
+<<<TODO>>>
+
+@subheading https
+
+Une implémentation cliente et serveur existe.
+
+<<<TODO>>>
+
+@subheading pop3
+
+<<<TODO>>>
+
+@subheading smtp
+
+Différentes implémentations client existent.
+
+<<<TODO>>>
+
+@subheading sockets tcp/ip
+
+Différentes implémentations existent.
+
+<<<TODO>>>
+
+@subheading tcp/ip
+
+Différentes implémentations existent, non directement utilisables.
+
+<<<TODO>>>
+
+@heading Autres bibliothèques
+
+@subheading Calcul
+
+Différentes implémentations de FFT existent.
+
+Une bibliothèque implémentant des CRC16 et CRC32 conformes POSIX
+existe. La conformité POSIX implique un CRC16 conforme CCITT et 
+un CRC32 conforme ANSI/IEEE.
+
+<<<TODO>>>
+
+@heading Chaînes de caractères
+
+<<<TODO>>>
+
+@subheading Chiffrement
+
+Une biliothèque de hachage (haval, md5, ripemd160, sha) existe.
+
+Une implémentation de l'algorithme AES (remplaçant de DES) existe.
+
+Les algorithmes serpent et solitaire sont implémentés.
+
+Une interface à GPG (GNU PG, remplaçant GNU de PGP) existe.
+
+
+@c --------------------------------------------------------------------
+@appendix Le cheminement vers Ada
+@c --------------------------------------------------------------------
+
+Afin de motiver les choix proposés par AIDE, il peut être utile de
+présenter le cheminement ayant entrainé l'adoption de Ada.
+
+@heading  Origine
+
+AIDE résulte d'une étude initiée en 1993, au sein d'une société de
+service, lorsque l'apparition d'environnements graphiques tels
+@emph{Presentation Manager} pour OS/2, @emph{Windows 3} pour MS-DOS ou
+@emph{XWindows} pour Unix, rendirent obsolètes les environnements en
+mode texte.
+
+Cette étude devait mener à la création d'un environnement graphique
+dénommé V93, selon la nomenclature de cette société, en remplacement de
+l'environnement V90, basé MS-DOS en mode texte avec menu déroulants et
+souris @emph{à la Turbo C} et spooler d'impression en tâche de fond,
+basé sur Nantucket Clipper Summer 87, Microsoft C 5.10 et Microsoft
+macro-assembleur 5.00.
+
+V90 avait nécessité plusieurs mois de développements et comptait 
+plusieurs dizaines de milliers de lignes dans ces trois langages. 
+V90 permettait de réaliser des applications industrielles ou de 
+gestion avec une excellente productivité et une remarquable fiabilité.
+
+Cette société de service décida qu'il ne serait plus possible de refaire
+un tel effort à chaque évolution technologique et qu'il serait
+souhaitable de créer un environnement plus universel.
+
+@heading 1993 : Une tentative avortée
+
+A cette époque, OS/2, fiable et multi-tâche, perdait déjà du terrain 
+devant Windows 3, instable et mono-tâche, et les premières solutions 
+Unix graphiques commençaient à se répandre, accroissant une offre que 
+l'on devinait encore appellée à s'étendre. 
+
+Dans le même temps, la société Nantucket, éditeur de Clipper, était 
+rachetée par Computer Associates, amenant un problême de pérennité, 
+alors que la nouvelle version du langage Clipper présentait des 
+problêmes de fiabilité inacceptables, tout en n'étant pas adaptée 
+aux environnements graphiques émergents.
+
+Cette situation amena la société de service à poser les critères suivants :
+
+@itemize @bullet
+@item
+Coût de l'environnement de développement complet inférieur à 50 KF (1993) ;
+@item
+Langage unique, de haut niveau, et disponible chez différents éditeurs ;
+@item
+Solution multi-plateforme avec les sources accessibles.
+@end itemize
+
+La notion de solution multi-plateforme sous-entendait la sélection d'un 
+ensemble de composants multi-plateforme. L'accès aux sources devait 
+permettre de s'affranchir de la disparition ou le rachat de tel ou tel éditeur :
+
+@itemize @bullet
+@item
+Interface homme-machine : bibliothèque graphique multi-plateforme ;
+@item
+Interface base de données : bibliothèque d'accès aux standards du marché
+;
+@item
+Bibliothèques d'exécution : accès aux services des différents systèmes.
+@end itemize
+
+L'étude dura près d'un an. Toutes les solutions disponibles aux
+États-Unis et en Europe furent évaluées. Le principal résultat fut la
+sélection du C++ comme seul langage permettant de respecter tous les 
+critères ci-dessus.
+
+Ensuite, des essais de développement furent menés pour évaluer la
+validité de la solution. Malheureusement, ils ne furent pas concluants, 
+le C++ est rapidement apparu comme un langage peu lisible, nécessitant
+des efforts très importants pour obtenir un programme fiable, et pour
+tout dire terriblement improductif par rapport à la solution mixte
+Clipper & C alors utilisée.
+
+Les essais furent alors stoppés et il fut décidé d'attendre l'apparition
+de solutions multi-plateforme plus évoluées : V93 fut abandonné et
+remplacé par V95, limité à Windows et basé sur Delphi, environnement
+@emph{propriétaire} très bien conçu et basé sur le langage Pascal,
+paradigme agréable et lisible.
+
+@heading 2003 : transformation de l'essai
+
+En dix ans, les développements logiciels ont beaucoup évolué. Les
+environnements de développement aussi, en grande partie grâce au
+logiciels libres. Cette évolution notable a déclenché une nouvelle 
+étude, à titre personnel cette fois. 
+
+De nouveaux langages interprétés, tels Java, Python ou Harbour, ont
+été exclus d'entrée de jeu, pour des raisons de performances et de
+fiabilité pour Java et d'ingénierie inverse pour les
+trois@footnote{L'ingénierie inverse est le nom donné, dans le domaine
+du logiciel, à la @emph{décompilation}, c'est à dire à la re-création
+du code source à partir du programme exécutable. L'ingénierie inverse,
+dans se cas, est achevée par la re-création de l'analyse à partir de
+la lecture du code source re-créé. Utiliser un langage interprété pour
+écrire un produit commercial peut donc, dans certains cas, se révéler
+un choix particulièrement douloureux.}.
+
+Les critères de 1993 furent repris et légèrement modifiés, compte tenu
+de l'évolution :
+
+@itemize @bullet
+@item
+Les outils de développement et les langages @emph{propriétaires},
+coûteux et non open source (à défaut d'être libre), sont de plus en plus
+souvent perçus comme une solution dangereuse par les développeurs avisés
+;
+@item
+Les outils de développement libres et multi-plateforme gagnent en 
+audience par leur qualité et leur pérenité garantie. Il est à noter 
+que la gratuité d'un logiciel libre n'est pas ici un critère essentiel.
+@end itemize
+
+Les critères suivant ont été utilisés :
+
+@itemize @bullet
+@item
+Solution libre multi-plateforme ;
+@item
+Langage unique, de haut niveau, productif, fiable et compilé ;
+@item
+Interface homme-machine : bibliothèque graphique multi-plateforme ;
+@item
+Interface base de données : bibliothèque d'accès aux standards du marché
+(SQL) ;
+@item
+Bibliothèques d'exécution : accès aux services des différents systèmes
+(POSIX) ;
+@item
+Bibliothèques annexes : accès aux formats courants (XML, JPG, PDF, ZIP),
+aux services internet standards, etc...
+@end itemize
+
+Ada s'est alors imposé comme une évidence.
+
+@c --------------------------------------------------------------------
+@appendix Références
+@c --------------------------------------------------------------------
+
+@heading Bibliographie
+
+Toute sélection est arbitraire, aussi il n'est pas inutile de préciser
+les critères utilisés ici : Soit les ouvrages cités ont été
+particulièrement appréciés (sérieux, consistance, lisibilité) ou bien
+les communications ou des interventions de l'auteur cité en font
+penser le plus grand bien !
+
+@emph{Les avis complémentaires sont les bienvenus}.
+
+@subheading Programmation séquentielle avec Ada95
+Pierre Bréguet & Luigi Zaffalon @*
+Presses polytechniques et universitaires romandes @*
+ISBN 2-88074-404-0 @*
+@url{http://ppur.epfl.ch}
+
+Mon premier ouvrage Ada. Clair et efficace, c'est un livre de référence,
+véritablement indispensable.
+
+@subheading Ada95 : Orientation objet, structures de données et algorithmes
+Philippe Gabrini @*
+De Boeck Université @*
+ISBN 2-8041-3790-2 @*
+@url{http://grosmax.si.uqam.ca/Professeurs/Gabrini/Exemples}
+
+Ce livre de Philippe Gabrini est excellent. Tous les algorithmes sont
+présentés sous forme de pseudo-code. A posséder absolument. Les
+sources des exemples de l'ouvrage sont disponibles, avec la permission
+de l'auteur, dans @file{aide-doc-@value{AIDE_Version}.tar.bz2}.
+
+@subheading Object-oriented Software in Ada 95
+Michael A. Smith @*
+School of Computing @*
+University of brighton @*
+@url{http://http://www.it.brighton.ac.uk/~mas}
+
+Ce livre est une extraordinaire référence et il est disponible
+gratuitement en téléchargement ! Son contenu est exceptionnel et les
+sources des exemples de l'ouvrage sont disponibles dans
+@file{aide-doc-@value{AIDE_Version}.tar.bz2}.
+
+@subheading Les ouvrages de Jean-Pierre Rosen
+Adalog @*
+Jean-Pierre Rosen @*
+@url{http://www.adalog.fr}
+
+Jean-Pierre Rosen est un @emph{gourou} de HOOD et de Ada et a écrit
+plusieurs ouvrages traitant de la conception logicielle, dont l'un
+spécifique à HOOD. Tous les écrits de cet auteur sont extrèmement
+intéressants, voire incontournables et ses conférences sont de grands
+moments ``d'apprentissage jubilatoire'' qui rassemblent une compétence
+rare et un plaisir d'enseigner évident.
+
+@subheading Enseigner Ada
+Daniel Feneuille @*
+@url{http://www.ada-france.org}
+
+À l'initiative de l'association Ada-France, ce texte est une réflexion
+et une synthèse sur les qualités pédagogiques et professionnelles du 
+langage de programmation Ada.
+
+Daniel Feneuille enseigne Ada depuis près de 15 ans. Passionné par ce
+langage, ses étudiants l'ont baptisé @emph{l'Adatollah}. Il faut croire
+qu'il a bien su communiquer cet enthousiasme car il me semble qu'au
+moins un de ses anciens élèves est un développeur bien connu
+d'ACT-Europe !
+
+@subheading File structures with Ada
+Nancy E. Miller & Charles G. Petersen @*
+Alan Apt @*
+ISBN 0-8053-0440-1 @*
+@url{http://www2.netdoor.com/~petersen/nembooks}
+@url{www.aw-bc.com}
+
+Ce livre est la référence pour implémenter ISAM ou VSAM grâce à des
+algorithmes de type Btree ou B+Tree. Ce livre est une perle rare.
+
+Les sources des exemples de l'ouvrage sont disponibles, avec la
+permission des auteurs, dans @file{aide-doc-@value{AIDE_Version}.tar.bz2}.
+
+
+@heading Liens internet
+
+@subheading Sites Ada
+
+@multitable @columnfractions .30 .70
+@item Ada Core Technologies @tab @url{http://www.gnat.com}
+@item GNAT compiler repository @tab @url{ftp://cs.nyu.edu/pub/gnat}
+@item Ada Libre software @tab @url{http://libre.act-europe.fr}
+
+@item AdaWorld @tab @url{http://www.adaworld.com}
+@item AdaPower @tab @url{http://www.adapower.com}
+@item AdaHome @tab @url{http://www.adahome.com}
+@item Ada IC @tab @url{http://www.adaic.com}
+
+@item Adalog @tab @url{http://www.adalog.fr}
+@item Académie de l'US Air Force @tab @url{http://www.usafa.af.mil}
+@item École d'ingénieurs de Genève @tab @url{http://www.eig.unige.ch}
+
+@item Ludovic Brenta @tab @url{http://users.skynet.be/ludovic.brenta}
+@item Gautier de Montmollin  @tab @url{http://homepage.sunrise.ch/mysunrise/gdm/}
+@item Pascal Obry @tab @url{http://perso.wanadoo.fr/pascal.obry}
+@item Thomas Quinot @tab @url{http://www.infres.enst.fr/~quinot/}
+@item Samuel Tardieu @tab @url{http://www.rfc1149.net/sam}
+
+@item Ada scripting lib @tab @url{http://adacl.sourceforge.net}
+@item Gnade @tab @url{http://gnade.sourceforge.net}
+@item MaRTE OS @tab @url{http://marte.unican.es}
+
+@end multitable
+
+@subheading Mailing lists et Newsgroups Ada
+
+@multitable @columnfractions .30 .70
+@item Mailing list Ada-France (fr) @tab @url{http://www.ada-france.org/mailman/listinfo/ada-france}
+@item Mailing lists Act (en) @tab @url{http://libre.act-europe.fr}
+@item Mailing list Aide (fr) @tab @email{aide@@rochebrune.org}
+@item Newsgroup Ada (fr) @tab @url{news://fr.comp.lang.ada}
+@item Newsgroup Ada (en) @tab @url{news://comp.lang.ada}
+
+@end multitable
+
+@subheading Outils bureautiques
+
+@multitable @columnfractions .30 .70
+@item The Gimp @tab @url{http://gimp.org}
+@item Dia @tab @url{http://www.lysator.liu.se/~alla/dia}
+@item Ghostscript @tab @url{http://www.cs.wisc.edu/~ghost}
+
+@item Texlive @tab @url{http://www.texlive.org}
+@item Texlive (fr) @tab @url{http://www.tug.org/texlive}
+@item Texlive windows @tab @url{http://www.fptex.org}
+
+@item OpenOffice Writer et Draw @tab @url{http://www.openoffice.org}
+@item Mozilla @tab @url{http://www.mozilla.org}
+
+@end multitable
+
+@subheading Cryptographie
+
+@multitable @columnfractions .30 .70
+@item Généralités @tab @url{http://lambda.eu.org}
+@item Sources @tab @url{http://www.ussrback.com/crypto/tree.html}
+@end multitable
+
+@subheading Divers
+
+@multitable @columnfractions .30 .70
+@item Open source for Windows @tab @url{http://osswin.sourceforge.net}
+
+@end multitable
+
+@subheading Standards
+
+@multitable @columnfractions .30 .70
+@item ECMA @tab @url{http://www.ecma.ch}
+@item ETSI @tab @url{http://www.etsi.org}
+@item IEC @tab @url{http://www.iec.ch}
+@item ITU @tab @url{http://www.itu.int}
+@item NCS @tab @url{http://www.ncs.gov/ncs/html/library.html}
+@item US DOD online (mil std) @tab @url{http://www.dsp.dla.mil/onlinedocs.htm}
+
+@end multitable
+
+@c --------------------------------------------------------------------
+@appendix Contributions, versions & évolutions
+@c --------------------------------------------------------------------
+
+@heading Contributions
+
+@subheading Afsys
+
+@image{img/afsys,3cm}
+
+La société Bordelaise Afsys, conseil en organisation des systèmes
+informatiques, héberge gracieusement AIDE (75 Mo) et tous ses
+composants (450Mo).
+
+@subheading Adaworld
+
+@image{img/adaworld,3cm}
+
+Stéphane Richard, webmaster de AdaWorld, @url{http://www.adaworld.com},
+assure la traduction du manuel en anglais.
+
+@heading Versions 
+
+@subheading GNAT 3.13p (2002)
+
+@multitable @columnfractions .16 .11 .73
+
+@item 0.10 - 01/12/01 @tab commun  @tab Version initiale 0.x (GNAT 3.13p, 
+GtkAda 1.3 et Emacs/Glide)
+
+@item 0.20 - 22/12/01 @tab commun  @tab Simplification des chemins
+@item                 @tab ide     @tab Mise à jour Emacs et Gvd
+
+@item 0.30 - 23/12/01 @tab ide     @tab Suppression des dépendances
+registry et modifications d'Adagide
+
+@item 0.40 - 30/12/01 @tab commun  @tab Amélioration de la
+documentation et de l'arborescence
+@item                 @tab gnat    @tab Suppression de l'anomalie crt2.o,
+validation compilation C
+
+@item 0.50 - 05/01/02 @tab commun  @tab Réorganisation de
+l'arborescence, finalisation de la distribution
+@item                 @tab doc     @tab Amélioration de la documentation
+
+@item 0.51 - 13/01/02 @tab doc     @tab Amélioration du lisezmoi.txt
+(Daniel Feneuille)
+
+@item 0.52 - 11/02/02 @tab ide     @tab Nouvelle version d'ada-mode compatible
+avec Emacs v21
+@item                 @tab doc     @tab corrections du lisezmoi.txt et de l'installation.txt
+(François Bergeret), intégration de la traduction du tutoriel de Glide
+(Daniel Feneuille)
+
+@item 0.60 - 18/03/02 @tab commun  @tab Validation NT4, 2K, 9x, validation sur différentes
+arborescences et différents disques, procédure d'installation pour
+windows 9x
+@item                 @tab doc     @tab Amélioration du lisezmoi.txt et de
+installation.txt
+
+@end multitable
+
+@subheading GCC 3.2 (2003)
+
+@multitable @columnfractions .16 .11 .73
+
+@item 0.70 - 23/02/03 @tab commun  @tab Amélioration de setada.cmd pour Windows 2K et Xp, validation
+expérimentale de GtkAda 2 sous Windows 2K avec Gcc 3.2
+@item                 @tab doc     @tab Amélioration de installation.txt
+
+@item 0.74 - 12/04/03 @tab ide     @tab Intégration d'Emacs/Glide avec
+GVD
+@item                 @tab doc     @tab Traduction de installation.txt
+en anglais
+
+@end multitable
+
+@subheading GNAT 3.15p (2004)
+
+@multitable @columnfractions .16 .11 .73
+
+@item 1.00 - 01/02/04 @tab commun  @tab Version initiale 1.00 (GNAT 3.15p, 
+GtkAda 2.2, Glide 3.15p avec Emacs 21.1.1 et GPS 1.4)
+
+@item 1.02 - 08/07/04 @tab commun  @tab Correction d'anomalies mineures.
+@item                 @tab doc     @tab Amélioration de la documentation des
+exemples
+@item                 @tab web     @tab Mise à jour du site Web
+et du site de téléchargement
+
+@item 1.03 - xx/10/04 @tab commun  @tab Amélioration de la procédure de
+lancement de AIDE : il n'existe désormais plus qu'un seul fichier de
+configuration pour GPS, Glide et MSys. Adabrowse, doublon d'Adadoc, a
+été supprimé de la distribution
+@item                 @tab lib     @tab Opengl a été inclus dans AIDE
+avec des exemples variés et testés
+@item                 @tab doc     @tab Création d'un chapitre
+documentation dans le manuel, la procédure d'installation de Tex a été
+mieux documentée après de nombreux tests. La traduction en anglais du
+manuel a commencé. Le jeu de manuels de référence Ada95 a été
+ajoûté. Une section contribution a été créée. La section version a été
+améliorée
+@item                 @tab texinfo @tab Un module Texinfo a été ajoûté
+au générateur de documentation AdaDoc
+
+@end multitable
+
+@heading Évolutions
+
+Les évolutions prioritaires sont en gras.
+
+@multitable @columnfractions .20 .80
+
+@item Module@tab Libellé
+
+@item Aide @tab @strong{Créer un programme d'installation} afin
+d'offrir une alternative à la décompression manuelle du paquet aux
+accrocs des fichiers @file{setup.exe}.
+@item Aide @tab Créer une version LIVE-AIDE, totalement opérationnelle
+sur CD-ROM, sans installation sur le disque dur. Seul le répertoire de
+l'utilisateur est créé sur le disque, nécessitant que quelques Ko). 
+
+@item GtkAda @tab Améliorer le support (Glide & compilation).
+
+@item Glide @tab Documenter un exemple d'utilisation des fichiers projets.
+@item Glide @tab Implémenter ispell pour la correction orthographique. Aujourd'hui,
+ispell ne fonctionne que dans une fenêtre CMD, ni à l'intérieur de
+EMACS, ni dans RXVT.
+@item Glide @tab Si on ouvre  d'abord v04-crt.adb puis test.adb et que l'on fait F4, ça
+compile dans le répertoire de v04-crt.adb.
+
+@item Doc @tab @strong{Traduire ce document en anglais.}
+@item Doc @tab Renseigner les programmes d'initiation.
+@item Doc @tab Ajoûter le code et le pseudo-code des calculatrices.
+@item Doc @tab Symétriser "questions courantes" et "outils utilisés".
+@item Doc @tab Créer un module Texinfo pour AdaDoc.
+
+@item V04 @tab @strong{Continuer le développement de V04}.
+@item V04 @tab Documenter V04 via AdaDoc.
+
+@end multitable
+
+@sp 5
+
+@image{img/adawrldg,3cm} 
+
+@ignore
+
+@c----------------------------------------------------------
+To do list
+@c----------------------------------------------------------
+EN COURS 1.03
+
+Traduire le minimum en Anglais
+Reformater la section projet et y intégrer DBF
+Faire une version CRT pour Linux
+Voir avec ACT pour une intégration sur leur site
+
+
+@c----------------------------------------------------------
+Doc Initiation au développement
+
+Ce qu'il faut éviter :
+Les ordinogrammes : 
+Se passer de méthode, 
+Mépriser le DSP, étape indispensable
+
+Ajouter :
+Vérifier structuration et modularisation
+lecture initiale, lecture courante
+saisie initiale, saisie courante
+
+@c----------------------------------------------------------
+Glide
+
+@c----------------------------------------------------------
+Aide
+
+@c----------------------------------------------------------
+@tex
+
+$$ \chi^2 = \sum_{i=1}^N \left (y_i - (a + b x_i) \over
+\sigma_i\right)^2 $$
+
+@end tex
+@c----------------------------------------------------------
+
+@end ignore
+
+@bye
+

@@ -1,0 +1,13 @@
+How to compile the programs using the GNAT compiler.
+
+    * Compile the library file Simple_io.ads
+      gnatchop -w -r simpleio.ads
+      If you are using DOS/Win 3.1 then use the -k flag to truncate names to 8.3 format
+      Then use gantmake to compile the specification for the package simple_io.ads. gnatmake simple_io
+      This of course only needs to be done once.
+    * Use gnatchop to split the file into separate package specs and bodies.
+      gnatchop -w -r x00_acc2.ada
+      If you are using DOS/Win 3.1 then use the -k flag to truncate names to 8.3 format
+    * Use gnatmake to compile the various units. The parameter to make is the name of the main procedure.
+      gnatmake main
+    * You can now run the executable image. 

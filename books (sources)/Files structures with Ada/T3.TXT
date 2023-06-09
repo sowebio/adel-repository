@@ -1,0 +1,8 @@
+DF1 ___
+AGM7PONTIAC   2 DR      FIERO      1,250    ORANGE_____
+CGM7___                               5,000
+DGM7___
+AGM7PONTIAC   2 DR      FIERO      1,500    NAVY_______
+DH3 ___
+CT1                                7,800
+DT1 ___

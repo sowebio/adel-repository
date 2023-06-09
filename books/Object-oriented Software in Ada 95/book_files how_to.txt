@@ -1,0 +1,6 @@
+The Ada 95 2nd edition programs are held in a text archive. which can be extracted by using the archive expander x80_exp.ada 
+
+If this program is compiled into the file exp and the text archive is held in the file files, then exp files will extract all the files in the archive.
+
+
+Web repository : http://www.cem.brighton.ac.uk/staff/mas/ada95_1

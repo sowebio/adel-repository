@@ -1,0 +1,4 @@
+dll2def msys-1.0.dll > msys-1.0.def
+gnatdll -e msys-1.0.def -d msys-1.0.dll
+gnatmake ed -largs io.o -lmsys-1.0
+

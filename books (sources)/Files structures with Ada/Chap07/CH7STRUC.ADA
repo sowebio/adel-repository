@@ -1,0 +1,39 @@
+With Direct_IO;
+PACKAGE Ch7Struc Is
+    prime_file_size : Constant Positive := 17;
+    SubType Key_Type Is String ( 1 .. 3 );
+    SubType String10 Is String ( 1 .. 10 );
+    Type Car_Record_Type Is Record
+                                id_number : Key_Type := "   ";
+                                make      : String10 := "          ";
+                                style     : String10 := "          ";
+                                model     : String10 := "          ";
+                                mileage   : String10 := "          ";
+                                color     : String10 := "          ";
+                            End Record;
+    Type Rel_Record_Type Is Record
+                                info : Car_Record_Type;
+                                link : Integer := -1;
+                            End Record;
+
+    PACKAGE Rel_IO Is New Direct_IO ( Rel_Record_Type );
+    FUNCTION Hash ( key : Key_Type ) Return Positive;
+    blank_id_number : Constant Key_Type := "   ";
+END Ch7Struc;
+PACKAGE Body Ch7Struc Is
+    FUNCTION Hash ( key : Key_Type ) Return Positive Is
+        sum : Positive;
+    BEGIN  -- Hash
+       sum := Character'Pos ( key ( 1 ) ) * 10;
+        For i In 2 .. 3 Loop
+            If  (key ( i ) >= '0' )
+            And (key ( i ) <= '9' ) Then
+                sum := sum + Character'Pos ( key ( i ) )
+                           - Character'Pos ( '0' );
+                Exit;
+            End If;
+        End Loop;
+        Return sum MOD prime_file_size + 1 ;
+    END Hash;
+END Ch7Struc;
+

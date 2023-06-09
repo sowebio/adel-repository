@@ -1,0 +1,36 @@
+A Text Archiver / De-archiver
+The format of the source text archive is:
+
+@@ mas1.ada @@
++WITH Ada.Text_io;
++USE  Ada.Text_io;
++PROCEDURE main IS
++BEGIN
++  put("Hello world"); new_line;
++END main;
+@@ mas2.ada @@
++WITH Ada.Text_io;
++USE  Ada.Text_io;
++PROCEDURE main IS
++BEGIN
++  put("Another program"); new_line;
++END main;
+
+Archiver
+The archive is created by the program:
+
+    * preview
+    * download
+    * split 
+
+	
+De-archiver
+The files are extracted from the archive by the program:
+
+    * preview
+    * download
+    * split 
+
+The line @@ mas1.ada @@ specifies the file to which the following text is to be written to. Each line of extracted text has a + as its first character which is removed before the line is written to the file.
+
+The source code held in this archive format for the all the programs used in this book, is available using anonymous FTP at the URL address ftp://ftp.brighton.ac.uk/pub/mas/ada95 . Alternatively the files are accessed using the WWW URL http://www.brighton.ac.uk/ada95/programs/home.html 

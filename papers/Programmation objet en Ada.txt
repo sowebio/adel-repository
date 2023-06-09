@@ -1,0 +1,22 @@
+
+Paradigme objet en Ada
+----------------------
+
+Vidéo de présentation de l'implémentation du paradigme objet en Ada
+https://www.ada-france.org/adafr/wikis/view/1/Webinaire:POO
+
+AdaCore University : Programmation objet avec exemples compilables en ligne
+https://learn.adacore.com/courses/intro-to-ada/chapters/object_oriented_programming.html
+
+Openclassroom : Notions avancées et Programmation Orientée Objet (partie 4) et Ada
+https://openclassrooms.com/fr/courses/900279-apprenez-a-programmer-avec-ada ou directement via "Openclassroom - Apprendre à programmer avec Ada.pdf" joint (grossir à ~300%, PDF auto-généré)
+
+
+Liste des démos et projets GNOGA sur Sourceforge : 
+https://sourceforge.net/p/gnoga/wiki/Gnoga-Gallery/
+
+
+Modèle standard d'interface graphique
+-------------------------------------
+
+À partir du lien ou du PDF ci-dessus : GTK : la programmation évènementielle (partie 5). Une bonne introduction aux principes d'une interface graphique classique.

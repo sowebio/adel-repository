@@ -1,0 +1,66 @@
+
+      NT Console Mouse
+
+------------------------------------------------------------------------
+
+I submit the package NT_MOUSE in the hope you may find it useful,
+even if it still can be improved upon, 
+and even if you may find that it contains too many different things..
+
+Procedure Get_Mouse
+Returns the Cursor-Position and Mouse-Button(s) clicked, and what
+button(s).
+
+Procedure Get_AnyKey
+Returns any key pressed, whether Normal, Extended, or Enhanced,
+and current control-keys: Shift, Ctrl, Alt, NumLock, ScrlLock,CapsLock.
+
+Procedure Get_Anything
+combines the above, returning Key-press or Mouse-click, whichever comes
+first.
+
+Function Key_Name_text
+returns a string containing the name of the key pressed
+(EG: "ESC", "F8", "NUM 7", "7", "PG DN")
+
+NT_MOUSE was made before CONSOLE_IO, and used codepages to cater
+for the full range of Ansi Latin_1 characters.  To this end it has
+
+Function Get_Codepage
+Returns the number of the current codepage.
+
+Procedure Set_Codepage
+will set the current codepage to 1252 (=ANSI), or any other (valid)
+number.
+(NOTE: NOT ALLOWED IN WINDOWS 95)
+
+NT_Mouse was originally meant as a supplement to NT_Console by Jerry van
+Dijk.
+
+The idea was to use his
+
+Goto_XY, Where_X, Where_Y
+for Text-Cursor position control.
+
+and
+
+Set_Foreground, Get_Foreground, Set_Background, Get_Background
+for Color control.
+
+Even if this works very well, it might be nicer to have a single package
+
+combining the functionality of Console_IO, NT_Mouse and NT_Console.
+I may get around to do this some day, unless someone else does it first.
+   
+
+Testmouse.ada illustrates only the use of Get_Anything.
+Get_Mouse and Get_Anykey are supposed to work similarly.
+
+------------------------------------------------------------------------
+Download ntmouse.zip here. <ntmouse.zip>
+------------------------------------------------------------------------
+Contributed by: Hans Marqvardsen <mailto:hm@ddre.dk>
+Contributed on: March 8, 1999
+License: Public Domain
+------------------------------------------------------------------------
+Back <index.html>

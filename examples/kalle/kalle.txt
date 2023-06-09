@@ -1,0 +1,59 @@
+Developed by (C) Wasiliy W. Molostoff 1994, 1995.
+		 Moscow, Russia,
+		 Voice:   7 (095) 398-23-38
+		 e-mail:  edv@edv.msk.ru
+This is free software; you can  freely  redistribute  it  and/or
+modify  it  without any restrictions.  Please report any errors.
+All corrections will be made as soon as possible.
+
+   Here is a set of Ada sources from the KALLE Utilitues Library.
+
+**** KALLE.TXT     -  Brief contents description.
+
+**** KALLE.SRC (PAGER2 file, stored in compilation order):
+
+    arrahand.ads  -  Array_Handler generic package
+    arrahand.adb  -
+    booleset.ads  -  Generic Enumeration Set
+    booleset.adb  -
+    btreeavl.ads  -  In-memory balanced binary tree (AVL-tree)
+    btreeavl.adb  -
+    btrefile.ads  -  In-file balanced binary tree (B-tree)
+    btrefile.adb  -
+    choice.ads    -  Generic choice utility (max, min, etc.)
+    choice.adb    -
+    dbase_io.ads  -  DBF III file IO procedures
+    dbase_io.adb  -
+    dbfileio.ads  -  Data file format definitions, IO procedures
+    dbfileio.adb  -
+    dfidfosp.adb  -  Separated data file format specific routines
+    dequtype.ads  -  Generic Deque types and procedures (Double ended queues)
+    dequtype.adb  -
+    filename.ads  -  File name splitting - allow DOS/UNIX/VMS conv.
+    filename.adb  -
+    formstri.ads  -  Generic Format string function (similar to C printf)
+    formstri.adb  -
+    stritool.adb  -  Additional String Tools based on array_handler
+    stritool.ads  -
+    systelog.ads  -  Message Log Utility
+    systelog.adb  -
+    sylopuli.adb  -  Separated put_line procedure from Message Log Utility
+    progrlog.ads  -
+    silenlog.ads  -  Silent log. Disable LOG reporting.
+    silenlog.adb  -
+    testing.ads   -  Testing utility
+    testing.adb   -
+    unsigned.ads  -  Unsigned types: byte, word, long_word.
+    unsigned.adb  -
+    unsignio.ads  -  File IO for unsigned types
+    unsignio.adb  -
+
+**** PAGER2 file TESTS.src:
+
+    testbtav.adb  -  Test b_tree_avl
+    testbtpa.adb  -  Test b_tree_file
+    testdbas.adb  -  Test dbase_io
+    test_ah.adb   -  Test array_handler
+    test_fs.adb   -  Test format_string
+
+----------------------------------------------------------------------------
